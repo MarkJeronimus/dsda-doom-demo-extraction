@@ -66,20 +66,14 @@ static int dsda_auto_key_frame_depth;
 static int dsda_auto_key_frame_timeout;
 
 static int autoKeyFrameTimeout(void) {
-  return dsda_StartInBuildMode() ? 0 : dsda_auto_key_frame_timeout;
+  return dsda_auto_key_frame_timeout;
 }
 
 static int autoKeyFrameDepth(void) {
-  if (dsda_StartInBuildMode() && dsda_auto_key_frame_depth < 60)
-    return 60;
-
   return dsda_auto_key_frame_depth;
 }
 
 static int autoKeyFrameInterval(void) {
-  if (dsda_StartInBuildMode())
-    return 1;
-
   return dsda_auto_key_frame_interval;
 }
 
@@ -269,10 +263,6 @@ void dsda_RestoreKeyFrame(dsda_key_frame_t* key_frame, dboolean skip_wipe) {
   dsda_ResolveParentKF(key_frame);
 
   doom_printf("Restored key frame");
-}
-
-void dsda_StoreTempKeyFrame(void) {
-  dsda_StoreKeyFrame(&temp_kf, true, true);
 }
 
 void dsda_StoreQuickKeyFrame(void) {

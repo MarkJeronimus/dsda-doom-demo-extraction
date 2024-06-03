@@ -1093,8 +1093,6 @@ void G_BuildTiccmd(ticcmd_t* cmd)
 
     arg = dsda_Arg(dsda_arg_first_input);
     if (arg->found) {
-      dsda_TrackFeature(uf_buildzero);
-
       cmd->forwardmove = (signed char) arg->value.v_int_array[0];
       cmd->sidemove = (signed char) arg->value.v_int_array[1];
       cmd->angleturn = (signed short) (arg->value.v_int_array[2] << 8);
@@ -1244,7 +1242,7 @@ static void G_DoLoadLevel (void)
   dsda_ResetPauseMode();
   dsda_ResetExCmdQueue();
 
-  if (dsda_BuildMode() || dsda_StartInBuildMode())
+  if (dsda_BuildMode())
     dsda_EnterBuildMode();
 
   // killough 5/13/98: in case netdemo has consoleplayer other than green
@@ -1329,9 +1327,6 @@ dboolean G_Responder (event_t* ev)
 
   if (gamestate == GS_FINALE && F_Responder(ev))
     return true;  // finale ate the event
-
-  if (dsda_BuildResponder(ev))
-    return true;
 
   // If the next/previous weapon keys are pressed, set the next_weapon
   // variable to change weapons when the next ticcmd is generated.

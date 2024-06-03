@@ -218,16 +218,6 @@ static arg_config_t arg_config[dsda_arg_count] = {
     "sets game speed percent",
     arg_int, 10, 10000,
   },
-  [dsda_arg_tas] = {
-    "-tas", NULL, NULL,
-    "lifts strict mode restrictions",
-    arg_null,
-  },
-  [dsda_arg_build] = {
-    "-build", NULL, NULL,
-    "starts in build mode",
-    arg_null,
-  },
   [dsda_arg_quit_after_brute_force] = {
     "-quit_after_brute_force", NULL, NULL,
     "quits the game when brute force ends",

@@ -56,7 +56,6 @@ int dsda_max_kill_requirement;
 static int dsda_session_attempts = 1;
 
 static int turbo_scale;
-static int start_in_build_mode;
 
 static int line_activation[2][LINE_ACTIVATION_INDEX_MAX + 1];
 static int line_activation_frame;
@@ -104,9 +103,6 @@ static void dsda_HandleTurbo(void) {
 
   if (arg->found)
     turbo_scale = arg->value.v_int;
-
-  if (turbo_scale > 100)
-    dsda_ToggleBuildTurbo();
 }
 
 int dsda_TurboScale(void) {
@@ -126,13 +122,6 @@ void dsda_ToggleFrozenMode(void) {
   frozen_mode = !frozen_mode;
 }
 
-static void dsda_HandleBuild(void) {
-  start_in_build_mode = dsda_Flag(dsda_arg_build);
-}
-
-int dsda_StartInBuildMode(void) {
-  return start_in_build_mode;
-}
 
 void dsda_ReadCommandLine(void) {
   dsda_arg_t* arg;
@@ -157,13 +146,10 @@ void dsda_ReadCommandLine(void) {
     dsda_InitGhostExport(arg->value.v_string);
 
   dsda_HandleTurbo();
-  dsda_HandleBuild();
 
   arg = dsda_Arg(dsda_arg_import_ghost);
   if (arg->found)
     dsda_InitGhostImport(arg->value.v_string_array, arg->count);
-
-  if (dsda_Flag(dsda_arg_tas) || dsda_Flag(dsda_arg_build)) dsda_SetTas();
 
   dsda_InitKeyFrame();
   dsda_InitCommandHistory();

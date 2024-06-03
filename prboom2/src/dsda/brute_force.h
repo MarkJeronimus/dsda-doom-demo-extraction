@@ -89,27 +89,8 @@ typedef enum {
 } dsda_bf_limit_t;
 
 extern const char* dsda_bf_attribute_names[dsda_bf_attribute_max];
-extern const char* dsda_bf_operator_names[dsda_bf_operator_max];
-extern const char* dsda_bf_item_names[dsda_bf_item_max];
-extern const char* dsda_bf_limit_names[dsda_bf_limit_max];
 
 dboolean dsda_BruteForce(void);
 dboolean dsda_BruteForceEnded(void);
-void dsda_ResetBruteForceConditions(void);
-void dsda_SetBruteForceTarget(dsda_bf_attribute_t attribute,
-                              dsda_bf_limit_t limit, fixed_t value, dboolean has_value);
-void dsda_AddMiscBruteForceCondition(dsda_bf_attribute_t attribute, fixed_t value);
-void dsda_AddBruteForceCondition(dsda_bf_attribute_t attribute,
-                                 dsda_bf_operator_t operator, fixed_t value);
-dboolean dsda_StartBruteForce(int depth);
-int dsda_KeepBruteForceFrame(int i);
-int dsda_AddBruteForceFrame(int i,
-                            int forwardmove_min, int forwardmove_max,
-                            int sidemove_min, int sidemove_max,
-                            int angleturn_min, int angleturn_max,
-                            byte buttons);
-void dsda_BruteForceWithoutMonsters(void);
-void dsda_BruteForceWithMonsters(void);
 void dsda_UpdateBruteForce(void);
 void dsda_EvaluateBruteForce(void);
-void dsda_CopyBruteForceCommand(ticcmd_t* cmd);

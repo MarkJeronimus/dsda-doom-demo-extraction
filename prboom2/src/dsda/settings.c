@@ -35,7 +35,6 @@
 
 #include "settings.h"
 
-int dsda_tas;
 int dsda_skip_next_wipe;
 
 void dsda_InitSettings(void) {
@@ -114,10 +113,6 @@ int dsda_CompatibilityLevel(void) {
   }
 
   return UNSPECIFIED_COMPLEVEL;
-}
-
-void dsda_SetTas(void) {
-  dsda_tas = true;
 }
 
 dboolean dsda_ViewBob(void) {
