@@ -94,7 +94,6 @@ void dsda_ExitSkipMode(void) {
   demo_skiptics = 0;
 
   I_Init2();
-  I_InitSound();
   S_Init();
 
   if (V_IsOpenGLMode())

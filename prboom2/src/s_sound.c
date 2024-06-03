@@ -109,8 +109,6 @@ int numChannels;
 
 void S_StopChannel(int cnum);
 
-int S_AdjustSoundParams(mobj_t *listener, mobj_t *source, channel_t *channel, sfx_params_t *params);
-
 static int S_getChannel(void *origin, sfxinfo_t *sfxinfo, sfx_params_t *params);
 
 
@@ -121,7 +119,6 @@ int dist_adjust = 160;
 static int AmbChan = -1;
 
 static mobj_t* GetSoundListener(void);
-static void Heretic_S_StopSound(void *_origin);
 static void Raven_S_StartSoundAtVolume(void *_origin, int sound_id, int volume, int loop_timeout);
 
 void S_ResetSfxVolume(void)
@@ -238,45 +235,13 @@ void S_LoopSound(void *origin, int sfx_id, int timeout)
   S_StartSoundAtVolume(origin, sfx_id, raven ? 127 : sfx_volume, timeout);
 }
 
-void S_StopSound(void *origin)
-{
-  if (raven) return Heretic_S_StopSound(origin);
-}
-
-void S_StopSoundLoops(void)
-{
-}
-
 // [FG] disable sound cutoffs
 int full_sounds;
-
-void S_UnlinkSound(void *origin)
-{
-}
-
-//
-// Updates sounds
-//
-void S_UpdateSounds(void)
-{
-}
 
 void S_StopChannel(int cnum)
 {
   if (AmbChan == cnum)
     AmbChan = -1;
-}
-
-//
-// Changes volume, stereo-separation, and pitch variables
-//  from the norm of a sound effect to be played.
-// If the sound is not audible, returns a 0.
-// Otherwise, modifies parameters and returns 1.
-//
-
-int S_AdjustSoundParams(mobj_t *listener, mobj_t *source, channel_t *channel, sfx_params_t *params)
-{
-  return 0;
 }
 
 //
@@ -390,7 +355,6 @@ static int Raven_S_getChannel(mobj_t *origin, sfxinfo_t *sfx, sfx_params_t *para
     }
     if (origin == channels[i].origin)
     {                       // only allow other mobjs one sound
-      S_StopSound(channels[i].origin);
       break;
     }
   }
@@ -470,16 +434,7 @@ void S_StartAmbientSound(void *_origin, int sound_id, int volume)
   GetSoundListener();
 }
 
-static void Heretic_S_StopSound(void *_origin)
-{
-}
-
 // hexen
-
-dboolean S_GetSoundPlayingInfo(void * origin, int sound_id)
-{
-  return false;
-}
 
 int S_GetSoundID(const char *name)
 {

@@ -305,7 +305,6 @@ void T_VerticalCompatibleDoor(vldoor_t *door)
           case vld_open:
             door->sector->ceilingdata = NULL;
             P_RemoveThinker(&door->thinker);        // unlink and free
-            S_StopSound(&door->sector->soundorg);
             break;
 
           default:

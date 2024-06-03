@@ -1710,8 +1710,7 @@ void P_DamageMobj(mobj_t *target,mobj_t *inflictor, mobj_t *source, int damage)
       else
       {                   // "electrocute" the target
         target->frame |= FF_FULLBRIGHT;
-        if (target->flags & MF_COUNTKILL && P_Random(pr_hexen) < 128
-            && !S_GetSoundPlayingInfo(target, hexen_sfx_puppybeat))
+        if (target->flags & MF_COUNTKILL && P_Random(pr_hexen) < 128)
         {
           if ((target->type == HEXEN_MT_CENTAUR) ||
               (target->type == HEXEN_MT_CENTAURLEADER) ||
@@ -1733,8 +1732,7 @@ void P_DamageMobj(mobj_t *target,mobj_t *inflictor, mobj_t *source, int damage)
 
       if (hexen && inflictor && inflictor->type == HEXEN_MT_POISONCLOUD)
       {
-        if (target->flags & MF_COUNTKILL && P_Random(pr_hexen) < 128
-            && !S_GetSoundPlayingInfo(target, hexen_sfx_puppybeat))
+        if (target->flags & MF_COUNTKILL && P_Random(pr_hexen) < 128)
         {
           if ((target->type == HEXEN_MT_CENTAUR) ||
               (target->type == HEXEN_MT_CENTAURLEADER) ||

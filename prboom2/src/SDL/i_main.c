@@ -93,7 +93,6 @@
 void I_Init(void)
 {
   dsda_ResetTimeFunctions(fastdemo);
-  I_InitSound();
 }
 
 //e6y

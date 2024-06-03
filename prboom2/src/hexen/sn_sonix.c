@@ -323,7 +323,6 @@ void SN_StopSequence(mobj_t * mobj)
         next_node = node->next;
         if (node->mobj == mobj)
         {
-            S_StopSound(mobj);
             if (node->stopSound)
             {
                 S_StartSoundAtVolume(mobj, node->stopSound, node->volume, 0);
@@ -350,7 +349,6 @@ void SN_UpdateActiveSequences(void)
 {
     seqnode_t *node;
     seqnode_t *next_node;
-    dboolean sndPlaying;
 
     if (!ActiveSequences || dsda_Paused())
     {                           // No sequences currently playing/game is paused
@@ -364,32 +362,22 @@ void SN_UpdateActiveSequences(void)
             node->delayTics--;
             continue;
         }
-        sndPlaying = S_GetSoundPlayingInfo(node->mobj, node->currentSoundID);
         switch (*node->sequencePtr)
         {
             case SS_CMD_PLAY:
-                if (!sndPlaying)
-                {
-                    node->currentSoundID = *(node->sequencePtr + 1);
-                    S_StartSoundAtVolume(node->mobj, node->currentSoundID,
-                                         node->volume, 0);
-                }
+                node->currentSoundID = *(node->sequencePtr + 1);
+                S_StartSoundAtVolume(node->mobj, node->currentSoundID,
+                                        node->volume, 0);
                 node->sequencePtr += 2;
                 break;
             case SS_CMD_WAITUNTILDONE:
-                if (!sndPlaying)
-                {
-                    node->sequencePtr++;
-                    node->currentSoundID = 0;
-                }
+                node->sequencePtr++;
+                node->currentSoundID = 0;
                 break;
             case SS_CMD_PLAYREPEAT:
-                if (!sndPlaying)
-                {
-                    node->currentSoundID = *(node->sequencePtr + 1);
-                    S_StartSoundAtVolume(node->mobj, node->currentSoundID,
-                                         node->volume, 0);
-                }
+                node->currentSoundID = *(node->sequencePtr + 1);
+                S_StartSoundAtVolume(node->mobj, node->currentSoundID,
+                                        node->volume, 0);
                 break;
             case SS_CMD_DELAY:
                 node->delayTics = *(node->sequencePtr + 1);

@@ -80,22 +80,11 @@ void S_StartSoundAtVolume(void *origin, int sound_id, int volume, int loop_timeo
 // killough 4/25/98: mask used to indicate sound origin is player item pickup
 #define PICKUP_SOUND (0x8000)
 
-// Stop sound for thing at <origin>
-void S_StopSound(void* origin);
-
-void S_StopSoundLoops(void);
-
 extern int full_sounds;
-void S_UnlinkSound(void *origin);
 
 void S_AdjustAttenuation(float attenuation);
 void S_AdjustVolume(float volume);
 void S_ResetAdjustments(void);
-
-//
-// Updates sounds
-//
-void S_UpdateSounds(void);
 
 // machine-independent sound params
 extern int default_numChannels;
@@ -110,7 +99,6 @@ void S_StartAmbientSound(void *origin, int sound_id, int volume);
 
 // hexen
 
-dboolean S_GetSoundPlayingInfo(void * mobj, int sound_id);
 int S_GetSoundID(const char *name);
 
 #endif

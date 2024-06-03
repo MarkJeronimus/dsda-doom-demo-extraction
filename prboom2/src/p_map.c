@@ -840,8 +840,7 @@ static dboolean PIT_CheckThing(mobj_t *thing) // killough 3/26/98: make static
               P_SpawnMobj(tmthing->x, tmthing->y, tmthing->z,
                           HEXEN_MT_HOLY_PUFF);
               S_StartMobjSound(tmthing, hexen_sfx_spirit_attack);
-              if (thing->flags & MF_COUNTKILL && P_Random(pr_hexen) < 128
-                  && !S_GetSoundPlayingInfo(thing, hexen_sfx_puppybeat))
+              if (thing->flags & MF_COUNTKILL && P_Random(pr_hexen) < 128)
               {
                 if ((thing->type == HEXEN_MT_CENTAUR) ||
                     (thing->type == HEXEN_MT_CENTAURLEADER) ||
@@ -959,13 +958,8 @@ static dboolean PIT_CheckThing(mobj_t *thing) // killough 3/26/98: make static
             {
               P_DamageMobj(thing, tmthing, tmthing->target, 3);
             }
-            if (!(S_GetSoundPlayingInfo(tmthing,
-                                        hexen_sfx_mage_lightning_zap)))
-            {
-              S_StartMobjSound(tmthing, hexen_sfx_mage_lightning_zap);
-            }
-            if (thing->flags & MF_COUNTKILL && P_Random(pr_hexen) < 64
-                && !S_GetSoundPlayingInfo(thing, hexen_sfx_puppybeat))
+            S_StartMobjSound(tmthing, hexen_sfx_mage_lightning_zap);
+            if (thing->flags & MF_COUNTKILL && P_Random(pr_hexen) < 64)
             {
               if ((thing->type == HEXEN_MT_CENTAUR) ||
                   (thing->type == HEXEN_MT_CENTAURLEADER) ||

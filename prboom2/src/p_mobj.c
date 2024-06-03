@@ -1862,7 +1862,6 @@ void P_RemoveMobj (mobj_t* mobj)
       P_DelSeclist(sector_list);
       sector_list = NULL;
     }
-    S_StopSound(mobj);
     P_RemoveThinker((thinker_t *) mobj);
     return;
   }
@@ -1898,14 +1897,6 @@ void P_RemoveMobj (mobj_t* mobj)
     P_DelSeclist(sector_list);
     sector_list = NULL;
     }
-
-  // stop any playing sound
-
-  // [FG] removed map objects may finish their sounds
-  if (full_sounds)
-    S_UnlinkSound(mobj);
-  else
-    S_StopSound(mobj);
 
   // killough 11/98:
   //

@@ -747,27 +747,21 @@ void P_PlayerThink (player_t* player)
     {
       case PCLASS_FIGHTER:
         if (player->mo->momz <= -35 * FRACUNIT
-            && player->mo->momz >= -40 * FRACUNIT && !player->morphTics
-            && !S_GetSoundPlayingInfo(player->mo,
-                                      hexen_sfx_player_fighter_falling_scream))
+            && player->mo->momz >= -40 * FRACUNIT && !player->morphTics)
         {
           S_StartMobjSound(player->mo, hexen_sfx_player_fighter_falling_scream);
         }
         break;
       case PCLASS_CLERIC:
         if (player->mo->momz <= -35 * FRACUNIT
-            && player->mo->momz >= -40 * FRACUNIT && !player->morphTics
-            && !S_GetSoundPlayingInfo(player->mo,
-                                      hexen_sfx_player_cleric_falling_scream))
+            && player->mo->momz >= -40 * FRACUNIT && !player->morphTics)
         {
           S_StartMobjSound(player->mo, hexen_sfx_player_cleric_falling_scream);
         }
         break;
       case PCLASS_MAGE:
         if (player->mo->momz <= -35 * FRACUNIT
-            && player->mo->momz >= -40 * FRACUNIT && !player->morphTics
-            && !S_GetSoundPlayingInfo(player->mo,
-                                      hexen_sfx_player_mage_falling_scream))
+            && player->mo->momz >= -40 * FRACUNIT && !player->morphTics)
         {
           S_StartMobjSound(player->mo, hexen_sfx_player_mage_falling_scream);
         }
@@ -1559,10 +1553,6 @@ void Raven_P_MovePlayer(player_t * player)
             {
                 player->mo->flags2 |= MF2_FLY;
                 player->mo->flags |= MF_NOGRAVITY;
-                if (hexen && player->mo->momz <= -39 * FRACUNIT)
-                {               // stop falling scream
-                    S_StopSound(player->mo);
-                }
             }
         }
         else
@@ -2092,10 +2082,6 @@ static dboolean Hexen_P_UseArtifact(player_t * player, artitype_t arti)
             if (!P_GivePower(player, pw_flight))
             {
                 return (false);
-            }
-            if (player->mo->momz <= -35 * FRACUNIT)
-            {                   // stop falling scream
-                S_StopSound(player->mo);
             }
             break;
         case hexen_arti_summon:

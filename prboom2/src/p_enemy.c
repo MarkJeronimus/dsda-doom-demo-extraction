@@ -1180,10 +1180,6 @@ void A_Look(mobj_t *actor)
     else
     {
       S_StartMobjSound(actor, sound);
-
-      // [FG] make seesounds uninterruptible
-      if (full_sounds)
-        S_UnlinkSound(actor);
     }
   }
   P_SetMobjState(actor, actor->info->seestate);
@@ -5640,7 +5636,6 @@ void Hexen_A_Scream(mobj_t * actor)
 {
     int sound;
 
-    S_StopSound(actor);
     if (actor->player)
     {
         if (actor->player->morphTics)

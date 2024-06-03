@@ -685,7 +685,3 @@ void I_ShutdownSound(void)
     }
   }
 }
-
-void I_InitSound(void)
-{
-}
