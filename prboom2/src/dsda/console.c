@@ -106,7 +106,7 @@ menu_t dsda_ConsoleDef = {
   0, MENUF_TEXTINPUT
 };
 
-static dboolean dsda_ExecuteConsole(const char* command_line, dboolean noise);
+static dboolean dsda_ExecuteConsole(const char* command_line);
 
 static void dsda_UpdateConsoleDisplay(void) {
   const char* s;
@@ -1095,7 +1095,7 @@ static dboolean console_ScriptRunLine(const char* line) {
       return false;
     }
 
-    if (!dsda_ExecuteConsole(line, false)) {
+    if (!dsda_ExecuteConsole(line)) {
       lprintf(LO_ERROR, "Script line failed: \"%s\"\n", line);
       return false;
     }
@@ -2520,7 +2520,7 @@ static dboolean dsda_AuthorizeCommand(console_command_entry_t* entry) {
   return true;
 }
 
-static dboolean dsda_ExecuteConsole(const char* command_line, dboolean noise) {
+static dboolean dsda_ExecuteConsole(const char* command_line) {
   char command[CONSOLE_ENTRY_SIZE];
   char args[CONSOLE_ENTRY_SIZE];
   int scan_count;
@@ -2538,23 +2538,14 @@ static dboolean dsda_ExecuteConsole(const char* command_line, dboolean noise) {
         if (dsda_AuthorizeCommand(entry)) {
           if (entry->command(command, args)) {
             dsda_AddConsoleMessage("command executed");
-
-            if (noise)
-              S_StartVoidSound(g_sfx_console);
           }
           else {
             dsda_AddConsoleMessage("command invalid");
             ret = false;
-
-            if (noise)
-              S_StartVoidSound(g_sfx_oof);
           }
         }
         else {
           ret = false;
-
-          if (noise)
-            S_StartVoidSound(g_sfx_oof);
         }
 
         break;
@@ -2564,9 +2555,6 @@ static dboolean dsda_ExecuteConsole(const char* command_line, dboolean noise) {
     if (!entry->command) {
       dsda_AddConsoleMessage("command unknown");
       ret = false;
-
-      if (noise)
-        S_StartVoidSound(g_sfx_oof);
     }
   }
 
@@ -2617,7 +2605,7 @@ void dsda_UpdateConsoleHistory(void) {
   console_entry = console_history_head;
 }
 
-void dsda_InterpretConsoleCommands(const char* str, dboolean noise, dboolean raise_errors) {
+void dsda_InterpretConsoleCommands(const char* str, dboolean raise_errors) {
   int line;
   char* entry;
   char** lines;
@@ -2625,7 +2613,7 @@ void dsda_InterpretConsoleCommands(const char* str, dboolean noise, dboolean rai
   entry = Z_Strdup(str);
   lines = dsda_SplitString(entry, ";");
   for (line = 0; lines[line]; ++line)
-    if (!dsda_ExecuteConsole(lines[line], noise) && raise_errors)
+    if (!dsda_ExecuteConsole(lines[line]) && raise_errors)
       I_Error("Console command failed: %s", lines[line]);
 
   Z_Free(lines);
@@ -2644,7 +2632,7 @@ void dsda_UpdateConsole(int action) {
     dsda_UpdateConsoleDisplay();
   }
   else if (action == MENU_ENTER) {
-    dsda_InterpretConsoleCommands(console_entry->text, true, false);
+    dsda_InterpretConsoleCommands(console_entry->text, false);
 
     dsda_UpdateConsoleHistory();
     dsda_ResetConsoleEntry();

@@ -403,6 +403,7 @@ void D_Display ()
   }
   else { // In a level
     dboolean redrawborderstuff;
+    fixed_t frac;
 
     // Work out if the player view is visible, and if there is a border
     viewactive = automap_off && !inhelpscreens;
@@ -444,7 +445,7 @@ void D_Display ()
     // Boom colormaps should be applied for everything in R_RenderPlayerView
     use_boom_cm=true;
 
-    fixed_t frac = I_GetTimeFrac();
+    frac = I_GetTimeFrac();
 
     R_InterpolateView(&players[displayplayer], frac);
 
