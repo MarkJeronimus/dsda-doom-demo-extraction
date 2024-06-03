@@ -1975,10 +1975,6 @@ void A_VileChase(mobj_t* actor)
     A_Chase(actor);  // Return to normal attack.
 }
 
-//
-// A_VileStart
-//
-
 void A_VileStart(mobj_t *actor)
 {
 }
@@ -2327,12 +2323,10 @@ void A_PainDie(mobj_t *actor)
   A_PainShootSkull(actor, actor->angle+ANG270);
 }
 
-void Heretic_A_Scream(mobj_t *actor);
 void Hexen_A_Scream(mobj_t *actor);
 
 void A_Scream(mobj_t *actor)
 {
-  if (heretic) return Heretic_A_Scream(actor);
   if (hexen) return Hexen_A_Scream(actor);
 
   switch (actor->info->deathsound)
@@ -3892,7 +3886,6 @@ void A_MummySoul(mobj_t * mummy)
 void A_Sor1Pain(mobj_t * actor)
 {
     actor->special1.i = 20;       // Number of steps to walk fast
-    A_Pain(actor);
 }
 
 void A_Sor1Chase(mobj_t * actor)
@@ -4105,30 +4098,6 @@ void A_Sor2DthLoop(mobj_t * actor)
     {                           // Need to loop
         P_SetMobjState(actor, HERETIC_S_SOR2_DIE4);
     }
-}
-
-void A_SorZap(mobj_t * actor)
-{
-}
-
-void A_SorRise(mobj_t * actor)
-{
-}
-
-void A_SorDSph(mobj_t * actor)
-{
-}
-
-void A_SorDExp(mobj_t * actor)
-{
-}
-
-void A_SorDBon(mobj_t * actor)
-{
-}
-
-void A_SorSightSnd(mobj_t * actor)
-{
 }
 
 void A_MinotaurAtk1(mobj_t * actor)
@@ -4760,10 +4729,6 @@ void A_UnHideThing(mobj_t * actor)
     actor->flags2 &= ~MF2_DONTDRAW;
 }
 
-void Heretic_A_Scream(mobj_t * actor)
-{
-}
-
 void Heretic_A_BossDeath(mobj_t * actor)
 {
     mobj_t *mo;
@@ -5197,7 +5162,6 @@ void A_PigAttack(mobj_t * actor)
 
 void A_PigPain(mobj_t * actor)
 {
-    A_Pain(actor);
     if (actor->z <= actor->floorz)
     {
         actor->momz = 3.5 * FRACUNIT;
@@ -6304,7 +6268,6 @@ void A_DragonFX2(mobj_t * actor)
 
 void A_DragonPain(mobj_t * actor)
 {
-    A_Pain(actor);
     if (!actor->special1.m)
     {                           // no destination spot yet
         P_SetMobjState(actor, HEXEN_S_DRAGON_INIT);
