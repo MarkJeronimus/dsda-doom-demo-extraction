@@ -89,7 +89,6 @@ extern int sts_traditional_keys;
 void I_Init2(void);
 void M_ChangeDemoSmoothTurns(void);
 void M_ChangeSkyMode(void);
-void M_ChangeMessages(void);
 void M_ChangeAllowFog(void);
 void gld_ResetShadowParameters(void);
 void gld_MultisamplingInit(void);
@@ -317,10 +316,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
   [dsda_config_autorun] = {
     "autorun", dsda_config_autorun,
     CONF_BOOL(1)
-  },
-  [dsda_config_show_messages] = {
-    "show_messages", dsda_config_show_messages,
-    CONF_BOOL(1), NULL, NOT_STRICT, M_ChangeMessages
   },
   [dsda_config_command_display] = {
     "dsda_command_display", dsda_config_command_display,

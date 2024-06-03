@@ -83,7 +83,6 @@
 #include "dsda/game_controller.h"
 #include "dsda/global.h"
 #include "dsda/mapinfo.h"
-#include "dsda/messenger.h"
 #include "dsda/settings.h"
 #include "dsda/key_frame.h"
 #include "dsda/input.h"
@@ -1244,14 +1243,6 @@ void M_EndGame(int choice)
     return;
     }
   M_StartMessage(s_ENDGAME,M_EndGameResponse,true); // Ty 03/27/98 - externalized
-}
-
-void M_ChangeMessages(void)
-{
-  if (!dsda_ShowMessages())
-    dsda_AddUnblockableMessage(s_MSGOFF);
-  else
-    dsda_AddMessage(s_MSGON);
 }
 
 /////////////////////////////
@@ -2483,7 +2474,6 @@ setup_menu_t stat_settings1[] =  // Status Bar and HUD Settings screen
   { "SINGLE KEY DISPLAY", S_YESNO, m_conf, SB_X, dsda_config_sts_traditional_keys },
   EMPTY_LINE,
   { "HEADS-UP DISPLAY", S_SKIP | S_TITLE, m_null, SB_X},
-  { "SHOW MESSAGES", S_YESNO, m_conf, SB_X, dsda_config_show_messages },
   { "HEALTH LOW/OK", S_NUM, m_conf, SB_X, dsda_config_hud_health_red },
   { "HEALTH OK/GOOD", S_NUM, m_conf, SB_X, dsda_config_hud_health_yellow },
   { "HEALTH GOOD/EXTRA", S_NUM, m_conf, SB_X, dsda_config_hud_health_green },
@@ -4023,7 +4013,6 @@ static toggle_input_t toggle_inputs[] = {
   { dsda_input_novert, dsda_config_vertmouse, true, false, "Vertical Mouse Movement", .play_sound = true },
   { dsda_input_mlook, dsda_config_freelook, true, true, "Free Look", .play_sound = true },
   { dsda_input_autorun, dsda_config_autorun, true, true, "Auto Run", .play_sound = true },
-  { dsda_input_messages, dsda_config_show_messages, true, true, "Messages" },
   { dsda_input_command_display, dsda_config_command_display, false, true, "Command Display" },
   { dsda_input_coordinate_display, dsda_config_coordinate_display, false, true, "Coordinate Display" },
   { dsda_input_fps, dsda_config_show_fps, true, true, "FPS" },
@@ -4985,13 +4974,7 @@ dboolean M_Responder (event_t* ev) {
     // Toggle gamma
     if (dsda_InputActivated(dsda_input_gamma))
     {
-//e6y
       dsda_CycleConfig(dsda_config_usegamma, true);
-      dsda_AddMessage(usegamma == 0 ? s_GAMMALVL0 :
-                      usegamma == 1 ? s_GAMMALVL1 :
-                      usegamma == 2 ? s_GAMMALVL2 :
-                      usegamma == 3 ? s_GAMMALVL3 :
-                      s_GAMMALVL4);
       return true;
     }
 

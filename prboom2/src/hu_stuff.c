@@ -58,7 +58,6 @@
 #include "dsda/exhud.h"
 #include "dsda/map_format.h"
 #include "dsda/mapinfo.h"
-#include "dsda/messenger.h"
 #include "dsda/pause.h"
 #include "dsda/settings.h"
 #include "dsda/stretch.h"
@@ -318,12 +317,7 @@ void HU_AnnounceMap(void)
         dsda_string_t message;
 
         dsda_StringPrintF(&message, "%s by %s", hud_title.string, author);
-        dsda_AddAlert(message.string);
         dsda_FreeString(&message);
-      }
-      else
-      {
-        dsda_AddAlert(hud_title.string);
       }
     }
   }
@@ -399,8 +393,6 @@ void HU_Ticker(void)
 {
   int i;
 
-  dsda_UpdateMessenger();
-
   // centered messages
   for (i = 0; i < g_maxplayers; i++)
   {
@@ -429,8 +421,6 @@ dboolean HU_Responder(event_t *ev)
 {
   if (dsda_InputActivated(dsda_input_repeat_message)) // phares
   {
-    dsda_ReplayMessage();
-
     return true;
   }
 

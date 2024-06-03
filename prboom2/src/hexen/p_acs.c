@@ -494,12 +494,6 @@ dboolean P_StartACS(int number, int map, byte * args, mobj_t * activator,
         return AddToACSStore(map, number, args);
     }
     infoIndex = GetACSIndex(number);
-    if (infoIndex == -1)
-    {                           // Script not found
-        //I_Error("P_StartACS: Unknown script number %d", number);
-        snprintf(ErrorMsg, sizeof(ErrorMsg), "P_STARTACS ERROR: UNKNOWN SCRIPT %d", number);
-        P_SetMessage(&players[consoleplayer], ErrorMsg, true);
-    }
     statePtr = &ACSInfo[infoIndex].state;
     if (*statePtr == ASTE_SUSPENDED)
     {                           // Resume a suspended script
@@ -580,9 +574,6 @@ dboolean P_StartLockedACS(line_t * line, byte * args, mobj_t * mo, int side)
     {
         if (!mo->player->cards[lock - 1])
         {
-            snprintf(LockedBuffer, sizeof(LockedBuffer),
-                     "YOU NEED THE %s\n", TextKeyMessages[lock - 1]);
-            P_SetMessage(mo->player, LockedBuffer, true);
             return false;
         }
     }
@@ -1566,21 +1557,11 @@ static int CmdEndPrint(void)
     {
         player = &players[consoleplayer];
     }
-    P_SetMessage(player, PrintBuffer, true);
     return SCRIPT_CONTINUE;
 }
 
 static int CmdEndPrintBold(void)
 {
-    int i;
-
-    for (i = 0; i < g_maxplayers; i++)
-    {
-        if (playeringame[i])
-        {
-            P_SetYellowMessage(&players[i], PrintBuffer, true);
-        }
-    }
     return SCRIPT_CONTINUE;
 }
 

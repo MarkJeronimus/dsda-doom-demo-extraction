@@ -43,7 +43,6 @@
 
 #include "dsda/id_list.h"
 #include "dsda/map_format.h"
-#include "dsda/messenger.h"
 
 #include "hexen/p_acs.h"
 #include "hexen/sn_sonix.h"
@@ -453,7 +452,6 @@ int EV_DoLockedDoor
     case 133:
       if (!p->cards[it_bluecard] && !p->cards[it_blueskull])
       {
-        dsda_AddPlayerMessage(s_PD_BLUEO, p);
         return 0;
       }
       break;
@@ -462,7 +460,6 @@ int EV_DoLockedDoor
     case 135:
       if (!p->cards[it_redcard] && !p->cards[it_redskull])
       {
-        dsda_AddPlayerMessage(s_PD_REDO, p);
         return 0;
       }
       break;
@@ -471,7 +468,6 @@ int EV_DoLockedDoor
     case 137:
       if (!p->cards[it_yellowcard] && !p->cards[it_yellowskull])
       {
-        dsda_AddPlayerMessage(s_PD_YELLOWO, p);
         return 0;
       }
       break;
@@ -609,7 +605,6 @@ int EV_VerticalDoor
         return 0;
       if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
       {
-          dsda_AddPlayerMessage(s_PD_BLUEK, player);
           return 0;
       }
       break;
@@ -620,7 +615,6 @@ int EV_VerticalDoor
           return 0;
       if (!player->cards[it_yellowcard] && !player->cards[it_yellowskull])
       {
-          dsda_AddPlayerMessage(s_PD_YELLOWK, player);
           return 0;
       }
       break;
@@ -631,7 +625,6 @@ int EV_VerticalDoor
           return 0;
       if (!player->cards[it_redcard] && !player->cards[it_redskull])
       {
-          dsda_AddPlayerMessage(s_PD_REDK, player);
           return 0;
       }
       break;
@@ -864,7 +857,6 @@ void Heretic_EV_VerticalDoor(line_t * line, mobj_t * thing)
             }
             if (!player->cards[key_blue])
             {
-                P_SetMessage(player, HERETIC_TXT_NEEDBLUEKEY, false);
                 return;
             }
             break;
@@ -876,7 +868,6 @@ void Heretic_EV_VerticalDoor(line_t * line, mobj_t * thing)
             }
             if (!player->cards[key_yellow])
             {
-                P_SetMessage(player, HERETIC_TXT_NEEDYELLOWKEY, false);
                 return;
             }
             break;
@@ -888,7 +879,6 @@ void Heretic_EV_VerticalDoor(line_t * line, mobj_t * thing)
             }
             if (!player->cards[key_green])
             {
-                P_SetMessage(player, HERETIC_TXT_NEEDGREENKEY, false);
                 return;
             }
             break;

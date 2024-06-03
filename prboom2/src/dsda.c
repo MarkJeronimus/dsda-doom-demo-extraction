@@ -69,7 +69,6 @@ static int dsda_time_use;
 static int dsda_time_secrets;
 
 dboolean dsda_IsWeapon(mobj_t* thing);
-void dsda_DisplayNotification(const char* msg);
 void dsda_ResetMapVariables(void);
 
 dboolean dsda_ILComplete(void) {
@@ -198,14 +197,12 @@ void dsda_DisplayNotifications(void) {
 
   if (!dsda_pacifist && dsda_track_pacifist && !dsda_pacifist_note_shown) {
     dsda_pacifist_note_shown = true;
-    dsda_DisplayNotification("Not pacifist!");
   }
 
   if (dsda_100k_on_map && dsda_track_100k && !dsda_100k_note_shown) {
     dsda_TrackFeature(uf_100k);
 
     dsda_100k_note_shown = true;
-    dsda_DisplayNotification("100K achieved!");
   }
 }
 
@@ -221,10 +218,6 @@ void dsda_DecomposeMovieTime(dsda_movie_time_t* total_time) {
   total_time->h = totalleveltimes / 35 / 60 / 60;
   total_time->m = (totalleveltimes % (60 * 60 * 35)) / 35 / 60;
   total_time->s = (totalleveltimes % (60 * 35)) / 35;
-}
-
-void dsda_DisplayNotification(const char* msg) {
-  doom_printf("%s", msg);
 }
 
 void dsda_WatchReborn(int playernum) {

@@ -48,7 +48,6 @@
 #include "dsda/font.h"
 #include "dsda/global.h"
 #include "dsda/map_format.h"
-#include "dsda/messenger.h"
 #include "dsda/mobjinfo.h"
 #include "dsda/playback.h"
 #include "dsda/settings.h"
@@ -629,8 +628,6 @@ static dboolean console_GameDescribe(const char* command, const char* args) {
                           nomonsters ? "-nomo " : "",
                           respawnparm ? "-respawn " : "",
                           fastparm ? "-fast" : "");
-
-  dsda_AddAlert(str.string);
 
   dsda_FreeString(&str);
 

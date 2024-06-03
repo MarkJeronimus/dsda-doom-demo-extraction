@@ -167,7 +167,6 @@ typedef struct menu_s
 
 void M_SetupNextMenu(menu_t *menudef);
 void M_DrawDelVerify(void);
-void M_ChangeMessages(void);
 
 extern dboolean delete_verify;
 

@@ -69,7 +69,6 @@
 #include "dsda/line_special.h"
 #include "dsda/map_format.h"
 #include "dsda/mapinfo.h"
-#include "dsda/messenger.h"
 #include "dsda/scroll.h"
 #include "dsda/thing_id.h"
 #include "dsda/utility.h"
@@ -943,7 +942,6 @@ dboolean P_CanUnlockGenDoor
         !player->cards[it_yellowskull]
       )
       {
-        dsda_AddPlayerMessage(s_PD_ANY, player);
         return false;
       }
       break;
@@ -954,7 +952,6 @@ dboolean P_CanUnlockGenDoor
         (!skulliscard || !player->cards[it_redskull])
       )
       {
-        dsda_AddPlayerMessage(skulliscard ? s_PD_REDK : s_PD_REDC, player);
         return false;
       }
       break;
@@ -965,7 +962,6 @@ dboolean P_CanUnlockGenDoor
         (!skulliscard || !player->cards[it_blueskull])
       )
       {
-        dsda_AddPlayerMessage(skulliscard ? s_PD_BLUEK : s_PD_BLUEC, player);
         return false;
       }
       break;
@@ -976,7 +972,6 @@ dboolean P_CanUnlockGenDoor
         (!skulliscard || !player->cards[it_yellowskull])
       )
       {
-        dsda_AddPlayerMessage(skulliscard ? s_PD_YELLOWK : s_PD_YELLOWC, player);
         return false;
       }
       break;
@@ -987,7 +982,6 @@ dboolean P_CanUnlockGenDoor
         (!skulliscard || !player->cards[it_redcard])
       )
       {
-        dsda_AddPlayerMessage(skulliscard ? s_PD_REDK : s_PD_REDS, player);
         return false;
       }
       break;
@@ -998,7 +992,6 @@ dboolean P_CanUnlockGenDoor
         (!skulliscard || !player->cards[it_bluecard])
       )
       {
-        dsda_AddPlayerMessage(skulliscard ? s_PD_BLUEK : s_PD_BLUES, player);
         return false;
       }
       break;
@@ -1009,7 +1002,6 @@ dboolean P_CanUnlockGenDoor
         (!skulliscard || !player->cards[it_yellowcard])
       )
       {
-        dsda_AddPlayerMessage(skulliscard ? s_PD_YELLOWK : s_PD_YELLOWS, player);
         return false;
       }
       break;
@@ -1027,7 +1019,6 @@ dboolean P_CanUnlockGenDoor
         )
       )
       {
-        dsda_AddPlayerMessage(s_PD_ALL6, player);
         return false;
       }
       if
@@ -1050,7 +1041,6 @@ dboolean P_CanUnlockGenDoor
         )
       )
       {
-        dsda_AddPlayerMessage(s_PD_ALL3, player);
         return false;
       }
       break;
@@ -1061,7 +1051,6 @@ dboolean P_CanUnlockGenDoor
 dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
 {
   player_t *player;
-  const char *message = NULL;
   dboolean successful = true;
 
   if (!mo || !mo->player)
@@ -1076,42 +1065,36 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
     case zk_red_card:
       if (!player->cards[it_redcard])
       {
-        message = legacy ? s_PD_REDC : NULL;
         successful = false;
       }
       break;
     case zk_blue_card:
       if (!player->cards[it_bluecard])
       {
-        message = legacy ? s_PD_BLUEC : NULL;
         successful = false;
       }
       break;
     case zk_yellow_card:
       if (!player->cards[it_yellowcard])
       {
-        message = legacy ? s_PD_YELLOWC : NULL;
         successful = false;
       }
       break;
     case zk_red_skull:
       if (!player->cards[it_redskull])
       {
-        message = legacy ? s_PD_REDS : NULL;
         successful = false;
       }
       break;
     case zk_blue_skull:
       if (!player->cards[it_blueskull])
       {
-        message = legacy ? s_PD_BLUES : NULL;
         successful = false;
       }
       break;
     case zk_yellow_skull:
       if (!player->cards[it_yellowskull])
       {
-        message = legacy ? s_PD_YELLOWS : NULL;
         successful = false;
       }
       break;
@@ -1125,7 +1108,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
         !player->cards[it_yellowskull]
       )
       {
-        message = legacy ? s_PD_ANY : NULL;
         successful = false;
       }
       break;
@@ -1139,7 +1121,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
         !player->cards[it_yellowskull]
       )
       {
-        message = legacy ? s_PD_ALL6 : NULL;
         successful = false;
       }
       break;
@@ -1147,7 +1128,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
     case zk_redx:
       if (!player->cards[it_redcard] && !player->cards[it_redskull])
       {
-        message = legacy ? s_PD_REDK : NULL;
         successful = false;
       }
       break;
@@ -1155,7 +1135,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
     case zk_bluex:
       if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
       {
-        message = legacy ? s_PD_BLUEK : NULL;
         successful = false;
       }
       break;
@@ -1163,7 +1142,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
     case zk_yellowx:
       if (!player->cards[it_yellowcard] && !player->cards[it_yellowskull])
       {
-        message = legacy ? s_PD_YELLOWK : NULL;
         successful = false;
       }
       break;
@@ -1174,16 +1152,10 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
         (!player->cards[it_yellowcard] && !player->cards[it_yellowskull])
       )
       {
-        message = legacy ? s_PD_ALL3 : NULL;
         successful = false;
       }
     default:
       break;
-  }
-
-  if (message)
-  {
-    dsda_AddPlayerMessage(message, player);
   }
 
   return successful;
@@ -5291,8 +5263,6 @@ char LockedBuffer[80];
 
 static dboolean CheckedLockedDoor(mobj_t * mo, byte lock)
 {
-    extern char *TextKeyMessages[11];
-
     if (!mo->player)
     {
         return false;
@@ -5303,9 +5273,6 @@ static dboolean CheckedLockedDoor(mobj_t * mo, byte lock)
     }
     if (!mo->player->cards[lock - 1])
     {
-        snprintf(LockedBuffer, sizeof(LockedBuffer),
-                 "YOU NEED THE %s\n", TextKeyMessages[lock - 1]);
-        P_SetMessage(mo->player, LockedBuffer, true);
         return false;
     }
     return true;

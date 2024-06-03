@@ -96,7 +96,6 @@
 #include "dsda/features.h"
 #include "dsda/key_frame.h"
 #include "dsda/mapinfo.h"
-#include "dsda/messenger.h"
 #include "dsda/save.h"
 #include "dsda/settings.h"
 #include "dsda/input.h"
@@ -1189,8 +1188,6 @@ static void G_DoLoadLevel (void)
 
   // [RH] Set up details about sky rendering
   R_InitSkyMap ();
-
-  dsda_InitMessenger();
 
   levelstarttic = gametic;        // for time calculation
 
@@ -4017,8 +4014,6 @@ void doom_printf(const char *s, ...)
   va_start(v,s);
   vsnprintf(msg,sizeof(msg),s,v);   /* print message in buffer */
   va_end(v);
-
-  dsda_AddMessage(msg);
 }
 
 //e6y
@@ -4263,7 +4258,6 @@ void G_Completed(int map, int position, int flags, angle_t angle)
 {
     if (hexen && gamemode == shareware && map > 4)
     {
-        P_SetMessage(&players[consoleplayer], "ACCESS DENIED -- DEMO", true);
         return;
     }
 

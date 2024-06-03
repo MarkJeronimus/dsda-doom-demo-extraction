@@ -167,8 +167,6 @@ set(COMMON_SRC
     dsda/mapinfo/legacy.h
     dsda/mapinfo/u.c
     dsda/mapinfo/u.h
-    dsda/messenger.c
-    dsda/messenger.h
     dsda/mobjinfo.c
     dsda/mobjinfo.h
     dsda/mouse.c
