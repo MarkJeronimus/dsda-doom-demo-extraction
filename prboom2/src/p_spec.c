@@ -1422,9 +1422,7 @@ void P_PlayerCollectSecret(player_t *player)
 
   if (dsda_IntConfig(dsda_config_hudadd_secretarea))
   {
-    int sfx_id = raven ? g_sfx_secret :
-                 I_GetSfxLumpNum(&S_sfx[g_sfx_secret]) < 0 ? sfx_itmbk : g_sfx_secret;
-    SetCustomMessage(player - players, "A secret is revealed!", 2 * TICRATE, sfx_id);
+    SetCustomMessage(player - players, "A secret is revealed!", 2 * TICRATE);
   }
 }
 

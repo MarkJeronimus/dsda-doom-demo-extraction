@@ -69,7 +69,6 @@ static player_t*  plr;
 typedef struct custom_message_s
 {
   int ticks;
-  int sfx;
   const char *msg;
 } custom_message_t;
 
@@ -439,18 +438,17 @@ dboolean HU_Responder(event_t *ev)
   return false;
 }
 
-int SetCustomMessage(int plr, const char *msg, int ticks, int sfx)
+int SetCustomMessage(int plr, const char *msg, int ticks)
 {
   custom_message_t item;
 
-  if (plr < 0 || plr >= g_maxplayers || !msg || ticks < 0 || sfx < 0 || sfx >= num_sfx)
+  if (plr < 0 || plr >= g_maxplayers || !msg || ticks < 0)
   {
     return false;
   }
 
   item.msg = msg;
   item.ticks = ticks;
-  item.sfx = sfx;
 
   custom_message[plr] = item;
 

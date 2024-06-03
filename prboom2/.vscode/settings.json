@@ -39,6 +39,10 @@
         "data_organizer.h": "c",
         "exdemo.h": "c",
         "sounds.h": "c",
-        "e6y.h": "c"
+        "e6y.h": "c",
+        "z_zone.h": "c",
+        "sdl_thread.h": "c",
+        "s_sound.h": "c",
+        "memory.h": "c"
     }
 }
