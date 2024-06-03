@@ -170,6 +170,4 @@ void M_DrawDelVerify(void);
 
 extern dboolean delete_verify;
 
-dboolean M_ConsoleOpen(void);
-
 #endif

@@ -90,7 +90,6 @@
 #include "dsda/skill_info.h"
 #include "dsda/skip.h"
 #include "dsda/time.h"
-#include "dsda/console.h"
 #include "dsda/stretch.h"
 #include "dsda/text_color.h"
 #include "dsda/utility.h"
@@ -2224,7 +2223,6 @@ setup_menu_t dsda_keys_settings[] = {
   { "Rewind", S_INPUT, m_scrn, KB_X, 0, dsda_input_rewind },
   { "Cycle Input Profile", S_INPUT, m_scrn, KB_X, 0, dsda_input_cycle_profile },
   { "Cycle Palette", S_INPUT, m_scrn, KB_X, 0, dsda_input_cycle_palette },
-  { "Open Console", S_INPUT, m_scrn, KB_X, 0, dsda_input_console },
   { "Fake Archvile Jump", S_INPUT, m_scrn, KB_X, 0, dsda_input_avj },
   EMPTY_LINE,
   { "Toggles", S_SKIP | S_TITLE, m_null, KB_X},
@@ -3930,11 +3928,6 @@ static void M_HandleToggles(void)
   }
 }
 
-dboolean M_ConsoleOpen(void)
-{
-  return menuactive && currentMenu == &dsda_ConsoleDef;
-}
-
 static void M_LeaveSetupMenu(void)
 {
   M_SetSetupMenuItemOn(set_menu_itemon);
@@ -4677,21 +4670,6 @@ dboolean M_Responder (event_t* ev) {
     action = MENU_CLEAR;
   }
 
-  if (M_ConsoleOpen() && action != MENU_ESCAPE)
-  {
-    if (ev->type == ev_text) {
-      dsda_UpdateConsoleText(ev->text);
-      return true;
-    }
-    else if (action != MENU_NULL)
-    {
-      dsda_UpdateConsole(action);
-      return true;
-    }
-    else if (ch != MENU_NULL)
-      return true;
-  }
-
   // Save Game string input
 
   if (saveStringEnter && (ch != MENU_NULL || action != MENU_NULL)) {
@@ -4842,23 +4820,6 @@ dboolean M_Responder (event_t* ev) {
     {
       M_QuitDOOM(0);
       return true;
-    }
-
-    if (dsda_InputActivated(dsda_input_console))
-    {
-      dsda_OpenConsole();
-      return true;
-    }
-
-    {
-      int i;
-
-      for (i = 0; i < CONSOLE_SCRIPT_COUNT; ++i)
-        if (dsda_InputActivated(dsda_input_script_0 + i)) {
-          dsda_ExecuteConsoleScript(i);
-
-          return true;
-        }
     }
 
     // Toggle gamma

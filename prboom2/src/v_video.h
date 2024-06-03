@@ -275,7 +275,6 @@ int V_BloodColor(int blood);
 #include "gl_struct.h"
 
 void V_FillRectVPT(int scrn, int x, int y, int width, int height, byte color, enum patch_translation_e flags);
-int V_FillHeightVPT(int scrn, int y, int height, byte color, enum patch_translation_e flags);
 
 // heretic
 

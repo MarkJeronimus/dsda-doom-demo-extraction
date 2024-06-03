@@ -525,9 +525,6 @@ static void V_DrawMemPatch(int x, int y, int scrn, const rpatch_t *patch,
 
     deltay1 = params->deltay1;
 
-    if (TOP_ALIGNMENT(flags & VPT_STRETCH_MASK))
-      deltay1 += global_patch_top_offset;
-
     left   += params->deltax1;
     right  += params->deltax2;
     top    += deltay1;
@@ -1401,19 +1398,6 @@ void V_FillRectVPT(int scrn, int x, int y, int width, int height, byte color, en
 {
   V_GetWideRect(&x, &y, &width, &height, flags);
   V_FillRect(scrn, x, y, width, height, color);
-}
-
-int V_FillHeightVPT(int scrn, int y, int height, byte color, enum patch_translation_e flags)
-{
-  stretch_param_t *params = dsda_StretchParams(flags);
-  int sy = y;
-
-  y = params->video->y1lookup[y];
-  height = params->video->y2lookup[sy + height - 1] - y + 1;
-  y += params->deltay1;
-  V_FillRect(scrn, 0, y, SCREENWIDTH, height, color);
-
-  return height;
 }
 
 // heretic

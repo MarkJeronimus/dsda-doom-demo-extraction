@@ -27,8 +27,6 @@ set(COMMON_SRC
     dsda/compatibility.h
     dsda/configuration.c
     dsda/configuration.h
-    dsda/console.c
-    dsda/console.h
     dsda/cr_table.c
     dsda/cr_table.h
     dsda/data_organizer.c

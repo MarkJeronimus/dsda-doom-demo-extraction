@@ -27,7 +27,6 @@
 #include "w_wad.h"
 
 #include "dsda/args.h"
-#include "dsda/console.h"
 #include "dsda/global.h"
 #include "dsda/hud_components.h"
 #include "dsda/render_stats.h"
@@ -667,19 +666,13 @@ static void dsda_DrawComponents(exhud_component_t* draw_components) {
       draw_components[i].draw(draw_components[i].data);
 }
 
-int global_patch_top_offset;
-
 void dsda_DrawExHud(void) {
-  global_patch_top_offset = M_ConsoleOpen() ? dsda_ConsoleHeight() : 0;
-
   if (automap_on) {
     if (containers[hud_map].loaded)
       dsda_DrawComponents(containers[hud_map].components);
   }
   else if (dsda_HUDActive())
     dsda_DrawComponents(components);
-
-  global_patch_top_offset = 0;
 }
 
 void dsda_DrawExIntermission(void) {
