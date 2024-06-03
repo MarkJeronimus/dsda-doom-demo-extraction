@@ -279,7 +279,6 @@ void M_CheatGod(void)
                 plyr->mo->y + 20*finesine[an],
                 plyr->mo->z + g_telefog_height,
                 g_mt_tfog);
-    S_StartMobjSound(plyr->mo, g_sfx_revive);
     P_MapEnd();
   }
 

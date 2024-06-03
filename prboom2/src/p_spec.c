@@ -946,7 +946,6 @@ dboolean P_CanUnlockGenDoor
       )
       {
         dsda_AddPlayerMessage(s_PD_ANY, player);
-        S_StartMobjSound(player->mo,sfx_oof);             // killough 3/20/98
         return false;
       }
       break;
@@ -958,7 +957,6 @@ dboolean P_CanUnlockGenDoor
       )
       {
         dsda_AddPlayerMessage(skulliscard ? s_PD_REDK : s_PD_REDC, player);
-        S_StartMobjSound(player->mo,sfx_oof);             // killough 3/20/98
         return false;
       }
       break;
@@ -970,7 +968,6 @@ dboolean P_CanUnlockGenDoor
       )
       {
         dsda_AddPlayerMessage(skulliscard ? s_PD_BLUEK : s_PD_BLUEC, player);
-        S_StartMobjSound(player->mo,sfx_oof);             // killough 3/20/98
         return false;
       }
       break;
@@ -982,7 +979,6 @@ dboolean P_CanUnlockGenDoor
       )
       {
         dsda_AddPlayerMessage(skulliscard ? s_PD_YELLOWK : s_PD_YELLOWC, player);
-        S_StartMobjSound(player->mo,sfx_oof);             // killough 3/20/98
         return false;
       }
       break;
@@ -994,7 +990,6 @@ dboolean P_CanUnlockGenDoor
       )
       {
         dsda_AddPlayerMessage(skulliscard ? s_PD_REDK : s_PD_REDS, player);
-        S_StartMobjSound(player->mo,sfx_oof);             // killough 3/20/98
         return false;
       }
       break;
@@ -1006,7 +1001,6 @@ dboolean P_CanUnlockGenDoor
       )
       {
         dsda_AddPlayerMessage(skulliscard ? s_PD_BLUEK : s_PD_BLUES, player);
-        S_StartMobjSound(player->mo,sfx_oof);             // killough 3/20/98
         return false;
       }
       break;
@@ -1018,7 +1012,6 @@ dboolean P_CanUnlockGenDoor
       )
       {
         dsda_AddPlayerMessage(skulliscard ? s_PD_YELLOWK : s_PD_YELLOWS, player);
-        S_StartMobjSound(player->mo,sfx_oof);             // killough 3/20/98
         return false;
       }
       break;
@@ -1037,7 +1030,6 @@ dboolean P_CanUnlockGenDoor
       )
       {
         dsda_AddPlayerMessage(s_PD_ALL6, player);
-        S_StartMobjSound(player->mo,sfx_oof);             // killough 3/20/98
         return false;
       }
       if
@@ -1061,7 +1053,6 @@ dboolean P_CanUnlockGenDoor
       )
       {
         dsda_AddPlayerMessage(s_PD_ALL3, player);
-        S_StartMobjSound(player->mo,sfx_oof);             // killough 3/20/98
         return false;
       }
       break;
@@ -1073,7 +1064,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
 {
   player_t *player;
   const char *message = NULL;
-  int sfx = sfx_None;
   dboolean successful = true;
 
   if (!mo || !mo->player)
@@ -1089,7 +1079,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       if (!player->cards[it_redcard])
       {
         message = legacy ? s_PD_REDC : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1097,7 +1086,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       if (!player->cards[it_bluecard])
       {
         message = legacy ? s_PD_BLUEC : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1105,7 +1093,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       if (!player->cards[it_yellowcard])
       {
         message = legacy ? s_PD_YELLOWC : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1113,7 +1100,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       if (!player->cards[it_redskull])
       {
         message = legacy ? s_PD_REDS : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1121,7 +1107,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       if (!player->cards[it_blueskull])
       {
         message = legacy ? s_PD_BLUES : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1129,7 +1114,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       if (!player->cards[it_yellowskull])
       {
         message = legacy ? s_PD_YELLOWS : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1144,7 +1128,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       )
       {
         message = legacy ? s_PD_ANY : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1159,7 +1142,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       )
       {
         message = legacy ? s_PD_ALL6 : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1168,7 +1150,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       if (!player->cards[it_redcard] && !player->cards[it_redskull])
       {
         message = legacy ? s_PD_REDK : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1177,7 +1158,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
       {
         message = legacy ? s_PD_BLUEK : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1186,7 +1166,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       if (!player->cards[it_yellowcard] && !player->cards[it_yellowskull])
       {
         message = legacy ? s_PD_YELLOWK : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
       break;
@@ -1198,7 +1177,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
       )
       {
         message = legacy ? s_PD_ALL3 : NULL;
-        sfx = legacy ? sfx_oof : sfx_None;
         successful = false;
       }
     default:
@@ -1208,11 +1186,6 @@ dboolean P_CheckKeys(mobj_t *mo, zdoom_lock_t lock, dboolean legacy)
   if (message)
   {
     dsda_AddPlayerMessage(message, player);
-  }
-
-  if (sfx != sfx_None)
-  {
-    S_StartMobjSound(mo, sfx);
   }
 
   return successful;
@@ -5277,7 +5250,6 @@ void P_PlayerOnSpecialFlat(player_t * player, int floorType)
             if (!(leveltime & 31))
             {
                 P_DamageMobj(player->mo, &LavaInflictor, NULL, 10);
-                S_StartMobjSound(player->mo, hexen_sfx_lava_sizzle);
             }
             break;
         default:
@@ -5338,7 +5310,6 @@ static dboolean CheckedLockedDoor(mobj_t * mo, byte lock)
         snprintf(LockedBuffer, sizeof(LockedBuffer),
                  "YOU NEED THE %s\n", TextKeyMessages[lock - 1]);
         P_SetMessage(mo->player, LockedBuffer, true);
-        S_StartMobjSound(mo, hexen_sfx_door_locked);
         return false;
     }
     return true;

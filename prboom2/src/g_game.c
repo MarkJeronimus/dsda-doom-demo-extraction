@@ -1915,7 +1915,6 @@ static dboolean G_CheckSpot(int playernum, mapthing_t *mthing)
   if (raven)
   {
     unsigned an;
-    mobj_t *mo;
 
     players[playernum].mo->flags2 &= ~MF2_PASSMOBJ;
     if (!P_CheckPosition(players[playernum].mo, x, y))
@@ -1929,11 +1928,8 @@ static dboolean G_CheckSpot(int playernum, mapthing_t *mthing)
     ss = R_PointInSubsector(x, y);
     an = ((unsigned) ANG45 * (mthing->angle / 45)) >> ANGLETOFINESHIFT;
 
-    mo = P_SpawnMobj(x + 20 * finecosine[an], y + 20 * finesine[an],
-                     ss->sector->floorheight + TELEFOGHEIGHT, g_mt_tfog);
-
-    if (players[consoleplayer].viewz != 1)
-      S_StartMobjSound(mo, g_sfx_telept);   // don't start sound on first frame
+    P_SpawnMobj(x + 20 * finecosine[an], y + 20 * finesine[an],
+                ss->sector->floorheight + TELEFOGHEIGHT, g_mt_tfog);
 
     return true;
   }
@@ -1962,7 +1958,6 @@ static dboolean G_CheckSpot(int playernum, mapthing_t *mthing)
   { // Teleport fog at respawn point
     fixed_t xa,ya;
     int an;
-    mobj_t      *mo;
 
 /* BUG: an can end up negative, because mthing->angle is (signed) short.
  * We have to emulate original Doom's behaviour, deferencing past the start
@@ -1991,12 +1986,9 @@ static dboolean G_CheckSpot(int playernum, mapthing_t *mthing)
       case 4096:
       case 0:  break; /* correct angles set above */
       default:  I_Error("G_CheckSpot: unexpected angle %d\n",an);
-      }
+    }
 
-    mo = P_SpawnMobj(x+20*xa, y+20*ya, ss->sector->floorheight, MT_TFOG);
-
-    if (players[consoleplayer].viewz != 1)
-      S_StartMobjSound(mo, sfx_telept);  // don't start sound on first frame
+    P_SpawnMobj(x+20*xa, y+20*ya, ss->sector->floorheight, MT_TFOG);
   }
 
   return true;

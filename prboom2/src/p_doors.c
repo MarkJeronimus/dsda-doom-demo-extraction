@@ -466,7 +466,6 @@ int EV_DoLockedDoor
       if (!p->cards[it_bluecard] && !p->cards[it_blueskull])
       {
         dsda_AddPlayerMessage(s_PD_BLUEO, p);
-        S_StartMobjSound(p->mo,sfx_oof);         // killough 3/20/98
         return 0;
       }
       break;
@@ -476,7 +475,6 @@ int EV_DoLockedDoor
       if (!p->cards[it_redcard] && !p->cards[it_redskull])
       {
         dsda_AddPlayerMessage(s_PD_REDO, p);
-        S_StartMobjSound(p->mo,sfx_oof);         // killough 3/20/98
         return 0;
       }
       break;
@@ -486,7 +484,6 @@ int EV_DoLockedDoor
       if (!p->cards[it_yellowcard] && !p->cards[it_yellowskull])
       {
         dsda_AddPlayerMessage(s_PD_YELLOWO, p);
-        S_StartMobjSound(p->mo,sfx_oof);         // killough 3/20/98
         return 0;
       }
       break;
@@ -632,7 +629,6 @@ int EV_VerticalDoor
       if (!player->cards[it_bluecard] && !player->cards[it_blueskull])
       {
           dsda_AddPlayerMessage(s_PD_BLUEK, player);
-          S_StartMobjSound(player->mo,sfx_oof);     // killough 3/20/98
           return 0;
       }
       break;
@@ -644,7 +640,6 @@ int EV_VerticalDoor
       if (!player->cards[it_yellowcard] && !player->cards[it_yellowskull])
       {
           dsda_AddPlayerMessage(s_PD_YELLOWK, player);
-          S_StartMobjSound(player->mo,sfx_oof);     // killough 3/20/98
           return 0;
       }
       break;
@@ -656,7 +651,6 @@ int EV_VerticalDoor
       if (!player->cards[it_redcard] && !player->cards[it_redskull])
       {
           dsda_AddPlayerMessage(s_PD_REDK, player);
-          S_StartMobjSound(player->mo,sfx_oof);     // killough 3/20/98
           return 0;
       }
       break;
@@ -668,7 +662,6 @@ int EV_VerticalDoor
   // if the wrong side of door is pushed, give oof sound
   if (line->sidenum[1]==NO_INDEX)                     // killough
   {
-    S_StartMobjSound(player->mo,sfx_oof);           // killough 3/20/98
     return 0;
   }
 
@@ -1079,8 +1072,6 @@ int EV_DoZDoomDoor(vldoor_e type, line_t *line, mobj_t *mo, int tag, fixed_t spe
     // if the wrong side of door is pushed, give oof sound
     if (line->sidenum[1] == NO_INDEX)
     {
-      if (mo->player) // is this check necessary?
-        S_StartMobjSound(mo, sfx_oof);
       return 0;
     }
 

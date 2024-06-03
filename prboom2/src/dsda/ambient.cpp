@@ -82,7 +82,6 @@ void dsda_UpdateAmbientSource(ambient_source_t* source) {
     else {
       S_AdjustAttenuation(source->data.attenuation);
       S_AdjustVolume(source->data.volume);
-      S_StartMobjSound(source->mobj, source->data.sfx_id);
       S_ResetAdjustments();
     }
   }

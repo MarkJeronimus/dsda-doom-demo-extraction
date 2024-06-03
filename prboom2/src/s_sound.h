@@ -58,8 +58,6 @@ void S_Start(void);
 
 void S_StartSectorSound(sector_t *sector, int sfx_id);
 
-void S_StartMobjSound(mobj_t *mobj, int sfx_id);
-
 void S_StartVoidSound(int sfx_id);
 
 // killough 4/25/98: mask used to indicate sound origin is player item pickup

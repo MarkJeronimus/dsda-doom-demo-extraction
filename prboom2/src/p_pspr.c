@@ -164,9 +164,6 @@ static void P_BringUpWeapon(player_t *player)
   if (player->pendingweapon == wp_nochange)
     player->pendingweapon = player->readyweapon;
 
-  if (player->pendingweapon == g_wp_chainsaw)
-    S_StartMobjSound(player->mo, g_sfx_sawup);
-
   if (player->pendingweapon >= NUMWEAPONS)
     lprintf(LO_WARN, "P_BringUpWeapon: weaponinfo overrun has occurred.\n");
 
@@ -511,15 +508,6 @@ static void P_FireWeapon(player_t *player)
   P_SetPsprite(player, ps_weapon, newstate);
   if (hexen || !(weaponinfo[player->readyweapon].flags & WPF_SILENT))
     P_NoiseAlert(player->mo, player->mo);
-
-  // heretic_note: does the order matter? can we move it up?
-  if (heretic)
-  {
-    if (player->readyweapon == wp_gauntlets && !player->refire)
-    {                           // Play the sound for the initial gauntlet attack
-        S_StartMobjSound(player->mo, heretic_sfx_gntuse);
-    }
-  }
 }
 
 //
@@ -571,19 +559,11 @@ void A_WeaponReady(player_t *player, pspdef_t *psp)
   if (heretic)
   {
     if (player->readyweapon == wp_staff
-        && psp->state == &states[HERETIC_S_STAFFREADY2_1]
-        && P_Random(pr_heretic) < 128)
+        && psp->state == &states[HERETIC_S_STAFFREADY2_1])
     {
-        S_StartMobjSound(player->mo, heretic_sfx_stfcrk);
+      P_Random(pr_heretic); // Sound
     }
   }
-  else if (hexen)
-  {
-    // hexen does nothing here
-  }
-  else
-    if (player->readyweapon == wp_chainsaw && psp->state == &states[S_SAW])
-      S_StartMobjSound(player->mo, sfx_sawidl);
 
   // check for change
   //  if player is dead, put the weapon away
@@ -830,8 +810,6 @@ void A_Punch(player_t *player, pspdef_t *psp)
   if (!linetarget)
     return;
 
-  S_StartMobjSound(player->mo, sfx_punch);
-
   // turn to face target
 
   player->mo->angle = R_PointToAngle2(player->mo->x, player->mo->y,
@@ -870,11 +848,8 @@ void A_Saw(player_t *player, pspdef_t *psp)
 
   if (!linetarget)
     {
-      S_StartMobjSound(player->mo, sfx_sawful);
       return;
     }
-
-  S_StartMobjSound(player->mo, sfx_sawhit);
 
   // turn to face target
   angle = R_PointToAngle2(player->mo->x, player->mo->y,
@@ -1044,8 +1019,6 @@ void A_FirePistol(player_t *player, pspdef_t *psp)
 {
   CHECK_WEAPON_CODEPOINTER("A_FirePistol", player);
 
-  S_StartMobjSound(player->mo, sfx_pistol);
-
   P_SetMobjState(player->mo, S_PLAY_ATK2);
   P_SubtractAmmo(player, 1);
 
@@ -1064,7 +1037,6 @@ void A_FireShotgun(player_t *player, pspdef_t *psp)
 
   CHECK_WEAPON_CODEPOINTER("A_FireShotgun", player);
 
-  S_StartMobjSound(player->mo, sfx_shotgn);
   P_SetMobjState(player->mo, S_PLAY_ATK2);
 
   P_SubtractAmmo(player, 1);
@@ -1087,7 +1059,6 @@ void A_FireShotgun2(player_t *player, pspdef_t *psp)
 
   CHECK_WEAPON_CODEPOINTER("A_FireShotgun2", player);
 
-  S_StartMobjSound(player->mo, sfx_dshtgn);
   P_SetMobjState(player->mo, S_PLAY_ATK2);
   P_SubtractAmmo(player, 2);
 
@@ -1120,9 +1091,6 @@ void A_FireCGun(player_t *player, pspdef_t *psp)
 
   has_ammo = player->ammo[weaponinfo[player->readyweapon].ammo] ||
              player->cheats & CF_INFINITE_AMMO;
-
-  if (has_ammo || comp[comp_sound])
-    S_StartMobjSound(player->mo, sfx_pistol);
 
   if (!has_ammo)
     return;
@@ -1193,15 +1161,8 @@ void A_BFGSpray(mobj_t *mo)
     }
 }
 
-//
-// A_BFGsound
-//
-
 void A_BFGsound(player_t *player, pspdef_t *psp)
 {
-  CHECK_WEAPON_CODEPOINTER("A_BFGsound", player);
-
-  S_StartMobjSound(player->mo, sfx_bfg);
 }
 
 //
@@ -1308,7 +1269,7 @@ void A_WeaponBulletAttack(player_t *player, pspdef_t *psp)
 //
 void A_WeaponMeleeAttack(player_t *player, pspdef_t *psp)
 {
-  int damagebase, damagemod, zerkfactor, hitsound, range;
+  int damagebase, damagemod, zerkfactor, range;
   angle_t angle;
   int t, slope, damage;
 
@@ -1320,7 +1281,6 @@ void A_WeaponMeleeAttack(player_t *player, pspdef_t *psp)
   damagebase = psp->state->args[0];
   damagemod  = psp->state->args[1];
   zerkfactor = psp->state->args[2];
-  hitsound   = psp->state->args[3];
   range      = psp->state->args[4];
 
   if (range == 0)
@@ -1348,28 +1308,13 @@ void A_WeaponMeleeAttack(player_t *player, pspdef_t *psp)
   if (!linetarget)
     return;
 
-  // un-missed!
-  S_StartMobjSound(player->mo, hitsound);
-
   // turn to face target
   player->mo->angle = R_PointToAngle2(player->mo->x, player->mo->y, linetarget->x, linetarget->y);
   R_SmoothPlaying_Reset(player);
 }
 
-//
-// A_WeaponSound
-// Plays a sound. Usable from weapons, unlike A_PlaySound
-//   args[0]: ID of sound to play
-//   args[1]: If 1, play sound at full volume (may be useful in DM?)
-//
 void A_WeaponSound(player_t *player, pspdef_t *psp)
 {
-  CHECK_WEAPON_CODEPOINTER("A_WeaponSound", player);
-
-  if (!mbf21 || !psp->state)
-    return;
-
-  S_StartMobjSound(psp->state->args[1] ? NULL : player->mo, psp->state->args[0]);
 }
 
 //
@@ -1615,7 +1560,7 @@ void A_BeakAttackPL1(player_t * player, pspdef_t * psp)
                                             player->mo->y, linetarget->x,
                                             linetarget->y);
     }
-    S_StartMobjSound(player->mo, heretic_sfx_chicpk1 + (P_Random(pr_heretic) % 3));
+    P_Random(pr_heretic); // Sound
     player->chickenPeck = 12;
     psp->tics -= P_Random(pr_heretic) & 7;
 }
@@ -1637,7 +1582,7 @@ void A_BeakAttackPL2(player_t * player, pspdef_t * psp)
                                             player->mo->y, linetarget->x,
                                             linetarget->y);
     }
-    S_StartMobjSound(player->mo, heretic_sfx_chicpk1 + (P_Random(pr_heretic) % 3));
+    P_Random(pr_heretic); // Sound
     player->chickenPeck = 12;
     psp->tics -= P_Random(pr_heretic) & 3;
 }
@@ -1656,7 +1601,6 @@ void A_StaffAttackPL1(player_t * player, pspdef_t * psp)
     P_LineAttack(player->mo, angle, MELEERANGE, slope, damage);
     if (linetarget)
     {
-        //S_StartMobjSound(player->mo, sfx_stfhit);
         // turn to face target
         player->mo->angle = R_PointToAngle2(player->mo->x,
                                             player->mo->y, linetarget->x,
@@ -1680,7 +1624,6 @@ void A_StaffAttackPL2(player_t * player, pspdef_t * psp)
     P_LineAttack(player->mo, angle, MELEERANGE, slope, damage);
     if (linetarget)
     {
-        //S_StartMobjSound(player->mo, sfx_stfpow);
         // turn to face target
         player->mo->angle = R_PointToAngle2(player->mo->x,
                                             player->mo->y, linetarget->x,
@@ -1696,7 +1639,6 @@ void A_FireBlasterPL1(player_t * player, pspdef_t * psp)
     int damage;
 
     mo = player->mo;
-    S_StartMobjSound(mo, heretic_sfx_gldhit);
     player->ammo[am_blaster] -= USE_BLSR_AMMO_1;
     P_BulletSlope(mo);
     damage = HITDICE(4);
@@ -1707,7 +1649,6 @@ void A_FireBlasterPL1(player_t * player, pspdef_t * psp)
     }
     PuffType = HERETIC_MT_BLASTERPUFF1;
     P_LineAttack(mo, angle, MISSILERANGE, bulletslope, damage);
-    S_StartMobjSound(player->mo, heretic_sfx_blssht);
 }
 
 void A_FireBlasterPL2(player_t * player, pspdef_t * psp)
@@ -1721,7 +1662,6 @@ void A_FireBlasterPL2(player_t * player, pspdef_t * psp)
     {
         mo->thinker.function = P_BlasterMobjThinker;
     }
-    S_StartMobjSound(player->mo, heretic_sfx_blssht);
 }
 
 void A_FireGoldWandPL1(player_t * player, pspdef_t * psp)
@@ -1741,7 +1681,6 @@ void A_FireGoldWandPL1(player_t * player, pspdef_t * psp)
     }
     PuffType = HERETIC_MT_GOLDWANDPUFF1;
     P_LineAttack(mo, angle, MISSILERANGE, bulletslope, damage);
-    S_StartMobjSound(player->mo, heretic_sfx_gldhit);
 }
 
 void A_FireGoldWandPL2(player_t * player, pspdef_t * psp)
@@ -1767,7 +1706,6 @@ void A_FireGoldWandPL2(player_t * player, pspdef_t * psp)
         P_LineAttack(mo, angle, MISSILERANGE, bulletslope, damage);
         angle += ((ANG45 / 8) * 2) / 4;
     }
-    S_StartMobjSound(player->mo, heretic_sfx_gldhit);
 }
 
 void A_FireMacePL1B(player_t * player, pspdef_t * psp)
@@ -1803,7 +1741,6 @@ void A_FireMacePL1B(player_t * player, pspdef_t * psp)
         + FixedMul(ball->info->speed, finecosine[angle]);
     ball->momy = (pmo->momy >> 1)
         + FixedMul(ball->info->speed, finesine[angle]);
-    S_StartMobjSound(ball, heretic_sfx_lobsht);
     P_CheckMissileSpawn(ball);
 }
 
@@ -1866,13 +1803,11 @@ void A_MaceBallImpact(mobj_t * ball)
         ball->momz = (ball->momz * 192) >> 8;
         ball->flags2 &= ~MF2_FLOORBOUNCE;
         P_SetMobjState(ball, ball->info->spawnstate);
-        S_StartMobjSound(ball, heretic_sfx_bounce);
     }
     else
     {                           // Explode
         ball->flags |= MF_NOGRAVITY;
         ball->flags2 &= ~MF2_LOGRAV;
-        S_StartMobjSound(ball, heretic_sfx_lobhit);
     }
 }
 
@@ -1939,7 +1874,6 @@ void A_FireMacePL2(player_t * player, pspdef_t * psp)
             P_SetTarget(&mo->special1.m, linetarget);
         }
     }
-    S_StartMobjSound(player->mo, heretic_sfx_lobsht);
 }
 
 void A_DeathBallImpact(mobj_t * ball)
@@ -1996,13 +1930,11 @@ void A_DeathBallImpact(mobj_t * ball)
             ball->momy = FixedMul(ball->info->speed, finesine[angle]);
         }
         P_SetMobjState(ball, ball->info->spawnstate);
-        S_StartMobjSound(ball, heretic_sfx_pstop);
     }
     else
     {                           // Explode
         ball->flags |= MF_NOGRAVITY;
         ball->flags2 &= ~MF2_LOGRAV;
-        S_StartMobjSound(ball, heretic_sfx_phohit);
     }
 }
 
@@ -2099,7 +2031,6 @@ void A_FireSkullRodPL2(player_t * player, pspdef_t * psp)
     {
         P_SetTarget(&MissileMobj->special1.m, linetarget);
     }
-    S_StartMobjSound(MissileMobj, heretic_sfx_hrnpow);
 }
 
 void A_SkullRodPL2Seek(mobj_t * actor)
@@ -2195,10 +2126,6 @@ void A_SkullRodStorm(mobj_t * actor)
     mo->momz = -mo->info->speed;
     mo->special2.i = actor->special2.i;     // Transfer player number
     P_CheckMissileSpawn(mo);
-    if (!(actor->special1.i & 31))
-    {
-        S_StartMobjSound(actor, heretic_sfx_ramrain);
-    }
     actor->special1.i++;
 }
 
@@ -2299,10 +2226,6 @@ void A_FirePhoenixPL2(player_t * player, pspdef_t * psp)
     mo->momy = pmo->momy + FixedMul(mo->info->speed,
                                     finesine[angle >> ANGLETOFINESHIFT]);
     mo->momz = FixedMul(mo->info->speed, slope);
-    if (!player->refire || !(leveltime % 38))
-    {
-        S_StartMobjSound(player->mo, heretic_sfx_phopow);
-    }
     P_CheckMissileSpawn(mo);
 }
 
@@ -2354,7 +2277,6 @@ void A_GauntletAttack(player_t * player, pspdef_t * psp)
         {
             player->extralight = !player->extralight;
         }
-        S_StartMobjSound(player->mo, heretic_sfx_gntful);
         return;
     }
     randVal = P_Random(pr_heretic);
@@ -2373,11 +2295,6 @@ void A_GauntletAttack(player_t * player, pspdef_t * psp)
     if (player->powers[pw_weaponlevel2])
     {
         P_GiveBody(player, damage >> 1);
-        S_StartMobjSound(player->mo, heretic_sfx_gntpow);
-    }
-    else
-    {
-        S_StartMobjSound(player->mo, heretic_sfx_gnthit);
     }
     // turn to face target
     angle = R_PointToAngle2(player->mo->x, player->mo->y,
@@ -2689,14 +2606,10 @@ void A_SnoutAttack(player_t * player, pspdef_t * psp)
     PuffType = HEXEN_MT_SNOUTPUFF;
     PuffSpawned = NULL;
     P_LineAttack(player->mo, angle, MELEERANGE, slope, damage);
-    S_StartMobjSound(player->mo, hexen_sfx_pig_active1 + (P_Random(pr_hexen) & 1));
+    P_Random(pr_hexen); // Sound
     if (linetarget)
     {
         AdjustPlayerAngle(player->mo);
-        if (PuffSpawned)
-        {                       // Bit something
-            S_StartMobjSound(player->mo, hexen_sfx_pig_attack);
-        }
     }
 }
 
@@ -2796,7 +2709,6 @@ void A_FSwordAttack(player_t * player, pspdef_t * psp)
                   HEXEN_MT_FSWORD_MISSILE, pmo->angle - ANG45 / 8);
     P_SPMAngleXYZ(pmo, pmo->x, pmo->y, pmo->z + 10 * FRACUNIT,
                   HEXEN_MT_FSWORD_MISSILE, pmo->angle - ANG45 / 4);
-    S_StartMobjSound(pmo, hexen_sfx_fighter_sword_fire);
 }
 
 void A_FSwordAttack2(mobj_t * actor)
@@ -2808,7 +2720,6 @@ void A_FSwordAttack2(mobj_t * actor)
     P_SpawnMissileAngle(actor, HEXEN_MT_FSWORD_MISSILE, angle, 0);
     P_SpawnMissileAngle(actor, HEXEN_MT_FSWORD_MISSILE, angle - ANG45 / 8, 0);
     P_SpawnMissileAngle(actor, HEXEN_MT_FSWORD_MISSILE, angle - ANG45 / 4, 0);
-    S_StartMobjSound(actor, hexen_sfx_fighter_sword_fire);
 }
 
 void A_FSwordFlames(mobj_t * actor)
@@ -2836,16 +2747,12 @@ void A_MWandAttack(player_t * player, pspdef_t * psp)
     {
         mo->thinker.function = P_BlasterMobjThinker;
     }
-    S_StartMobjSound(player->mo, hexen_sfx_mage_wand_fire);
 }
 
 void A_LightningReady(player_t * player, pspdef_t * psp)
 {
     A_WeaponReady(player, psp);
-    if (P_Random(pr_hexen) < 160)
-    {
-        S_StartMobjSound(player->mo, hexen_sfx_mage_lightning_ready);
-    }
+    P_Random(pr_hexen); // Sound
 }
 
 #define ZAGSPEED FRACUNIT
@@ -2949,9 +2856,9 @@ void A_LightningZap(mobj_t * actor)
         }
     }
 
-    if (actor->type == HEXEN_MT_LIGHTNING_FLOOR && P_Random(pr_hexen) < 160)
+    if (actor->type == HEXEN_MT_LIGHTNING_FLOOR)
     {
-        S_StartMobjSound(actor, hexen_sfx_mage_lightning_continuous);
+      P_Random(pr_hexen); // Sound
     }
 }
 
@@ -2973,7 +2880,6 @@ void A_MLightningAttack2(mobj_t * actor)
         P_SetTarget(&cmo->special2.m, fmo);
         A_LightningZap(cmo);
     }
-    S_StartMobjSound(actor, hexen_sfx_mage_lightning_fire);
 }
 
 void A_MLightningAttack(player_t * player, pspdef_t * psp)
@@ -3051,7 +2957,6 @@ void A_MStaffAttack(player_t * player, pspdef_t * psp)
     MStaffSpawn(pmo, angle);
     MStaffSpawn(pmo, angle - ANG1 * 5);
     MStaffSpawn(pmo, angle + ANG1 * 5);
-    S_StartMobjSound(player->mo, hexen_sfx_mage_staff_fire);
     if (player == &players[consoleplayer])
     {
         player->damagecount = 0;
@@ -3132,7 +3037,6 @@ void A_MStaffAttack2(mobj_t * actor)
     MStaffSpawn2(actor, angle);
     MStaffSpawn2(actor, angle - ANG1 * 5);
     MStaffSpawn2(actor, angle + ANG1 * 5);
-    S_StartMobjSound(actor, hexen_sfx_mage_staff_fire);
 }
 
 void A_FPunchAttack(player_t * player, pspdef_t * psp)
@@ -3200,7 +3104,6 @@ void A_FPunchAttack(player_t * player, pspdef_t * psp)
     {
         pmo->special1.i = 0;
         P_SetPsprite(player, ps_weapon, HEXEN_S_PUNCHATK2_1);
-        S_StartMobjSound(pmo, hexen_sfx_fighter_grunt);
     }
     return;
 }
@@ -3394,7 +3297,6 @@ void A_CStaffAttack(player_t * player, pspdef_t * psp)
     {
         mo->special2.i = 0;
     }
-    S_StartMobjSound(player->mo, hexen_sfx_cleric_cstaff_fire);
 }
 
 void A_CStaffMissileSlither(mobj_t * actor)
@@ -3443,7 +3345,6 @@ void A_CFlameAttack(player_t * player, pspdef_t * psp)
     }
 
     player->ammo[MANA_2] -= WeaponManaUse[player->pclass][player->readyweapon];
-    S_StartMobjSound(player->mo, hexen_sfx_cleric_flame_fire);
 }
 
 void A_CFlamePuff(mobj_t * actor)
@@ -3452,7 +3353,6 @@ void A_CFlamePuff(mobj_t * actor)
     actor->momx = 0;
     actor->momy = 0;
     actor->momz = 0;
-    S_StartMobjSound(actor, hexen_sfx_cleric_flame_explode);
 }
 
 void A_CFlameMissile(mobj_t * actor)
@@ -3463,7 +3363,6 @@ void A_CFlameMissile(mobj_t * actor)
     mobj_t *mo;
 
     A_UnHideThing(actor);
-    S_StartMobjSound(actor, hexen_sfx_cleric_flame_explode);
     if (BlockingMobj && BlockingMobj->flags & MF_SHOOTABLE)
     {                           // Hit something, so spawn the flame circle around the thing
         dist = BlockingMobj->radius + 18 * FRACUNIT;
@@ -3514,7 +3413,6 @@ void A_CFlameRotate(mobj_t * actor)
 void A_CHolyAttack3(mobj_t * actor)
 {
     P_SpawnMissile(actor, actor->target, HEXEN_MT_HOLY_MISSILE);
-    S_StartMobjSound(actor, hexen_sfx_choly_fire);
 }
 
 void A_CHolyAttack2(mobj_t * actor)
@@ -3590,7 +3488,6 @@ void A_CHolyAttack(player_t * player, pspdef_t * psp)
         V_SetPalette(STARTHOLYPAL);
         SB_Start();
     }
-    S_StartMobjSound(player->mo, hexen_sfx_choly_fire);
 }
 
 void A_CHolyPalette(player_t * player, pspdef_t * psp)
@@ -3831,10 +3728,7 @@ void A_CHolyTail(mobj_t * actor)
 void A_CHolyCheckScream(mobj_t * actor)
 {
     A_CHolySeek(actor);
-    if (P_Random(pr_hexen) < 20)
-    {
-        S_StartMobjSound(actor, hexen_sfx_spirit_active);
-    }
+    P_Random(pr_hexen); // Sound
     if (!actor->special1.m)
     {
         CHolyFindTarget(actor);
@@ -3861,7 +3755,6 @@ void A_FireConePL1(player_t * player, pspdef_t * psp)
 
     pmo = player->mo;
     player->ammo[MANA_1] -= WeaponManaUse[player->pclass][player->readyweapon];
-    S_StartMobjSound(pmo, hexen_sfx_mage_shards_fire);
 
     damage = 90 + (P_Random(pr_hexen) & 15);
     for (i = 0; i < 16; i++)

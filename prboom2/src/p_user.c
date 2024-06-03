@@ -743,33 +743,6 @@ void P_PlayerThink (player_t* player)
       P_PlayerOnSpecialFlat(player, floorType);
     }
 
-    switch (player->pclass)
-    {
-      case PCLASS_FIGHTER:
-        if (player->mo->momz <= -35 * FRACUNIT
-            && player->mo->momz >= -40 * FRACUNIT && !player->morphTics)
-        {
-          S_StartMobjSound(player->mo, hexen_sfx_player_fighter_falling_scream);
-        }
-        break;
-      case PCLASS_CLERIC:
-        if (player->mo->momz <= -35 * FRACUNIT
-            && player->mo->momz >= -40 * FRACUNIT && !player->morphTics)
-        {
-          S_StartMobjSound(player->mo, hexen_sfx_player_cleric_falling_scream);
-        }
-        break;
-      case PCLASS_MAGE:
-        if (player->mo->momz <= -35 * FRACUNIT
-            && player->mo->momz >= -40 * FRACUNIT && !player->morphTics)
-        {
-          S_StartMobjSound(player->mo, hexen_sfx_player_mage_falling_scream);
-        }
-        break;
-      default:
-        break;
-    }
-
     if (cmd->arti)
     {                           // Use an artifact
       if ((cmd->arti & AFLAG_JUMP) && onground && !player->jumpTics)
@@ -1134,7 +1107,6 @@ int P_GetPlayerNum(player_t * player)
 
 dboolean P_UndoPlayerChicken(player_t * player)
 {
-    mobj_t *fog;
     mobj_t *mo;
     mobj_t *pmo;
     fixed_t x;
@@ -1188,9 +1160,8 @@ dboolean P_UndoPlayerChicken(player_t * player)
     player->health = mo->health = MAXHEALTH;
     player->mo = mo;
     angle >>= ANGLETOFINESHIFT;
-    fog = P_SpawnMobj(x + 20 * finecosine[angle],
-                      y + 20 * finesine[angle], z + TELEFOGHEIGHT, HERETIC_MT_TFOG);
-    S_StartMobjSound(fog, heretic_sfx_telept);
+    P_SpawnMobj(x + 20 * finecosine[angle],
+                y + 20 * finesine[angle], z + TELEFOGHEIGHT, HERETIC_MT_TFOG);
     P_PostChickenWeapon(player, weapon);
     return (true);
 }
@@ -1377,7 +1348,6 @@ dboolean P_UseArtifact(player_t * player, artitype_t arti)
                 else
                 {               // Succeeded
                     player->chickenTics = 0;
-                    S_StartMobjSound(player->mo, heretic_sfx_wpnup);
                 }
             }
             else
@@ -1598,10 +1568,7 @@ void P_ChickenPlayerThink(player_t * player)
         P_SetMobjState(pmo, HERETIC_S_CHICPLAY_PAIN);
         return;
     }
-    if (P_Random(pr_heretic) < 48)
-    {                           // Just noise
-        S_StartMobjSound(pmo, heretic_sfx_chicact);
-    }
+    P_Random(pr_heretic); // Sound
 }
 
 // hexen
@@ -1713,7 +1680,6 @@ void P_BlastRadius(player_t * player)
     thinker_t *think;
     fixed_t dist;
 
-    S_StartMobjSound(pmo, hexen_sfx_artifact_blast);
     P_NoiseAlert(player->mo, player->mo);
 
     for (think = thinkercap.next; think != &thinkercap; think = think->next)
@@ -1779,25 +1745,16 @@ void P_MorphPlayerThink(player_t * player)
     if (!(pmo->momx + pmo->momy) && P_Random(pr_hexen) < 64)
     {                           // Snout sniff
         P_SetPspriteNF(player, ps_weapon, HEXEN_S_SNOUTATK2);
-        S_StartMobjSound(pmo, hexen_sfx_pig_active1);     // snort
         return;
     }
     if (P_Random(pr_hexen) < 48)
     {
-        if (P_Random(pr_hexen) < 128)
-        {
-            S_StartMobjSound(pmo, hexen_sfx_pig_active1);
-        }
-        else
-        {
-            S_StartMobjSound(pmo, hexen_sfx_pig_active2);
-        }
+        P_Random(pr_hexen); // Sound
     }
 }
 
 dboolean P_UndoPlayerMorph(player_t * player)
 {
-    mobj_t *fog;
     mobj_t *mo;
     mobj_t *pmo;
     fixed_t x;
@@ -1881,9 +1838,8 @@ dboolean P_UndoPlayerMorph(player_t * player)
     player->mo = mo;
     player->pclass = PlayerClass[playerNum];
     angle >>= ANGLETOFINESHIFT;
-    fog = P_SpawnMobj(x + 20 * finecosine[angle],
-                      y + 20 * finesine[angle], z + TELEFOGHEIGHT, HEXEN_MT_TFOG);
-    S_StartMobjSound(fog, hexen_sfx_teleport);
+    P_SpawnMobj(x + 20 * finecosine[angle],
+                y + 20 * finesine[angle], z + TELEFOGHEIGHT, HEXEN_MT_TFOG);
     P_PostMorphWeapon(player, weapon);
     return (true);
 }
@@ -2003,7 +1959,6 @@ dboolean P_HealRadius(player_t * player)
                     (Hexen_P_GiveArmor(mo->player, ARMOR_AMULET, 1)))
                 {
                     effective = true;
-                    S_StartMobjSound(mo, hexen_sfx_mysticincant);
                 }
                 break;
             case PCLASS_CLERIC:        // Radius heal
@@ -2011,7 +1966,6 @@ dboolean P_HealRadius(player_t * player)
                 if (P_GiveBody(mo->player, amount))
                 {
                     effective = true;
-                    S_StartMobjSound(mo, hexen_sfx_mysticincant);
                 }
                 break;
             case PCLASS_MAGE:  // Radius mana boost
@@ -2020,7 +1974,6 @@ dboolean P_HealRadius(player_t * player)
                     (P_GiveMana(mo->player, MANA_2, amount)))
                 {
                     effective = true;
-                    S_StartMobjSound(mo, hexen_sfx_mysticincant);
                 }
                 break;
             case PCLASS_PIG:

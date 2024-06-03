@@ -170,10 +170,6 @@ dboolean EV_ThingProjectile(byte * args, dboolean gravity)
     while ((mobj = P_FindMobjFromTID(tid, &searcher)) != NULL)
     {
         newMobj = P_SpawnMobj(mobj->x, mobj->y, mobj->z, moType);
-        if (newMobj->info->seesound)
-        {
-            S_StartMobjSound(newMobj, newMobj->info->seesound);
-        }
         P_SetTarget(&newMobj->target, mobj); // Originator
         newMobj->angle = angle;
         newMobj->momx = FixedMul(speed, finecosine[fineAngle]);
@@ -199,7 +195,6 @@ dboolean EV_ThingSpawn(byte * args, dboolean fog)
     angle_t angle;
     mobj_t *mobj;
     mobj_t *newMobj;
-    mobj_t *fogMobj;
     mobjtype_t moType;
     int searcher;
     dboolean success;
@@ -234,9 +229,8 @@ dboolean EV_ThingSpawn(byte * args, dboolean fog)
             newMobj->angle = angle;
             if (fog == true)
             {
-                fogMobj = P_SpawnMobj(mobj->x, mobj->y,
-                                      mobj->z + TELEFOGHEIGHT, HEXEN_MT_TFOG);
-                S_StartMobjSound(fogMobj, hexen_sfx_teleport);
+                P_SpawnMobj(mobj->x, mobj->y,
+                            mobj->z + TELEFOGHEIGHT, HEXEN_MT_TFOG);
             }
             newMobj->flags |= MF_DROPPED;     // Don't respawn
             if (newMobj->flags2 & MF2_FLOATBOB)
@@ -342,12 +336,10 @@ static dboolean ActivateThing(mobj_t * mobj)
         case HEXEN_MT_ZTWINEDTORCH:
         case HEXEN_MT_ZTWINEDTORCH_UNLIT:
             P_SetMobjState(mobj, HEXEN_S_ZTWINEDTORCH_1);
-            S_StartMobjSound(mobj, hexen_sfx_ignite);
             break;
         case HEXEN_MT_ZWALLTORCH:
         case HEXEN_MT_ZWALLTORCH_UNLIT:
             P_SetMobjState(mobj, HEXEN_S_ZWALLTORCH1);
-            S_StartMobjSound(mobj, hexen_sfx_ignite);
             break;
         case HEXEN_MT_ZGEMPEDESTAL:
             P_SetMobjState(mobj, HEXEN_S_ZGEMPEDESTAL2);
@@ -359,7 +351,6 @@ static dboolean ActivateThing(mobj_t * mobj)
         case HEXEN_MT_THRUSTFLOOR_DOWN:
             if (mobj->special_args[0] == 0)
             {
-                S_StartMobjSound(mobj, hexen_sfx_thrustspike_lower);
                 mobj->flags2 &= ~MF2_DONTDRAW;
                 if (mobj->special_args[1])
                     P_SetMobjState(mobj, HEXEN_S_BTHRUSTRAISE1);
@@ -370,7 +361,6 @@ static dboolean ActivateThing(mobj_t * mobj)
         case HEXEN_MT_ZFIREBULL:
         case HEXEN_MT_ZFIREBULL_UNLIT:
             P_SetMobjState(mobj, HEXEN_S_ZFIREBULL_BIRTH);
-            S_StartMobjSound(mobj, hexen_sfx_ignite);
             break;
         case HEXEN_MT_ZBELL:
             if (mobj->health > 0)
@@ -381,14 +371,11 @@ static dboolean ActivateThing(mobj_t * mobj)
         case HEXEN_MT_ZCAULDRON:
         case HEXEN_MT_ZCAULDRON_UNLIT:
             P_SetMobjState(mobj, HEXEN_S_ZCAULDRON1);
-            S_StartMobjSound(mobj, hexen_sfx_ignite);
             break;
         case HEXEN_MT_FLAME_SMALL:
-            S_StartMobjSound(mobj, hexen_sfx_ignite);
             P_SetMobjState(mobj, HEXEN_S_FLAME_SMALL1);
             break;
         case HEXEN_MT_FLAME_LARGE:
-            S_StartMobjSound(mobj, hexen_sfx_ignite);
             P_SetMobjState(mobj, HEXEN_S_FLAME_LARGE1);
             break;
         case HEXEN_MT_BAT_SPAWNER:
@@ -427,7 +414,6 @@ static dboolean DeactivateThing(mobj_t * mobj)
         case HEXEN_MT_THRUSTFLOOR_DOWN:
             if (mobj->special_args[0] == 1)
             {
-                S_StartMobjSound(mobj, hexen_sfx_thrustspike_raise);
                 if (mobj->special_args[1])
                     P_SetMobjState(mobj, HEXEN_S_BTHRUSTLOWER);
                 else

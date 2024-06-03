@@ -92,7 +92,6 @@ void A_FireCrossbowPL2();
 void A_BoltSpark();
 void A_NoBlocking();
 void A_AddPlayerCorpse();
-void A_FlameSnd();
 void A_CheckBurnGone();
 void A_CheckSkullFloor();
 void A_CheckSkullDone();
@@ -104,7 +103,6 @@ void A_ChicAttack();
 void A_MummyAttack();
 void A_MummyAttack2();
 void A_MummySoul();
-void A_ContMobjSound();
 void A_MummyFX1Seek();
 void A_BeastAttack();
 void A_SnakeAttack();
@@ -148,6 +146,5 @@ void A_MinotaurAtk2();
 void A_MinotaurAtk3();
 void A_MinotaurCharge();
 void A_MntrFloorFire();
-void A_ESound();
 
 #endif
