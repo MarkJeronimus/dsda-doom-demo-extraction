@@ -362,37 +362,6 @@ void M_ChangeFOV(void)
 
 float viewPitch;
 
-void I_vWarning(const char *message, va_list argList)
-{
-  char msg[1024];
-  vsnprintf(msg,sizeof(msg),message,argList);
-  lprintf(LO_ERROR, "%s\n", msg);
-#ifdef _WIN32
-  I_MessageBox(msg, PRB_MB_OK);
-#endif
-}
-
-int I_MessageBox(const char* text, unsigned int type)
-{
-#ifdef _WIN32
-  int result = PRB_IDCANCEL;
-
-  if (!dsda_Flag(dsda_arg_no_message_box))
-  {
-    HWND current_hwnd = GetForegroundWindow();
-    wchar_t *wtext = ConvertUtf8ToWide(text);
-    wchar_t *wpackage = ConvertUtf8ToWide(PACKAGE_NAME);
-    result = MessageBoxW(GetDesktopWindow(), wtext, wpackage, type|MB_TASKMODAL|MB_TOPMOST);
-    Z_Free(wtext);
-    Z_Free(wpackage);
-    I_SwitchToWindow(current_hwnd);
-    return result;
-  }
-#endif
-
-  return PRB_IDCANCEL;
-}
-
 int stats_level;
 int stroller;
 int numlevels = 0;

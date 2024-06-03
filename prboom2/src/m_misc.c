@@ -292,17 +292,11 @@ cfg_def_t cfg_defs[] =
   MIGRATED_SETTING(dsda_config_script_9),
 
   SETTING_HEADING("Overrun settings"),
-  MIGRATED_SETTING(dsda_config_overrun_spechit_warn),
   MIGRATED_SETTING(dsda_config_overrun_spechit_emulate),
-  MIGRATED_SETTING(dsda_config_overrun_reject_warn),
   MIGRATED_SETTING(dsda_config_overrun_reject_emulate),
-  MIGRATED_SETTING(dsda_config_overrun_intercept_warn),
   MIGRATED_SETTING(dsda_config_overrun_intercept_emulate),
-  MIGRATED_SETTING(dsda_config_overrun_playeringame_warn),
   MIGRATED_SETTING(dsda_config_overrun_playeringame_emulate),
-  MIGRATED_SETTING(dsda_config_overrun_donut_warn),
   MIGRATED_SETTING(dsda_config_overrun_donut_emulate),
-  MIGRATED_SETTING(dsda_config_overrun_missedbackside_warn),
   MIGRATED_SETTING(dsda_config_overrun_missedbackside_emulate),
 
   SETTING_HEADING("Mapping error compatibility settings"),

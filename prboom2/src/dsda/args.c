@@ -403,26 +403,6 @@ static arg_config_t arg_config[dsda_arg_count] = {
     "sets dehacked log file",
     arg_string,
   },
-  [dsda_arg_verbose] = {
-    "-verbose", NULL, NULL,
-    "enable all logging",
-    arg_null,
-  },
-  [dsda_arg_quiet] = {
-    "-quiet", NULL, NULL,
-    "disable all logging",
-    arg_null,
-  },
-  [dsda_arg_v] = {
-    "-v", NULL, NULL,
-    "print the version and exit",
-    arg_null,
-  },
-  [dsda_arg_resetgamma] = {
-    "-resetgamma", NULL, NULL,
-    "reset gamma and exit",
-    arg_null,
-  },
   [dsda_arg_force_old_zdoom_nodes] = {
     "-force_old_zdoom_nodes", NULL, NULL,
     "force extended (non-gl) zdoom nodes",

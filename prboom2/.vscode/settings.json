@@ -43,6 +43,7 @@
         "z_zone.h": "c",
         "sdl_thread.h": "c",
         "s_sound.h": "c",
-        "memory.h": "c"
+        "memory.h": "c",
+        "i_main.h": "c"
     }
 }

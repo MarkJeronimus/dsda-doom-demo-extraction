@@ -125,7 +125,6 @@
 #define S_SKIP     0x00002000 // Cursor can't land here
 #define S_KEEP     0x00004000 // Don't swap key out
 #define S_END      0x00008000 // Last item in list (dummy)
-#define S_LEVWARN  0x00010000 // killough 8/30/98: Always warn about pending change
 #define S_NOSELECT 0x00020000
 #define S_CENTER   0x00040000
 #define S_FILE     0x00080000 // killough 10/98: Filenames
@@ -2907,13 +2906,9 @@ setup_menu_t display_settings[] = {
 
 setup_menu_t mapping_settings[] = {
   { "EMULATION", S_SKIP | S_TITLE, m_null, G_X},
-  { "WARN ON SPECHITS OVERFLOW", S_YESNO, m_conf, G_X, dsda_config_overrun_spechit_warn },
   { "TRY TO EMULATE IT", S_YESNO, m_conf, G_X, dsda_config_overrun_spechit_emulate },
-  { "WARN ON REJECT OVERFLOW", S_YESNO, m_conf, G_X, dsda_config_overrun_reject_warn },
   { "TRY TO EMULATE IT", S_YESNO, m_conf, G_X, dsda_config_overrun_reject_emulate },
-  { "WARN ON INTERCEPTS OVERFLOW", S_YESNO, m_conf, G_X, dsda_config_overrun_intercept_warn },
   { "TRY TO EMULATE IT", S_YESNO, m_conf, G_X, dsda_config_overrun_intercept_emulate },
-  { "WARN ON PLAYERINGAME OVERFLOW", S_YESNO, m_conf, G_X, dsda_config_overrun_playeringame_warn },
   { "TRY TO EMULATE IT", S_YESNO, m_conf, G_X, dsda_config_overrun_playeringame_emulate },
   EMPTY_LINE,
   { "MAPPING ERROR FIXES", S_SKIP | S_TITLE, m_conf, G_X},

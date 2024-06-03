@@ -71,44 +71,9 @@ void ResetOverruns(void)
   }
 }
 
-static void ShowOverflowWarning(overrun_list_t overflow, int fatal, const char *params, ...)
+static void ShowOverflowWarning(overrun_list_t overflow)
 {
   overflows[overflow].happened = true;
-
-  if (overflows[overflow].warn && !overflows[overflow].promted)
-  {
-    va_list argptr;
-    char buffer[1024];
-
-    static const char *name[OVERFLOW_MAX] = {
-      "SPECHIT", "REJECT", "INTERCEPT", "PLYERINGAME", "DONUT", "MISSEDBACKSIDE"};
-
-    static const char str1[] =
-      "Too big or not supported %s overflow has been detected. "
-      "Desync or crash can occur soon "
-      "or during playback with the vanilla engine in case you're recording demo.%s%s";
-
-    static const char str2[] =
-      "%s overflow has been detected.%s%s";
-
-    static const char str3[] =
-      "%s overflow has been detected. "
-      "The option responsible for emulation of this overflow is switched off "
-      "hence desync or crash can occur soon "
-      "or during playback with the vanilla engine in case you're recording demo.%s%s";
-
-    overflows[overflow].promted = true;
-
-    sprintf(buffer,
-      (fatal ? str1 : (EMULATE(overflow) ? str2 : str3)),
-      name[overflow],
-      "\nYou can change PrBoom behaviour for this overflow through in-game menu.",
-      params);
-
-    va_start(argptr, params);
-    I_vWarning(buffer, argptr);
-    va_end(argptr);
-  }
 }
 
 // e6y
@@ -173,7 +138,7 @@ void InterceptsOverrun(int num_intercepts, intercept_t *intercept)
 
   if (!hexen && num_intercepts > MAXINTERCEPTS_ORIGINAL && demo_compatibility && PROCESS(OVERFLOW_INTERCEPT))
   {
-    ShowOverflowWarning(OVERFLOW_INTERCEPT, false, "");
+    ShowOverflowWarning(OVERFLOW_INTERCEPT);
 
     if (EMULATE(OVERFLOW_INTERCEPT))
     {
@@ -205,7 +170,7 @@ int PlayeringameOverrun(const mapthing_t* mthing)
   if (mthing->type == 0 && PROCESS(OVERFLOW_PLAYERINGAME))
   {
     // playeringame[-1] == players[3].didsecret
-    ShowOverflowWarning(OVERFLOW_PLAYERINGAME, (players + 3)->didsecret, "");
+    ShowOverflowWarning(OVERFLOW_PLAYERINGAME);
 
     if (EMULATE(OVERFLOW_PLAYERINGAME))
     {
@@ -234,16 +199,7 @@ void SpechitOverrun(spechit_overrun_param_t *params)
 
   if (!hexen && demo_compatibility && numspechit > 8)
   {
-    line_t **spechit = *(params->spechit);
-
-    ShowOverflowWarning(OVERFLOW_SPECHIT,
-      numspechit >
-        (compatibility_level == dosdoom_compatibility ||
-        compatibility_level == tasdoom_compatibility ? 10 : 14),
-      "\n\nThe list of LineID leading to overrun:\n%d, %d, %d, %d, %d, %d, %d, %d, %d.",
-      spechit[0]->iLineID, spechit[1]->iLineID, spechit[2]->iLineID,
-      spechit[3]->iLineID, spechit[4]->iLineID, spechit[5]->iLineID,
-      spechit[6]->iLineID, spechit[7]->iLineID, spechit[8]->iLineID);
+    ShowOverflowWarning(OVERFLOW_SPECHIT);
 
     if (EMULATE(OVERFLOW_SPECHIT))
     {
@@ -375,7 +331,7 @@ void RejectOverrun(unsigned int length, const byte **rejectmatrix, int totalline
 
     if (!hexen && demo_compatibility && PROCESS(OVERFLOW_REJECT))
     {
-      ShowOverflowWarning(OVERFLOW_REJECT, (required - length > 16) || (length%4 != 0), "");
+      ShowOverflowWarning(OVERFLOW_REJECT);
 
       if (EMULATE(OVERFLOW_REJECT))
       {
@@ -494,7 +450,7 @@ int DonutOverrun(fixed_t *pfloorheight, short *pfloorpic)
 {
   if (demo_compatibility && PROCESS(OVERFLOW_DONUT))
   {
-    ShowOverflowWarning(OVERFLOW_DONUT, 0, "");
+    ShowOverflowWarning(OVERFLOW_DONUT);
 
     if (EMULATE(OVERFLOW_DONUT))
     {
@@ -522,16 +478,7 @@ int MissedBackSideOverrun(line_t *line)
 {
   if (demo_compatibility)
   {
-    if (line)
-    {
-      ShowOverflowWarning(OVERFLOW_MISSEDBACKSIDE, 0,
-        "\n\nLinedef %d has two-sided flag set, but no second sidedef",
-        line->iLineID);
-    }
-    else
-    {
-      ShowOverflowWarning(OVERFLOW_MISSEDBACKSIDE, 0, "");
-    }
+    ShowOverflowWarning(OVERFLOW_MISSEDBACKSIDE);
   }
 
   return false;

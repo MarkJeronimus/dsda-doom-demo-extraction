@@ -118,10 +118,6 @@ static void I_SignalHandler(int s)
 
   signal(s, SIG_IGN);  /* Ignore future instances of this signal.*/
 
-  // Terminal Interrupt
-  if (s == 2)
-    I_DisableMessageBoxes();
-
   I_SigString(buf, sizeof(buf), s);
 
   I_Error("The game has crashed!\n"
@@ -265,19 +261,6 @@ void I_SetProcessPriority(void)
 int main(int argc, char **argv)
 {
   dsda_ParseCommandLineArgs(argc, argv);
-
-  if (dsda_Flag(dsda_arg_verbose))
-    I_EnableVerboseLogging();
-
-  if (dsda_Flag(dsda_arg_quiet))
-    I_DisableAllLogging();
-
-  // Print the version and exit
-  if (dsda_Flag(dsda_arg_v))
-  {
-    PrintVer();
-    return 0;
-  }
 
   // e6y: Check for conflicts.
   // Conflicting command-line parameters could cause the engine to be confused

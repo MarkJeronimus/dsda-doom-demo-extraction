@@ -55,11 +55,6 @@
 
 #include "dsda/args.h"
 
-static dboolean disable_message_box;
-
-int cons_stdout_mask = LO_INFO;
-int cons_stderr_mask = LO_WARN | LO_ERROR;
-
 /* cphipps - enlarged message buffer and made non-static
  * We still have to be careful here, this function can be called after exit
  */
@@ -80,33 +75,17 @@ int lprintf(OutputLevels pri, const char *s, ...)
   // do not crash with unicode dirs
   if (fileno(stdout) != -1)
 #endif
-  if (lvl & cons_stdout_mask)
+  if (lvl & (LO_INFO | LO_DEBUG))
     r = fprintf(stdout,"%s",msg);
 
 #ifdef _WIN32
   // do not crash with unicode dirs
   if (fileno(stderr) != -1)
 #endif
-  if (lvl & cons_stderr_mask)
+  if (lvl & (LO_WARN | LO_ERROR))
     r = fprintf(stderr,"%s",msg);
 
   return r;
-}
-
-void I_EnableVerboseLogging(void)
-{
-  cons_stdout_mask = LO_INFO | LO_DEBUG;
-}
-
-void I_DisableAllLogging(void)
-{
-  cons_stdout_mask = 0;
-  cons_stderr_mask = 0;
-}
-
-void I_DisableMessageBoxes(void)
-{
-  disable_message_box = true;
 }
 
 /*
@@ -126,11 +105,6 @@ void I_Error(const char *error, ...)
   vsnprintf(errmsg,sizeof(errmsg),error,argptr);
   va_end(argptr);
   lprintf(LO_ERROR, "%s\n", errmsg);
-#ifdef _WIN32
-  if (!disable_message_box && !dsda_Flag(dsda_arg_nodraw)) {
-    I_MessageBox(errmsg, PRB_MB_OK);
-  }
-#endif
   I_SafeExit(-1);
 }
 
@@ -142,9 +116,4 @@ void I_Warn(const char *error, ...)
   vsnprintf(errmsg, sizeof(errmsg), error, argptr);
   va_end(argptr);
   lprintf(LO_WARN, "%s\n", errmsg);
-#ifdef _WIN32
-  if (!dsda_Flag(dsda_arg_nodraw)) {
-    I_MessageBox(errmsg, PRB_MB_OK);
-  }
-#endif
 }

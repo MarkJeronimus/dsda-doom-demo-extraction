@@ -40,11 +40,9 @@
 
 typedef struct overrun_param_s
 {
-  int warn;
   int emulate;
   int footer;
   int footer_emulate;
-  int promted;
   int happened;
 } overrun_param_t;
 
@@ -65,7 +63,7 @@ extern overrun_param_t overflows[];
 extern const char *overflow_cfgname[OVERFLOW_MAX];
 
 #define EMULATE(overflow) (overflows_enabled && (overflows[overflow].footer ? overflows[overflow].footer_emulate : overflows[overflow].emulate))
-#define PROCESS(overflow) (overflows_enabled && (overflows[overflow].warn || EMULATE(overflow)))
+#define PROCESS(overflow) (overflows_enabled && EMULATE(overflow))
 
 // e6y
 //

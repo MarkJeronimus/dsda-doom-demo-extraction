@@ -225,24 +225,4 @@ int HU_DrawDemoProgress(int force);
 int GetFullPath(const char* FileName, const char* ext, char *Buffer, size_t BufferLength);
 #endif
 
-void I_vWarning(const char *message, va_list argList);
-
-#define PRB_MB_OK                       0x00000000
-#define PRB_MB_OKCANCEL                 0x00000001
-#define PRB_MB_ABORTRETRYIGNORE         0x00000002
-#define PRB_MB_YESNOCANCEL              0x00000003
-#define PRB_MB_YESNO                    0x00000004
-#define PRB_MB_RETRYCANCEL              0x00000005
-#define PRB_MB_DEFBUTTON1               0x00000000
-#define PRB_MB_DEFBUTTON2               0x00000100
-#define PRB_MB_DEFBUTTON3               0x00000200
-#define PRB_IDOK                1
-#define PRB_IDCANCEL            2
-#define PRB_IDABORT             3
-#define PRB_IDRETRY             4
-#define PRB_IDIGNORE            5
-#define PRB_IDYES               6
-#define PRB_IDNO                7
-int I_MessageBox(const char* text, unsigned int type);
-
 #endif
