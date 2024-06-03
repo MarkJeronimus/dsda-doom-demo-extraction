@@ -2171,7 +2171,6 @@ setup_menu_t keys_settings6[] =
   {"CLEAR"       ,S_INPUT     ,m_menu,KB_X,0,dsda_input_menu_clear},
   EMPTY_LINE,
   {"MESSAGES"       ,S_SKIP|S_TITLE,m_null,KB_X},
-  {"REPEAT MESSAGE" ,S_INPUT     ,m_scrn,KB_X,0,dsda_input_repeat_message},
 
   PREV_PAGE(keys_settings5),
   NEXT_PAGE(keys_settings7),

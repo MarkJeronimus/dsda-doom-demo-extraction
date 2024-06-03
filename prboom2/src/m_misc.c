@@ -370,8 +370,6 @@ cfg_input_def_t input_defs[] = {
   INPUT_SETTING("input_map_overlay", dsda_input_map_overlay, 'o', -1, -1),
   INPUT_SETTING("input_map_textured", dsda_input_map_textured, 0, -1, -1),
 
-  INPUT_SETTING("input_repeat_message", dsda_input_repeat_message, 0, -1, -1),
-
   INPUT_SETTING("input_speed_up", dsda_input_speed_up, 0, -1, -1),
   INPUT_SETTING("input_speed_down", dsda_input_speed_down, 0, -1, -1),
   INPUT_SETTING("input_speed_default", dsda_input_speed_default, 0, -1, -1),

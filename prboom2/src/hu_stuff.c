@@ -363,20 +363,3 @@ void HU_Ticker(void)
 {
   dsda_UpdateExHud();
 }
-
-//
-// HU_Responder()
-//
-// Responds to input events that affect the heads up displays
-//
-// Passed the event to respond to, returns true if the event was handled
-//
-dboolean HU_Responder(event_t *ev)
-{
-  if (dsda_InputActivated(dsda_input_repeat_message)) // phares
-  {
-    return true;
-  }
-
-  return false;
-}

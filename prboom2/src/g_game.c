@@ -1304,7 +1304,6 @@ dboolean G_Responder (event_t* ev)
 {
   if (
     gamestate == GS_LEVEL && (
-      HU_Responder(ev) ||
       ST_Responder(ev) ||
       AM_Responder(ev)
     )

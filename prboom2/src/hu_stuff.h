@@ -38,13 +38,9 @@
 #include "p_mobj.h"
 #include "r_defs.h"
 
-#define HU_MSGTIMEOUT   (4*TICRATE)
-
 #define HU_CROSSHAIRS	8
 
 void HU_Start(void);
-
-dboolean HU_Responder(event_t* ev);
 
 void HU_Ticker(void);
 void HU_Drawer(void);
