@@ -3647,9 +3647,6 @@ void P_SetupLevel(int episode, int map, int playermask, int skill)
   snprintf(lumpname, sizeof(lumpname), "%s", dsda_MapLumpName(episode, map));
   lumpnum = W_GetNumForName(lumpname);
 
-  // Make sure all sounds are stopped before Z_FreeTag.
-  S_Start();
-
   Z_FreeLevel();
 
   P_InitThinkers();

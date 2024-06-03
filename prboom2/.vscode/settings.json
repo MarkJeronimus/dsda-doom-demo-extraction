@@ -38,6 +38,7 @@
         "p_map.h": "c",
         "data_organizer.h": "c",
         "exdemo.h": "c",
-        "sounds.h": "c"
+        "sounds.h": "c",
+        "e6y.h": "c"
     }
 }

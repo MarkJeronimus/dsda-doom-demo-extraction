@@ -46,36 +46,12 @@
 #include "l_soundgen.h"
 #endif
 
-// ... shut down and relase at program termination.
-void I_ShutdownSound(void);
-
 //
 //  SFX I/O
 //
 
-// Initialize channels?
-void I_SetChannels(void);
-
 // Get raw data lump index for sound descriptor.
 int I_GetSfxLumpNum (sfxinfo_t *sfxinfo);
-
-// Starts a sound in a particular sound channel.
-int I_StartSound(int id, int channel, sfx_params_t *params);
-
-// Stops a sound channel.
-void I_StopSound(int handle);
-
-// Called by S_*() functions
-//  to see if a channel is still playing.
-// Returns 0 if no longer playing, 1 if playing.
-dboolean I_SoundIsPlaying(int handle);
-
-// Called by m_menu.c to let the quit sound play and quit right after it stops
-dboolean I_AnySoundStillPlaying(void);
-
-// Updates the volume, separation,
-//  and pitch of a sound channel.
-void I_UpdateSoundParams(int handle, sfx_params_t *params);
 
 // CPhipps - put these in config file
 extern int snd_samplerate;

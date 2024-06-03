@@ -60,29 +60,9 @@ void dsda_UpdateAmbientSource(ambient_source_t* source) {
   // looping
   if (source->data.min_tics < 0) {
     source->wait_tics = 35;
-
-    if (!source->data.attenuation) {
-      S_AdjustVolume(source->data.volume);
-      S_ResetAdjustments();
-    }
-    else {
-      S_AdjustAttenuation(source->data.attenuation);
-      S_AdjustVolume(source->data.volume);
-      S_ResetAdjustments();
-    }
   }
   else {
     source->wait_tics = dsda_AmbientWaitTime(&source->data);
-
-    if (!source->data.attenuation) {
-      S_AdjustVolume(source->data.volume);
-      S_ResetAdjustments();
-    }
-    else {
-      S_AdjustAttenuation(source->data.attenuation);
-      S_AdjustVolume(source->data.volume);
-      S_ResetAdjustments();
-    }
   }
 }
 

@@ -1660,14 +1660,14 @@ static int CmdTimer(void)
 static int CmdSectorSound(void)
 {
     Pop();
-    S_GetSoundID(StringLookup(Pop()));
+    Pop();
     return SCRIPT_CONTINUE;
 }
 
 static int CmdThingSound(void)
 {
     Pop();
-    S_GetSoundID(StringLookup(Pop()));
+    Pop();
     Pop();
     return SCRIPT_CONTINUE;
 }
@@ -1675,7 +1675,7 @@ static int CmdThingSound(void)
 static int CmdAmbientSound(void)
 {
     Pop();
-    S_GetSoundID(StringLookup(Pop()));
+    Pop();
     return SCRIPT_CONTINUE;
 }
 

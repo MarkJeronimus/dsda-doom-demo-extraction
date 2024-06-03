@@ -40,41 +40,8 @@
 
 #define MAX_CHANNELS 32
 
-//
-// Initializes sound stuff, including volume
-// Sets channels, SFX volume,
-//  allocates channel buffer, sets S_sfx lookup.
-//
 void S_Init(void);
 
-// Kills all sounds
-void S_Stop(void);
-
-//
-// Per level startup code.
-// Kills playing sounds at start of level.
-//
-void S_Start(void);
-
-// killough 4/25/98: mask used to indicate sound origin is player item pickup
-#define PICKUP_SOUND (0x8000)
-
 extern int full_sounds;
-
-void S_AdjustAttenuation(float attenuation);
-void S_AdjustVolume(float volume);
-void S_ResetAdjustments(void);
-
-// machine-independent sound params
-extern int default_numChannels;
-extern int numChannels;
-
-// heretic
-
-#include "doomtype.h"
-
-// hexen
-
-int S_GetSoundID(const char *name);
 
 #endif
