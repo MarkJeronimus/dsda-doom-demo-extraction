@@ -81,26 +81,22 @@ void T_VerticalCompatibleDoor(vldoor_t *door)
           case blazeRaise:
           case genBlazeRaise:
             door->direction = -1; // time to go back down
-            S_StartSectorSound(door->sector, sfx_bdcls);
             break;
 
           case normal:
           case genRaise:
           case vld_normal:
             door->direction = -1; // time to go back down
-            S_StartSectorSound(door->sector, g_sfx_dorcls);
             break;
 
           case close30ThenOpen:
           case genCdO:
           case vld_close30ThenOpen:
             door->direction = 1;  // time to go back up
-            S_StartSectorSound(door->sector, g_sfx_doropn);
             break;
 
           case genBlazeCdO:
             door->direction = 1;  // time to go back up
-            S_StartSectorSound(door->sector, sfx_bdopn);
             break;
 
           default:
@@ -119,13 +115,11 @@ void T_VerticalCompatibleDoor(vldoor_t *door)
           case vld_raiseIn5Mins:
             door->direction = 1;  // time to raise then
             door->type = g_door_normal; // door acts just like normal 1 DR door now
-            S_StartSectorSound(door->sector, g_sfx_doropn);
             break;
 
           case waitCloseDoor:
             door->direction = -1;
             door->type = closeDoor;
-            S_StartSectorSound(door->sector, g_sfx_dorcls);
 
           default:
             break;
@@ -173,8 +167,6 @@ void T_VerticalCompatibleDoor(vldoor_t *door)
             door->sector->ceilingdata = NULL;  //jff 2/22/98
             P_RemoveThinker (&door->thinker);  // unlink and free
             // killough 4/15/98: remove double-closing sound of blazing doors
-            if (comp[comp_blazing])
-              S_StartSectorSound(door->sector, sfx_bdcls);
             break;
 
           case normal:
@@ -189,7 +181,6 @@ void T_VerticalCompatibleDoor(vldoor_t *door)
           case vld_close:
             door->sector->ceilingdata = NULL;
             P_RemoveThinker(&door->thinker);        // unlink and free
-            S_StartSectorSound(door->sector, g_sfx_dorlnd);
             break;
 
           // close then open doors start waiting
@@ -236,14 +227,12 @@ void T_VerticalCompatibleDoor(vldoor_t *door)
           case genBlazeRaise:
             door->direction = 1;
             if (!comp[comp_blazing]) {
-              S_StartSectorSound(door->sector, sfx_bdopn);
               break;
             }
             // fallthrough
 
           default:             // other types bounce off the obstruction
             door->direction = 1;
-            S_StartSectorSound(door->sector, g_sfx_doropn);
             break;
         }
       }
@@ -544,7 +533,6 @@ int EV_DoDoor
         door->topheight -= 4*FRACUNIT;
         door->direction = -1;
         door->speed = VDOORSPEED * 4;
-        S_StartSectorSound(door->sector, sfx_bdcls);
         break;
 
       case closeDoor:
@@ -552,14 +540,12 @@ int EV_DoDoor
         door->topheight = P_FindLowestCeilingSurrounding(sec);
         door->topheight -= 4*FRACUNIT;
         door->direction = -1;
-        S_StartSectorSound(door->sector, g_sfx_dorcls);
         break;
 
       case close30ThenOpen:
       case vld_close30ThenOpen:
         door->topheight = sec->ceilingheight;
         door->direction = -1;
-        S_StartSectorSound(door->sector, g_sfx_dorcls);
         break;
 
       case blazeRaise:
@@ -568,8 +554,6 @@ int EV_DoDoor
         door->topheight = P_FindLowestCeilingSurrounding(sec);
         door->topheight -= 4*FRACUNIT;
         door->speed = VDOORSPEED * 4;
-        if (door->topheight != sec->ceilingheight)
-          S_StartSectorSound(door->sector, sfx_bdopn);
         break;
 
       case vld_normal_turbo:
@@ -584,8 +568,6 @@ int EV_DoDoor
         door->direction = 1;
         door->topheight = P_FindLowestCeilingSurrounding(sec);
         door->topheight -= 4*FRACUNIT;
-        if (door->topheight != sec->ceilingheight)
-          S_StartSectorSound(door->sector, g_sfx_doropn);
         break;
 
       default:
@@ -728,19 +710,6 @@ int EV_VerticalDoor
      * we're a monster and don't want to shut it; exit with no action.
      */
     return 0;
-  }
-
-  // emit proper sound
-  switch(line->special)
-  {
-    case 117: // blazing door raise
-    case 118: // blazing door open
-      S_StartSectorSound(sec, sfx_bdopn);
-      break;
-
-    default:  // normal or locked door sound
-      S_StartSectorSound(sec, sfx_doropn);
-      break;
   }
 
   // new door thinker
@@ -956,8 +925,6 @@ void Heretic_EV_VerticalDoor(line_t * line, mobj_t * thing)
         }
     }
 
-    S_StartSectorSound(sec, heretic_sfx_doropn);
-
     //
     // new door thinker
     //
@@ -1023,20 +990,17 @@ static void P_SpawnZDoomDoor(sector_t *sec, vldoor_e type, line_t *line, fixed_t
       door->topheight = P_FindLowestCeilingSurrounding(sec);
       door->topheight -= 4 * FRACUNIT;
       door->direction = -1;
-      S_StartSectorSound(door->sector, g_sfx_dorcls);
       break;
     case genCdO:
       door->topheight = sec->ceilingheight;
       door->direction = -1;
       door->topwait = topwait;
-      S_StartSectorSound(door->sector, g_sfx_dorcls);
       break;
     case normal:
     case openDoor:
       door->direction = 1;
       door->topheight = P_FindLowestCeilingSurrounding(sec);
       door->topheight -= 4 * FRACUNIT;
-      S_StartSectorSound(door->sector, g_sfx_doropn);
       break;
     case waitRaiseDoor:
       door->direction = 2;
@@ -1095,7 +1059,6 @@ int EV_DoZDoomDoor(vldoor_e type, line_t *line, mobj_t *mo, int tag, fixed_t spe
           {
             door->direction = 1;
 
-            S_StartSectorSound(door->sector, g_sfx_doropn);
             return 1;
           }
           else if (!(line->activation & (SPAC_PUSH | SPAC_MPUSH)))
@@ -1108,7 +1071,6 @@ int EV_DoZDoomDoor(vldoor_e type, line_t *line, mobj_t *mo, int tag, fixed_t spe
 
             door->direction = -1; // start going down immediately
 
-            S_StartSectorSound(door->sector, g_sfx_dorcls);
             return 1;
           }
           else

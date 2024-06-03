@@ -234,11 +234,6 @@ void T_MoveCompatibleFloor(floormove_t * floor)
 
   if (res == pastdest)    // if destination height is reached
   {
-    if (heretic && floor->type == buildStair)
-    {
-        S_StartSectorSound(floor->sector, heretic_sfx_pstop);
-    }
-
     if (floor->type == floorBuildStair)
       floor->type = floorWaitStair;
 
@@ -307,11 +302,6 @@ void T_MoveCompatibleFloor(floormove_t * floor)
           }
         }
       }
-
-      // Moving floors (but not plats) in versions <= v1.2 did not
-      // make floor stop sound
-      if (compatibility_level > doom_12_compatibility)
-          S_StartSectorSound(floor->sector, sfx_pstop);
     }
   }
 }
@@ -449,9 +439,6 @@ void T_MoveElevator(elevator_t* elevator)
     elevator->sector->floordata = NULL;     //jff 2/22/98
     elevator->sector->ceilingdata = NULL;   //jff 2/22/98
     P_RemoveThinker(&elevator->thinker);    // remove elevator from actives
-
-    // make floor stop sound
-    S_StartSectorSound(elevator->sector, sfx_pstop);
   }
 }
 
@@ -1998,9 +1985,6 @@ void T_BuildZDoomPillar(pillar_t * pillar)
     pillar->sector->floordata = NULL;
     pillar->sector->ceilingdata = NULL;
     P_RemoveThinker(&pillar->thinker);
-
-    // make floor stop sound
-    S_StartSectorSound(pillar->sector, sfx_pstop);
   }
   else
   {

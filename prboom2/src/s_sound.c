@@ -164,10 +164,6 @@ void S_ResetAdjustments(void) {
   adjust_volume = 0;
 }
 
-void S_StartSectorSound(sector_t *sector, int sfx_id)
-{
-}
-
 void S_StartVoidSound(int sfx_id)
 {
 }
