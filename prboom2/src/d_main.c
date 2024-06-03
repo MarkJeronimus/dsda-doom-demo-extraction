@@ -133,9 +133,6 @@ dboolean randomclass;
 
 dboolean singletics = false; // debug flag to cancel adaptiveness
 
-//jff 1/22/98 parms for disabling sound
-dboolean nosfxparm;
-
 //jff 4/18/98
 extern dboolean inhelpscreens;
 extern dboolean BorderNeedRefresh;
@@ -1657,13 +1654,6 @@ static void D_DoomMainSetup(void)
     //jff 9/3/98 use logical output routine
     lprintf(LO_INFO,"Levels will end after %d minute%s.\n", time, time>1 ? "s" : "");
   }
-
-  //jff 1/22/98 add command line parms to disable sound
-  {
-    int nosound = dsda_Flag(dsda_arg_nosound);
-    nosfxparm   = nosound || dsda_Flag(dsda_arg_nosfx);
-  }
-  //jff end of sound command line parms
 
   // killough 3/2/98: allow -nodraw generally
   nodrawers = dsda_Flag(dsda_arg_nodraw);

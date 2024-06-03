@@ -52,18 +52,16 @@ static void dsda_CacheSkipSetting(dboolean* old, dboolean* current) {
   *current = true;
 }
 
-static dboolean old_fastdemo, old_nodrawers, old_nosfxparm;
+static dboolean old_fastdemo, old_nodrawers;
 
 static void dsda_ApplySkipSettings(void) {
   dsda_CacheSkipSetting(&old_fastdemo, &fastdemo);
   dsda_CacheSkipSetting(&old_nodrawers, &nodrawers);
-  dsda_CacheSkipSetting(&old_nosfxparm, &nosfxparm);
 }
 
 static void dsda_ResetSkipSettings(void) {
   fastdemo = old_fastdemo;
   nodrawers = old_nodrawers;
-  nosfxparm = old_nosfxparm;
 }
 
 void dsda_EnterSkipMode(void) {
