@@ -148,10 +148,6 @@ dboolean dsda_StrictMode(void) {
   return dsda_IntConfig(dsda_config_strict_mode) && demorecording && !dsda_tas;
 }
 
-dboolean dsda_MuteSfx(void) {
-  return dsda_IntConfig(dsda_config_mute_sfx);
-}
-
 dboolean dsda_ProcessCheatCodes(void) {
   return dsda_IntConfig(dsda_config_cheat_codes);
 }

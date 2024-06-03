@@ -25,7 +25,6 @@
 #include "doomstat.h"
 #include "d_event.h"
 #include "s_sound.h"
-#include "sounds.h"
 #include "i_system.h"
 #include "i_video.h"
 #include "v_video.h"
@@ -661,7 +660,6 @@ void IN_DrawSingleStats(void)
     const char *prev_level_name = NameForMap(prevmap);
     const char *next_level_name = NameForMap(nextmap);
     int x;
-    static int sounds;
 
     // [crispy] offset the stats for Ep.4 and up, to make room for level time
     int yoffset = 0;
@@ -683,12 +681,7 @@ void IN_DrawSingleStats(void)
 
     if (intertime < 30)
     {
-        sounds = 0;
         return;
-    }
-    if (sounds < 1 && intertime >= 30)
-    {
-        sounds++;
     }
     IN_DrawNumber(players[consoleplayer].killcount, 200, 65 - yoffset, 3);
     V_DrawShadowedNamePatch(237, 65 - yoffset, "FONTB15");
@@ -697,10 +690,6 @@ void IN_DrawSingleStats(void)
     {
         return;
     }
-    if (sounds < 2 && intertime >= 60)
-    {
-        sounds++;
-    }
     IN_DrawNumber(players[consoleplayer].itemcount, 200, 90 - yoffset, 3);
     V_DrawShadowedNamePatch(237, 90 - yoffset, "FONTB15");
     IN_DrawNumber(totalitems, 248, 90 - yoffset, 3);
@@ -708,20 +697,12 @@ void IN_DrawSingleStats(void)
     {
         return;
     }
-    if (sounds < 3 && intertime >= 90)
-    {
-        sounds++;
-    }
     IN_DrawNumber(players[consoleplayer].secretcount, 200, 115 - yoffset, 3);
     V_DrawShadowedNamePatch(237, 115 - yoffset, "FONTB15");
     IN_DrawNumber(totalsecret, 248, 115 - yoffset, 3);
     if (intertime < 150)
     {
         return;
-    }
-    if (sounds < 4 && intertime >= 150)
-    {
-        sounds++;
     }
 
     // [crispy] ignore "now entering" if it's the final intermission
@@ -765,8 +746,6 @@ void IN_DrawCoopStats(void)
     int x;
     int ypos;
 
-    static int sounds;
-
     IN_DrTextB("KILLS", 95, 35);
     IN_DrTextB("BONUS", 155, 35);
     IN_DrTextB("SECRET", 232, 35);
@@ -783,13 +762,8 @@ void IN_DrawCoopStats(void)
             V_DrawShadowedNumPatch(25, ypos, patchFaceOkayBase + i);
             if (intertime < 40)
             {
-                sounds = 0;
                 ypos += 37;
                 continue;
-            }
-            else if (intertime >= 40 && sounds < 1)
-            {
-                sounds++;
             }
             IN_DrawNumber(killPercent[i], 85, ypos + 10, 3);
             V_DrawShadowedNamePatch(121, ypos + 10, "FONTB05");
@@ -815,8 +789,6 @@ void IN_DrawDMStats(void)
     int ypos;
     int xpos;
     int kpos;
-
-    static int sounds;
 
     xpos = 90;
     ypos = 55;
@@ -845,16 +817,7 @@ void IN_DrawDMStats(void)
                 );
             }
         }
-        sounds = 0;
         return;
-    }
-    if (intertime >= 20 && sounds < 1)
-    {
-        sounds++;
-    }
-    if (intertime >= 100 && slaughterboy && sounds < 2)
-    {
-        sounds++;
     }
     for (i = 0; i < g_maxplayers; i++)
     {

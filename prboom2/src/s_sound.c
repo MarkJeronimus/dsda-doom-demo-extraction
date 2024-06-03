@@ -60,11 +60,8 @@
 #include "dsda/sfx.h"
 #include "dsda/skip.h"
 
-int snd_SfxVolume;
-
 void S_ResetSfxVolume(void)
 {
-  snd_SfxVolume = dsda_IntConfig(dsda_config_sfx_volume);
 }
 
 void S_Init(void)

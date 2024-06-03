@@ -73,19 +73,8 @@
 #include "dsda/settings.h"
 
 
-static int pitched_sounds;
-int snd_samplerate; // samples per second
-static int snd_samplecount;
-
 void I_InitSoundParams(void)
 {
-  pitched_sounds = dsda_IntConfig(dsda_config_pitched_sounds);
-
-  // TODO: can we reinitialize sound with new sample rate / count?
-  if (!snd_samplerate)
-    snd_samplerate = dsda_IntConfig(dsda_config_snd_samplerate);
-  if (!snd_samplecount)
-    snd_samplecount = dsda_IntConfig(dsda_config_snd_samplecount);
 }
 
 //

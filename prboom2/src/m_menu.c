@@ -1222,7 +1222,7 @@ void M_DrawSound(void)
   // CPhipps - patch drawing updated
   V_DrawNamePatch(60, 38, 0, "M_SVOL", CR_DEFAULT, VPT_STRETCH);
 
-  M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),16,snd_SfxVolume);
+  M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),16,0);
 }
 
 void M_Sound(int choice)
@@ -1242,10 +1242,6 @@ void M_SfxVol(int choice)
       dsda_IncrementIntConfig(dsda_config_sfx_volume, true);
       break;
   }
-
-  // Unmute the sfx if we are adjusting the volume
-  if (dsda_MuteSfx())
-    dsda_ToggleConfig(dsda_config_mute_sfx, true);
 }
 
 /////////////////////////////

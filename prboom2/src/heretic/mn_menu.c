@@ -339,7 +339,7 @@ void MN_DrawOptions(void)
 
 void MN_DrawSound(void)
 {
-  MN_DrawSlider(SoundDef.x - 8, SoundDef.y + ITEM_HEIGHT * SFX_VOL_INDEX, 16, snd_SfxVolume);
+  MN_DrawSlider(SoundDef.x - 8, SoundDef.y + ITEM_HEIGHT * SFX_VOL_INDEX, 16, 0);
 }
 
 extern char savegamestrings[10][SAVESTRINGSIZE];

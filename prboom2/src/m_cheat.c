@@ -103,7 +103,6 @@ static void cheat_tntweapx();
 static void cheat_tntammo();
 static void cheat_tntammox();
 static void cheat_smart();
-static void cheat_pitch();
 static void cheat_megaarmour();
 static void cheat_health();
 static void cheat_notarget();
@@ -195,8 +194,6 @@ cheatseq_t cheat[] = {
   CHEAT("tntammo",    NULL,               not_demo, cheat_tntammox, -1, false),
   // killough 2/21/98: smart monster toggle
   CHEAT("tntsmart",   NULL,               not_demo, cheat_smart, 0, false),
-  // killough 2/21/98: pitched sound toggle
-  CHEAT("tntpitch",   NULL,               cht_always, cheat_pitch, 0, false),
   // killough 2/21/98: reduce RSI injury by adding simpler alias sequences:
   // killough 2/21/98: same as tntammo
   CHEAT("tntamo",     NULL,               not_demo, cheat_tntammo, 0, false),
@@ -763,12 +760,6 @@ static void cheat_smart()
 {
   dsda_AddMessage((monsters_remember = !monsters_remember) ?
                   "Smart Monsters Enabled" : "Smart Monsters Disabled");
-}
-
-static void cheat_pitch()
-{
-  dsda_AddMessage(dsda_ToggleConfig(dsda_config_pitched_sounds, true) ? "Pitch Effects Enabled"
-                                                                      : "Pitch Effects Disabled");
 }
 
 static void cheat_notarget()

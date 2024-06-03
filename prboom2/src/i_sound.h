@@ -53,7 +53,4 @@
 // Get raw data lump index for sound descriptor.
 int I_GetSfxLumpNum (sfxinfo_t *sfxinfo);
 
-// CPhipps - put these in config file
-extern int snd_samplerate;
-
 #endif
