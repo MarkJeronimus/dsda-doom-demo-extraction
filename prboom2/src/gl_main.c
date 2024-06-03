@@ -242,10 +242,6 @@ void gld_Init(int width, int height)
   I_AtExit(gld_CleanMemory, true, "gld_CleanMemory", exit_priority_normal); //e6y
 }
 
-void gld_InitCommandLine(void)
-{
-}
-
 //
 // Textured automap
 //

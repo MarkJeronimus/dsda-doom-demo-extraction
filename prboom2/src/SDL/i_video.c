@@ -421,13 +421,6 @@ void I_StartTic (void)
   dsda_PollGameController();
 }
 
-//
-// I_StartFrame
-//
-void I_StartFrame (void)
-{
-}
-
 static void I_FlushMousePosition(void)
 {
   int x, y;

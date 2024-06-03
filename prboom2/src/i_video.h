@@ -79,17 +79,6 @@ unsigned char *I_GrabScreen (void);
  */
 void I_StartTic (void);
 
-/* I_StartFrame
- * Called by D_DoomLoop,
- * called before processing any tics in a frame
- * (just after displaying a frame).
- * Time consuming syncronous operations
- * are performed here (joystick reading).
- * Can call D_PostEvent.
- */
-
-void I_StartFrame (void);
-
 extern int desired_fullscreen; //e6y
 extern int exclusive_fullscreen;
 

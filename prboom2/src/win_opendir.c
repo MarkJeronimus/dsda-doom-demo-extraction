@@ -1,7 +1,7 @@
 //
 // 03/10/2006 James Haley
 //
-// For this module only: 
+// For this module only:
 // This code is public domain. No change sufficient enough to constitute a
 // significant or original work has been made, and thus it remains as such.
 //
@@ -20,7 +20,7 @@
 // * This file is a part of the mingw-runtime package.
 // * No warranty is given; refer to the file DISCLAIMER within the package.
 // *
-// * Derived from DIRLIB.C by Matt J. Weinstein 
+// * Derived from DIRLIB.C by Matt J. Weinstein
 // * This note appears in the DIRLIB.H
 // * DIRLIB.H by M. J. Weinstein   Released to public domain 1-Jan-89
 // *
@@ -48,7 +48,7 @@
 
 //
 // opendir
-// 
+//
 // Returns a pointer to a DIR structure appropriately filled in to begin
 // searching a directory.
 //
@@ -57,15 +57,15 @@ DIR *opendir(const _TCHAR *szPath)
    DIR *nd;
    unsigned int rc;
    _TCHAR szFullPath[MAX_PATH];
-	
+
    errno = 0;
-   
+
    if(!szPath)
    {
       errno = EFAULT;
       return (DIR *)0;
    }
-   
+
    if(szPath[0] == _T('\0'))
    {
       errno = ENOTDIR;
@@ -119,7 +119,7 @@ DIR *opendir(const _TCHAR *szPath)
 
    /* Add on the search pattern */
    _tcscat(nd->dd_name, SUFFIX);
-   
+
    /* Initialize handle to -1 so that a premature closedir doesn't try
    * to call _findclose on it. */
    nd->dd_handle = -1;
@@ -134,7 +134,7 @@ DIR *opendir(const _TCHAR *szPath)
    nd->dd_dir.d_reclen = 0;
    nd->dd_dir.d_namlen = 0;
    memset(nd->dd_dir.d_name, 0, FILENAME_MAX);
-  
+
    return nd;
 }
 
@@ -147,7 +147,7 @@ DIR *opendir(const _TCHAR *szPath)
 struct dirent *readdir(DIR *dirp)
 {
    errno = 0;
-   
+
    /* Check for valid DIR struct. */
    if(!dirp)
    {
@@ -183,9 +183,9 @@ struct dirent *readdir(DIR *dirp)
       /* Get the next search entry. */
       if(_tfindnext(dirp->dd_handle, &(dirp->dd_dta)))
       {
-         /* We are off the end or otherwise error.	
+         /* We are off the end or otherwise error.
             _findnext sets errno to ENOENT if no more file
-            Undo this. */ 
+            Undo this. */
          DWORD winerr = GetLastError();
          if(winerr == ERROR_NO_MORE_FILES)
             errno = 0;
@@ -223,10 +223,10 @@ struct dirent *readdir(DIR *dirp)
 int closedir(DIR *dirp)
 {
    int rc;
-   
+
    errno = 0;
    rc = 0;
-   
+
    if(!dirp)
    {
       errno = EFAULT;
@@ -240,97 +240,7 @@ int closedir(DIR *dirp)
 
    /* Delete the dir structure. */
    free(dirp);
-   
+
    return rc;
 }
-
-//
-// rewinddir
-//
-// Return to the beginning of the directory "stream". We simply call findclose
-// and then reset things like an opendir.
-//
-void rewinddir(DIR * dirp)
-{
-   errno = 0;
-   
-   if(!dirp)
-   {
-      errno = EFAULT;
-      return;
-   }
-
-   if(dirp->dd_handle != -1)
-   {
-      _findclose(dirp->dd_handle);
-   }
-   
-   dirp->dd_handle = -1;
-   dirp->dd_stat = 0;
-}
-
-//
-// telldir
-//
-// Returns the "position" in the "directory stream" which can be used with
-// seekdir to go back to an old entry. We simply return the value in stat.
-//
-long telldir(DIR *dirp)
-{
-   errno = 0;
-   
-   if(!dirp)
-   {
-      errno = EFAULT;
-      return -1;
-   }
-   return dirp->dd_stat;
-}
-
-//
-// seekdir
-//
-// Seek to an entry previously returned by telldir. We rewind the directory
-// and call readdir repeatedly until either dd_stat is the position number
-// or -1 (off the end). This is not perfect, in that the directory may
-// have changed while we weren't looking. But that is probably the case with
-// any such system.
-//
-void seekdir(DIR *dirp, long lPos)
-{
-   errno = 0;
-   
-   if(!dirp)
-   {
-      errno = EFAULT;
-      return;
-   }
-
-   if(lPos < -1)
-   {
-      /* Seeking to an invalid position. */
-      errno = EINVAL;
-      return;
-   }
-   else if(lPos == -1)
-   {
-      /* Seek past end. */
-      if(dirp->dd_handle != -1)
-      {
-         _findclose(dirp->dd_handle);
-      }
-      dirp->dd_handle = -1;
-      dirp->dd_stat = -1;
-   }
-   else
-   {
-      /* Rewind and read forward to the appropriate index. */
-      rewinddir(dirp);
-      
-      while((dirp->dd_stat < lPos) && readdir(dirp))
-         ; /* do-nothing loop */
-   }
-}
-
-// EOF
 

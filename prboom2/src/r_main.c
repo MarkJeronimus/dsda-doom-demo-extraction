@@ -768,8 +768,6 @@ void R_Init (void)
   lprintf(LO_DEBUG, "\nR_InitData: ");
   R_InitData();
   R_SetViewSize();
-  lprintf(LO_DEBUG, "\nR_Init: R_InitPlanes ");
-  R_InitPlanes();
   lprintf(LO_DEBUG, "R_InitLightTables ");
   R_InitLightTables();
   lprintf(LO_DEBUG, "R_InitSkyMap ");

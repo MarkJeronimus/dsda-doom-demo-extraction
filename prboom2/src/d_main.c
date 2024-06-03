@@ -515,7 +515,7 @@ void D_Display ()
 //  called by D_DoomMain, never exits.
 // Manages timing and IO,
 //  calls all ?_Responder, ?_Ticker, and ?_Drawer,
-//  calls I_GetTime, I_StartFrame, and I_StartTic
+//  calls I_GetTime and I_StartTic
 //
 
 static void D_DoomLoop(void)
@@ -527,9 +527,6 @@ static void D_DoomLoop(void)
   {
     if (I_Interrupted())
       I_SafeExit(0);
-
-    // frame syncronous IO operations
-    I_StartFrame ();
 
     // process one or more tics
     if (singletics)
@@ -1649,9 +1646,6 @@ static void D_DoomMainSetup(void)
 
   G_ReloadDefaults();    // killough 3/4/98: set defaults just loaded.
   // jff 3/24/98 this sets startskill if it was -1
-
-  // proff 04/05/2000: for GL-specific switches
-  gld_InitCommandLine();
 
   //jff 9/3/98 use logical output routine
   lprintf(LO_DEBUG, "V_Init: allocate screens.\n");
