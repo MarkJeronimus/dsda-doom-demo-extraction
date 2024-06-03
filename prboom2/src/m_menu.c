@@ -241,11 +241,9 @@ void M_ReadThis2(int choice);
 void M_QuitDOOM(int choice);
 
 void M_ChangeSensitivity(int choice);
-void M_SfxVol(int choice);
 /* void M_ChangeDetail(int choice);  unused -- killough */
 void M_SizeDisplay(int choice);
 void M_StartGame(int choice);
-void M_Sound(int choice);
 
 void M_FinishReadThis(int choice);
 void M_FinishHelp(int choice);            // killough 10/98
@@ -261,22 +259,17 @@ void M_DrawReadThis2(void);
 void M_DrawSkillMenu(void);
 void M_DrawEpisode(void);
 void M_DrawOptions(void);
-void M_DrawSound(void);
 void M_DrawLoad(void);
 void M_DrawSave(void);
 void M_DrawHelp (void);                                     // phares 5/04/98
 
 void M_DrawSaveLoadBorder(int x,int y);
-void M_DrawThermo(int x,int y,int thermWidth,int thermDot);
-void M_DrawEmptyCell(menu_t *menu,int item);
-void M_DrawSelCell(menu_t *menu,int item);
 void M_WriteText(int x, int y, const char *string, int cm);
 int  M_StringWidth(const char *string);
 int  M_StringHeight(const char *string);
 void M_DrawTitle(int x, int y, const char *patch, int cm,
                  const char *alttext, int altcm);
 void M_StartMessage(const char *string,void *routine,dboolean input);
-void M_StopMessage(void);
 void M_ChangeMenu(menu_t *menu, menuactive_t mnact);
 void M_ClearMenus (void);
 
@@ -1077,7 +1070,6 @@ enum
   set_weapons,
   set_statbar,
   set_automap,
-  soundvol,
   level_table,
   opt_end
 } options_e;
@@ -1091,7 +1083,6 @@ menuitem_t OptionsMenu[]=
   { 1, "M_WEAP", M_Weapons, 'w', "WEAPONS" },
   { 1, "M_STAT", M_StatusBar, 's', "STATUS BAR / HUD" },
   { 1, "M_AUTO", M_Automap, 'a', "AUTOMAP" },
-  { 1, "M_SVOL", M_Sound, 's', "SOUND VOLUME" },
   { 1, "M_LVLTBL", M_LevelTable, 's', "LEVEL TABLE" },
 };
 
@@ -1111,8 +1102,6 @@ menu_t OptionsDef =
 
 void M_DrawOptions(void)
 {
-  if (raven) return MN_DrawOptions();
-
   // CPhipps - patch drawing updated
   // proff/nicolas 09/20/98 -- changed for hi-res
   V_DrawNamePatch(108, 15, 0, "M_OPTTTL", CR_DEFAULT, VPT_STRETCH);
@@ -1176,72 +1165,6 @@ void M_QuitDOOM(int choice)
     M_QuitResponse(true);
   else
     M_StartMessage(endstring,M_QuitResponse,true);
-}
-
-/////////////////////////////
-//
-// SOUND VOLUME MENU
-//
-
-// numerical values for the Sound Volume menu items
-// The 'empty' slots are where the sliding scales appear.
-
-enum
-{
-  sfx_vol,
-  sfx_empty1,
-  sound_end
-} sound_e;
-
-// The definitions of the Sound Volume menu
-
-menuitem_t SoundMenu[]=
-{
-  {2,"M_SFXVOL",M_SfxVol,'s'},
-  {-1,"",0}
-};
-
-menu_t SoundDef =
-{
-  sound_end,
-  &OptionsDef,
-  SoundMenu,
-  M_DrawSound,
-  80,64,
-  0
-};
-
-//
-// Change Sfx volume
-//
-
-void M_DrawSound(void)
-{
-  if (raven) return MN_DrawSound();
-
-  // CPhipps - patch drawing updated
-  V_DrawNamePatch(60, 38, 0, "M_SVOL", CR_DEFAULT, VPT_STRETCH);
-
-  M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),16,0);
-}
-
-void M_Sound(int choice)
-{
-  M_SetupNextMenu(&SoundDef);
-}
-
-void M_SfxVol(int choice)
-{
-  switch(choice)
-  {
-    case 0:
-      if (dsda_IntConfig(dsda_config_sfx_volume) > 0)
-        dsda_DecrementIntConfig(dsda_config_sfx_volume, true);
-      break;
-    case 1:
-      dsda_IncrementIntConfig(dsda_config_sfx_volume, true);
-      break;
-  }
 }
 
 /////////////////////////////
@@ -2157,7 +2080,6 @@ setup_menu_t keys_settings2[] =  // Key Binding screen strings
   // {"MENU"        ,S_SKIP|S_KEEP|S_INPUT ,m_scrn,0   ,0,dsda_input_escape},
   {"PAUSE"       ,S_INPUT     ,m_scrn,KB_X,0,dsda_input_pause},
   {"AUTOMAP"     ,S_INPUT     ,m_scrn,KB_X,0,dsda_input_map},
-  {"VOLUME"      ,S_INPUT     ,m_scrn,KB_X,0,dsda_input_soundvolume},
   {"HUD"         ,S_INPUT     ,m_scrn,KB_X,0,dsda_input_hud},
   {"MESSAGES"    ,S_INPUT     ,m_scrn,KB_X,0,dsda_input_messages},
   {"GAMMA FIX"   ,S_INPUT     ,m_scrn,KB_X,0,dsda_input_gamma},
@@ -3873,7 +3795,6 @@ setup_menu_t helpstrings[] =  // HELP screen strings
   {"MENU"        ,S_SKIP|S_INPUT,m_null,KT_X1,0,dsda_input_escape},
   {"PAUSE"       ,S_SKIP|S_INPUT,m_null,KT_X1,0,dsda_input_pause},
   {"AUTOMAP"     ,S_SKIP|S_INPUT,m_null,KT_X1,0,dsda_input_map},
-  {"SOUND VOLUME",S_SKIP|S_INPUT,m_null,KT_X1,0,dsda_input_soundvolume},
   {"HUD"         ,S_SKIP|S_INPUT,m_null,KT_X1,0,dsda_input_hud},
   {"MESSAGES"    ,S_SKIP|S_INPUT,m_null,KT_X1,0,dsda_input_messages},
   {"GAMMA FIX"   ,S_SKIP|S_INPUT,m_null,KT_X1,0,dsda_input_gamma},
@@ -5036,22 +4957,6 @@ dboolean M_Responder (event_t* ev) {
       return true;
     }
 
-    if (dsda_InputActivated(dsda_input_level_table))
-    {
-      M_StartControlPanel();
-      S_StartVoidSound(g_sfx_swtchn);
-      M_LevelTable(0);
-      return true;
-    }
-
-    if (dsda_InputActivated(dsda_input_soundvolume))
-    {
-      M_StartControlPanel ();
-      M_ChangeMenu(&SoundDef, mnact_nochange);
-      itemOn = sfx_vol;
-      return true;
-    }
-
     if (dsda_InputActivated(dsda_input_quicksave))
     {
       M_QuickSave();
@@ -5710,92 +5615,6 @@ void M_StartMessage (const char* string,void* routine,dboolean input)
   messageNeedsInput = input;
   M_ChangeMenu(NULL, mnact_float);
   return;
-}
-
-void M_StopMessage(void)
-{
-  M_ChangeMenu(NULL, messageLastMenuActive);
-  messageToPrint = 0;
-}
-
-/////////////////////////////
-//
-// Thermometer Routines
-//
-
-//
-// M_DrawThermo draws the thermometer graphic for Mouse Sensitivity,
-// Sound Volume, etc.
-//
-// proff/nicolas 09/20/98 -- changed for hi-res
-// CPhipps - patch drawing updated
-//
-void M_DrawThermo(int x,int y,int thermWidth,int thermDot )
-{
-  int          xx;
-  int           i;
-  char num[4];
-  int horizScaler; //Used to allow more thermo range for mouse sensitivity.
-
-  if (raven) return MN_DrawSlider(x, y, thermWidth, thermDot);
-
-  /*
-   * Modification By Barry Mead to allow the Thermometer to have vastly
-   * larger ranges. (the thermWidth parameter can now have a value as
-   * large as 200.      Modified 1-9-2000  Originally I used it to make
-   * the sensitivity range for the mouse better. It could however also
-   * be used to improve the dynamic range of sound affect
-   * volume controls for example.
-   */
-  thermWidth = (thermWidth > 200) ? 200 : thermWidth; //Clamp to 200 max
-  horizScaler = (thermWidth > 23) ? (200 / thermWidth) : 8; //Dynamic range
-  xx = x;
-  V_DrawNamePatch(xx, y, 0, "M_THERML", CR_DEFAULT, VPT_STRETCH);
-  xx += 8;
-  for (i=0;i<thermWidth;i++)
-    {
-    V_DrawNamePatch(xx, y, 0, "M_THERMM", CR_DEFAULT, VPT_STRETCH);
-    xx += horizScaler;
-    }
-
-  xx += (8 - horizScaler);  /* make the right end look even */
-
-  V_DrawNamePatch(xx, y, 0, "M_THERMR", CR_DEFAULT, VPT_STRETCH);
-
-  // [crispy] print the value
-  snprintf(num, sizeof(num), "%3d", thermDot);
-  strcpy(menu_buffer, num);
-  M_DrawMenuString(xx + 12, y + 3, cr_value_edit);
-
-  // [crispy]
-  if (thermDot >= thermWidth)
-  {
-    thermDot = thermWidth - 1;
-  }
-
-  V_DrawNamePatch((x+8)+thermDot*horizScaler,y,0,"M_THERMO",CR_DEFAULT,VPT_STRETCH);
-}
-
-//
-// Draw an empty cell in the thermometer
-//
-
-void M_DrawEmptyCell (menu_t* menu,int item)
-{
-  // CPhipps - patch drawing updated
-  V_DrawNamePatch(menu->x - 10, menu->y+item*LINEHEIGHT - 1, 0,
-      "M_CELL1", CR_DEFAULT, VPT_STRETCH);
-}
-
-//
-// Draw a full cell in the thermometer
-//
-
-void M_DrawSelCell (menu_t* menu,int item)
-{
-  // CPhipps - patch drawing updated
-  V_DrawNamePatch(menu->x - 10, menu->y+item*LINEHEIGHT - 1, 0,
-      "M_CELL2", CR_DEFAULT, VPT_STRETCH);
 }
 
 /////////////////////////////

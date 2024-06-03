@@ -77,7 +77,6 @@ typedef enum {
   dsda_input_join_demo,
   dsda_input_pause,
   dsda_input_map,
-  dsda_input_soundvolume,
   dsda_input_hud,
   dsda_input_messages,
   dsda_input_gamma,

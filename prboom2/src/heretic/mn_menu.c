@@ -50,12 +50,8 @@ extern menu_t MainDef;
 extern menu_t EpiDef;
 extern menu_t SkillDef;
 extern menu_t OptionsDef;
-extern menu_t SoundDef;
 extern menu_t LoadDef;
 extern menu_t SaveDef;
-extern menuitem_t SoundMenu[];
-
-void M_DrawThermo(int x, int y, int thermWidth, int thermDot);
 
 void MN_Init(void)
 {
@@ -77,9 +73,6 @@ void MN_Init(void)
 
   OptionsDef.x = 88;
   OptionsDef.y = 16;
-
-  SoundDef.x = OptionsDef.x;
-  SoundDef.y = OptionsDef.y;
 
   LoadDef.x = 70;
   LoadDef.y = 30;
@@ -110,8 +103,6 @@ void MN_Init(void)
     SkillDef.x = 120;
     SkillDef.y = 44;
   }
-
-  SoundMenu[0].alttext = "SFX VOLUME";
 }
 
 void MN_UpdateClass(int choice)
@@ -333,15 +324,6 @@ void MN_DrawSkillMenu(void)
     MN_DrTextB("CHOOSE SKILL LEVEL:", 74, 16);
 }
 
-void MN_DrawOptions(void)
-{
-}
-
-void MN_DrawSound(void)
-{
-  MN_DrawSlider(SoundDef.x - 8, SoundDef.y + ITEM_HEIGHT * SFX_VOL_INDEX, 16, 0);
-}
-
 extern char savegamestrings[10][SAVESTRINGSIZE];
 
 static void MN_DrawFileSlots(int x, int y)
@@ -508,45 +490,6 @@ int MN_TextBWidth(const char *text)
 #define SLIDER_LIMIT 200
 #define SLIDER_WIDTH (SLIDER_LIMIT - 64)
 #define SLIDER_PATCH_COUNT (SLIDER_WIDTH / 8)
-
-void MN_DrawSlider(int x, int y, int width, int slot)
-{
-  int x2;
-  int count;
-  char num[4];
-  int slot_x;
-  short slider_img = 0;
-
-  width = (width > SLIDER_LIMIT) ? SLIDER_LIMIT : width;
-
-  V_DrawNamePatch(x, y, 0, "M_SLDLT", CR_DEFAULT, VPT_STRETCH);
-
-  for (x2 = x + 32, count = SLIDER_PATCH_COUNT; count--; x2 += 8)
-  {
-    const char* name;
-
-    name = (slider_img & 1 ? "M_SLDMD1" : "M_SLDMD2");
-    slider_img ^= 1;
-
-    V_DrawNamePatch(x2, y, 0, name, CR_DEFAULT, VPT_STRETCH);
-  }
-
-  V_DrawNamePatch(x2, y, 0, "M_SLDRT", CR_DEFAULT, VPT_STRETCH);
-
-  // [crispy] print the value
-  snprintf(num, sizeof(num), "%3d", slot);
-  MN_DrTextA(num, x2 + 32, y + 3);
-
-  // [crispy] do not crash anymore if the value is out of bounds
-  if (slot >= width)
-  {
-    slot = width - 1;
-  }
-
-  slot_x = x + 36 + (SLIDER_WIDTH - 8) * slot / (width - 1);
-
-  V_DrawNamePatch(slot_x, y + 7, 0, "M_SLDKB", CR_DEFAULT, VPT_STRETCH);
-}
 
 // hexen
 
