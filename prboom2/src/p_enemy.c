@@ -134,9 +134,6 @@ static void P_RecursiveSound(sector_t *sec, int soundblocks, mobj_t *soundtarget
 //
 void P_NoiseAlert(mobj_t *target, mobj_t *emitter)
 {
-  if (target != NULL && target->player && (target->player->cheats & CF_NOTARGET))
-    return;
-
   validcount++;
   P_RecursiveSound(emitter->subsector->sector, 0, target);
 }
@@ -921,9 +918,6 @@ static dboolean P_LookForPlayers(mobj_t *actor, dboolean allaround)
 
       player = &players[actor->lastlook];
 
-      if (player->cheats & CF_NOTARGET)
-        continue; // no target
-
       if (player->health <= 0)
   continue;               // dead
 
@@ -1120,9 +1114,6 @@ void A_Look(mobj_t *actor)
 {
   mobj_t *targ = actor->subsector->sector->soundtarget;
   actor->threshold = 0; // any shot will wake up
-
-  if (targ && targ->player && (targ->player->cheats & CF_NOTARGET))
-    return;
 
   /* killough 7/18/98:
    * Friendly monsters go after other monsters first, but
@@ -4822,9 +4813,6 @@ dboolean Raven_P_LookForPlayers(mobj_t * actor, dboolean allaround)
             return false;       // done looking
 
         player = &players[actor->lastlook];
-
-        if (players->cheats & CF_NOTARGET)
-          continue; // no target
 
         if (player->health <= 0)
             continue;           // dead

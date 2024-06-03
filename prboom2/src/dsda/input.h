@@ -159,21 +159,6 @@ typedef enum {
   dsda_input_hexen_arti_bracers,
   dsda_input_avj,
   dsda_input_exhud,
-  dsda_input_mute_sfx,
-  dsda_input_cheat_codes,
-  dsda_input_notarget,
-  dsda_input_freeze,
-  dsda_input_script_0,
-  dsda_input_script_1,
-  dsda_input_script_2,
-  dsda_input_script_3,
-  dsda_input_script_4,
-  dsda_input_script_5,
-  dsda_input_script_6,
-  dsda_input_script_7,
-  dsda_input_script_8,
-  dsda_input_script_9,
-  dsda_input_fps,
   DSDA_INPUT_IDENTIFIER_COUNT
 } dsda_input_identifier_t;
 

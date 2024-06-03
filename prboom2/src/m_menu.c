@@ -1935,7 +1935,6 @@ setup_menu_t raven_keys_settings[];
 setup_menu_t heretic_keys_settings[];
 setup_menu_t hexen_keys_settings[];
 setup_menu_t dsda_keys_settings[];
-setup_menu_t script_keys_settings[];
 
 // The table which gets you from one screen table to the next.
 
@@ -1952,7 +1951,6 @@ setup_menu_t* keys_settings[] =
   heretic_keys_settings,
   hexen_keys_settings,
   dsda_keys_settings,
-  script_keys_settings,
   NULL
 };
 
@@ -2146,8 +2144,6 @@ setup_menu_t keys_settings7[] =
   { "Reset Health", S_INPUT, m_scrn, KB_X, 0, dsda_input_ponce },
   { "Tome of Power", S_INPUT, m_scrn, KB_X, 0, dsda_input_shazam },
   { "Chicken", S_INPUT, m_scrn, KB_X, 0, dsda_input_chicken },
-  { "No Target", S_INPUT, m_scrn, KB_X, 0, dsda_input_notarget },
-  { "Freeze", S_INPUT, m_scrn, KB_X, 0, dsda_input_freeze },
 
   PREV_PAGE(keys_settings6),
   NEXT_PAGE(raven_keys_settings),
@@ -2230,30 +2226,9 @@ setup_menu_t dsda_keys_settings[] = {
   { "Strict Mode", S_INPUT, m_scrn, KB_X, 0, dsda_input_strict_mode },
   { "Coordinate Display", S_INPUT, m_scrn, KB_X, 0, dsda_input_coordinate_display },
   { "Extended HUD", S_INPUT, m_scrn, KB_X, 0, dsda_input_exhud },
-  { "SFX", S_INPUT, m_scrn, KB_X, 0, dsda_input_mute_sfx },
-  { "Cheat Code Entry", S_INPUT, m_scrn, KB_X, 0, dsda_input_cheat_codes },
   { "Render Stats", S_INPUT, m_scrn, KB_X, 0, dsda_input_idrate },
-  { "FPS", S_INPUT, m_scrn, KB_X, 0, dsda_input_fps },
 
   PREV_PAGE(hexen_keys_settings),
-  NEXT_PAGE(script_keys_settings),
-  FINAL_ENTRY
-};
-
-setup_menu_t script_keys_settings[] = {
-  { "Script Keys", S_SKIP | S_TITLE, m_null, KB_X},
-  { "Script 0", S_INPUT, m_scrn, KB_X, 0, dsda_input_script_0 },
-  { "Script 1", S_INPUT, m_scrn, KB_X, 0, dsda_input_script_1 },
-  { "Script 2", S_INPUT, m_scrn, KB_X, 0, dsda_input_script_2 },
-  { "Script 3", S_INPUT, m_scrn, KB_X, 0, dsda_input_script_3 },
-  { "Script 4", S_INPUT, m_scrn, KB_X, 0, dsda_input_script_4 },
-  { "Script 5", S_INPUT, m_scrn, KB_X, 0, dsda_input_script_5 },
-  { "Script 6", S_INPUT, m_scrn, KB_X, 0, dsda_input_script_6 },
-  { "Script 7", S_INPUT, m_scrn, KB_X, 0, dsda_input_script_7 },
-  { "Script 8", S_INPUT, m_scrn, KB_X, 0, dsda_input_script_8 },
-  { "Script 9", S_INPUT, m_scrn, KB_X, 0, dsda_input_script_9 },
-
-  PREV_PAGE(dsda_keys_settings),
   FINAL_ENTRY
 };
 
@@ -2739,7 +2714,6 @@ setup_menu_t misc_settings[] = {
   { "Miscellaneous", S_SKIP | S_TITLE, m_null, G_X},
   { "Default skill level", S_CHOICE, m_conf, G_X, dsda_config_default_skill, 0, gen_skillstrings },
   { "Default compatibility level", S_CHOICE, m_conf, G_X, dsda_config_default_complevel, 0, &gen_compstrings[1] },
-  { "Enable Cheat Code Entry", S_YESNO, m_conf, G_X, dsda_config_cheat_codes },
   { "Announce Map On Entry", S_YESNO, m_conf, G_X, dsda_config_announce_map },
   EMPTY_LINE,
   { "Quality Of Life", S_SKIP | S_TITLE, m_null, G_X},
@@ -2767,7 +2741,6 @@ setup_menu_t display_settings[] = {
   { "Hide Status Bar Horns", S_YESNO, m_conf, G_X, dsda_config_hide_horns },
   { "Hide Weapon", S_YESNO, m_conf, G_X, dsda_config_hide_weapon },
   { "Wipe Screen Effect", S_YESNO,  m_conf, G_X, dsda_config_render_wipescreen },
-  { "Show FPS", S_YESNO,  m_conf, G_X, dsda_config_show_fps },
   { "View Bobbing", S_YESNO, m_conf, G_X, dsda_config_viewbob },
   { "Weapon Bobbing", S_YESNO, m_conf, G_X, dsda_config_weaponbob },
   { "Quake Intensity", S_NUM, m_conf, G_X, dsda_config_quake_intensity },
@@ -3906,9 +3879,7 @@ static toggle_input_t toggle_inputs[] = {
   { dsda_input_autorun, dsda_config_autorun, true, true, "Auto Run", .play_sound = true },
   { dsda_input_command_display, dsda_config_command_display, false, true, "Command Display" },
   { dsda_input_coordinate_display, dsda_config_coordinate_display, false, true, "Coordinate Display" },
-  { dsda_input_fps, dsda_config_show_fps, true, true, "FPS" },
   { dsda_input_exhud, dsda_config_exhud, true, true, "Extended HUD" },
-  { dsda_input_cheat_codes, dsda_config_cheat_codes, false, true, "Cheat Codes" },
   { -1 }
 };
 

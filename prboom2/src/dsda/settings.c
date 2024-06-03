@@ -135,10 +135,6 @@ dboolean dsda_VertMouse(void) {
   return dsda_IntConfig(dsda_config_vertmouse);
 }
 
-dboolean dsda_ProcessCheatCodes(void) {
-  return dsda_IntConfig(dsda_config_cheat_codes);
-}
-
 dboolean dsda_CycleGhostColors(void) {
   return dsda_IntConfig(dsda_config_cycle_ghost_colors);
 }
@@ -177,10 +173,6 @@ dboolean dsda_CommandDisplay(void) {
 
 dboolean dsda_CoordinateDisplay(void) {
   return dsda_IntConfig(dsda_config_coordinate_display);
-}
-
-dboolean dsda_ShowFPS(void) {
-  return dsda_IntConfig(dsda_config_show_fps);
 }
 
 dboolean dsda_ShowMinimap(void) {

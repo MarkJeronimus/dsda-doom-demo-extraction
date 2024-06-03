@@ -605,7 +605,6 @@ static void dsda_RefreshHUD(void) {
   if (dsda_show_render_stats)
     dsda_TurnComponentOn(exhud_render_stats);
 
-  dsda_RefreshExHudFPS();
   dsda_RefreshExHudMinimap();
   dsda_RefreshExHudLevelSplits();
   dsda_RefreshExHudCoordinateDisplay();
@@ -728,10 +727,6 @@ static void dsda_BasicMapRefresh(dboolean (*show_component)(void), exhud_compone
     dsda_TurnComponentOff(id);
 
   components = old_components;
-}
-
-void dsda_RefreshExHudFPS(void) {
-  dsda_BasicRefresh(dsda_ShowFPS, exhud_fps);
 }
 
 void dsda_RefreshExHudMinimap(void) {

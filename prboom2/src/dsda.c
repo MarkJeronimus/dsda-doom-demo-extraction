@@ -109,20 +109,6 @@ int dsda_TurboScale(void) {
   return turbo_scale;
 }
 
-static dboolean frozen_mode;
-
-dboolean dsda_FrozenMode(void) {
-  return frozen_mode;
-}
-
-void dsda_ToggleFrozenMode(void) {
-  if (demoplayback)
-    return;
-
-  frozen_mode = !frozen_mode;
-}
-
-
 void dsda_ReadCommandLine(void) {
   dsda_arg_t* arg;
   int dsda_time_all;

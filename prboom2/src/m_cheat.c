@@ -98,8 +98,6 @@ static void cheat_tntammox();
 static void cheat_smart();
 static void cheat_megaarmour();
 static void cheat_health();
-static void cheat_notarget();
-static void cheat_freeze();
 static void cheat_fly();
 
 // heretic
@@ -190,8 +188,6 @@ cheatseq_t cheat[] = {
   // phares 3/10/98: toggle pushers
   CHEAT("tntpush",    NULL,               not_demo, cheat_pushers, 0, false),
 
-  // [RH] Monsters don't target
-  CHEAT("notarget",   NULL,               not_demo, cheat_notarget, 0, false),
   // fly mode is active
   CHEAT("fly",        NULL,               not_demo, cheat_fly, 0, false),
 
@@ -684,16 +680,6 @@ static void cheat_smart()
   monsters_remember = !monsters_remember;
 }
 
-static void cheat_notarget()
-{
-  plyr->cheats ^= CF_NOTARGET;
-}
-
-static void cheat_freeze()
-{
-  dsda_ToggleFrozenMode();
-}
-
 static void cheat_fly()
 {
   if (plyr->mo != NULL)
@@ -866,19 +852,12 @@ static cheat_input_t cheat_input[] = {
   { dsda_input_ponce, not_demo, cheat_reset_health, 0 },
   { dsda_input_shazam, not_demo, cheat_tome, 0 },
   { dsda_input_chicken, not_demo, cheat_chicken, 0 },
-  { dsda_input_notarget, not_demo, cheat_notarget, 0 },
-  { dsda_input_freeze, not_demo, cheat_freeze, 0 },
   { 0 }
 };
 
 dboolean M_CheatResponder(event_t *ev)
 {
   cheat_input_t* cheat_i;
-
-  if (dsda_ProcessCheatCodes() &&
-      ev->type == ev_keydown &&
-      M_FindCheats(ev->data1.i))
-    return true;
 
   for (cheat_i = cheat_input; cheat_i->input; cheat_i++)
   {

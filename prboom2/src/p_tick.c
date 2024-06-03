@@ -329,30 +329,23 @@ void P_Ticker (void)
     return;
   }
 
-  if (dsda_FrozenMode())
-  {
-    P_FrozenTicker();
-  }
-  else
-  {
-    P_MapStart();
+  P_MapStart();
 
-    // not if this is an intermission screen
-    if (gamestate == GS_LEVEL)
-      for (i = 0; i < g_maxplayers; i++)
-        if (playeringame[i])
-          P_PlayerThink(&players[i]);
+  // not if this is an intermission screen
+  if (gamestate == GS_LEVEL)
+    for (i = 0; i < g_maxplayers; i++)
+      if (playeringame[i])
+        P_PlayerThink(&players[i]);
 
-    P_RunThinkers();
-    P_UpdateSpecials();
-    P_AnimateSurfaces();
-    P_RespawnSpecials();
-    P_AmbientSound();
+  P_RunThinkers();
+  P_UpdateSpecials();
+  P_AnimateSurfaces();
+  P_RespawnSpecials();
+  P_AmbientSound();
 
-    P_MapEnd();
+  P_MapEnd();
 
-    dsda_WatchPTickCompleted();
-  }
+  dsda_WatchPTickCompleted();
 
   leveltime++;                       // for par times
 }

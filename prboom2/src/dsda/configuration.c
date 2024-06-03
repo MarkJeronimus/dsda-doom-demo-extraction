@@ -243,10 +243,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
     "dsda_coordinate_display", dsda_config_coordinate_display,
     CONF_BOOL(0), NULL, STRICT_INT(0), dsda_RefreshExHudCoordinateDisplay
   },
-  [dsda_config_show_fps] = {
-    "dsda_show_fps", dsda_config_show_fps,
-    CONF_BOOL(0), NULL, NOT_STRICT, dsda_RefreshExHudFPS
-  },
   [dsda_config_show_minimap] = {
     "dsda_show_minimap", dsda_config_show_minimap,
     CONF_BOOL(0), NULL, STRICT_INT(0), dsda_RefreshExHudMinimap
@@ -263,53 +259,9 @@ dsda_config_t dsda_config[dsda_config_count] = {
     "dsda_free_text", dsda_config_free_text,
     CONF_STRING(""), NULL, NOT_STRICT, dsda_UpdateFreeText
   },
-  [dsda_config_cheat_codes] = {
-    "dsda_cheat_codes", dsda_config_cheat_codes,
-    CONF_BOOL(1)
-  },
   [dsda_config_organize_failed_demos] = {
     "dsda_organize_failed_demos", dsda_config_organize_failed_demos,
     CONF_BOOL(0)
-  },
-  [dsda_config_script_0] = {
-    "dsda_script_0", dsda_config_script_0,
-    CONF_STRING("")
-  },
-  [dsda_config_script_1] = {
-    "dsda_script_1", dsda_config_script_1,
-    CONF_STRING("")
-  },
-  [dsda_config_script_2] = {
-    "dsda_script_2", dsda_config_script_2,
-    CONF_STRING("")
-  },
-  [dsda_config_script_3] = {
-    "dsda_script_3", dsda_config_script_3,
-    CONF_STRING("")
-  },
-  [dsda_config_script_4] = {
-    "dsda_script_4", dsda_config_script_4,
-    CONF_STRING("")
-  },
-  [dsda_config_script_5] = {
-    "dsda_script_5", dsda_config_script_5,
-    CONF_STRING("")
-  },
-  [dsda_config_script_6] = {
-    "dsda_script_6", dsda_config_script_6,
-    CONF_STRING("")
-  },
-  [dsda_config_script_7] = {
-    "dsda_script_7", dsda_config_script_7,
-    CONF_STRING("")
-  },
-  [dsda_config_script_8] = {
-    "dsda_script_8", dsda_config_script_8,
-    CONF_STRING("")
-  },
-  [dsda_config_script_9] = {
-    "dsda_script_9", dsda_config_script_9,
-    CONF_STRING("")
   },
   [dsda_config_overrun_spechit_emulate] = {
     "overrun_spechit_emulate", dsda_config_overrun_spechit_emulate,
