@@ -56,26 +56,11 @@ void S_Stop(void);
 //
 void S_Start(void);
 
-//
-// Start sound for thing at <origin>
-//  using <sound_id> from sounds.h
-//
-void S_StartSound(void *origin, int sound_id);
-void S_LoopSound(void *origin, int sfx_id, int timeout);
-
 void S_StartSectorSound(sector_t *sector, int sfx_id);
-void S_LoopSectorSound(sector_t *sector, int sfx_id, int timeout);
 
 void S_StartMobjSound(mobj_t *mobj, int sfx_id);
-void S_LoopMobjSound(mobj_t *mobj, int sfx_id, int timeout);
 
 void S_StartVoidSound(int sfx_id);
-void S_LoopVoidSound(int sfx_id, int timeout);
-
-void S_StartLineSound(line_t *line, degenmobj_t *soundorg, int sfx_id);
-
-// Will start a sound at a given volume.
-void S_StartSoundAtVolume(void *origin, int sound_id, int volume, int loop_timeout);
 
 // killough 4/25/98: mask used to indicate sound origin is player item pickup
 #define PICKUP_SOUND (0x8000)
@@ -93,9 +78,6 @@ extern int numChannels;
 // heretic
 
 #include "doomtype.h"
-
-void S_SetSoundCurve(dboolean fullprocess);
-void S_StartAmbientSound(void *origin, int sound_id, int volume);
 
 // hexen
 

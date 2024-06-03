@@ -215,8 +215,7 @@ void P_ChangeSwitchTexture
   int           useAgain )
 {
   /* Rearranged a bit to avoid too much code duplication */
-  degenmobj_t *soundorg;
-  int     i, sound;
+  int     i;
   short   *texture, *ttop, *tmid, *tbot;
   bwhere_e position;
 
@@ -242,27 +241,6 @@ void P_ChangeSwitchTexture
   if (texture == NULL)
     return; /* no switch texture was found to change */
   *texture = switchlist[i^1];
-
-  if (hexen)
-  {
-    // hexen has sound id in episode field
-    sound = alphSwitchList[i / 2].episode;
-    soundorg = &line->frontsector->soundorg;
-  }
-  else
-  {
-    sound = g_sfx_swtchn;
-    /* use the sound origin of the linedef (its midpoint)
-     * unless in a compatibility mode */
-    soundorg = &line->soundorg;
-    if (comp[comp_sound] || compatibility_level < prboom_6_compatibility) {
-      /* usually NULL, unless there is another button already pressed in,
-       * in which case it's the sound origin of that button press... */
-      soundorg = buttonlist->soundorg;
-    }
-  }
-
-  S_StartLineSound(line, soundorg, sound);
 
   if (useAgain)
     P_StartButton(line, position, switchlist[i], BUTTONTIME);

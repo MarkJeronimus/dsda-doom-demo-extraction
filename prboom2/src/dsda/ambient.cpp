@@ -63,13 +63,11 @@ void dsda_UpdateAmbientSource(ambient_source_t* source) {
 
     if (!source->data.attenuation) {
       S_AdjustVolume(source->data.volume);
-      S_LoopVoidSound(source->data.sfx_id, source->wait_tics + 1);
       S_ResetAdjustments();
     }
     else {
       S_AdjustAttenuation(source->data.attenuation);
       S_AdjustVolume(source->data.volume);
-      S_LoopMobjSound(source->mobj, source->data.sfx_id, source->wait_tics + 1);
       S_ResetAdjustments();
     }
   }

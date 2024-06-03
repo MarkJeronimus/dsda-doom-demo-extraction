@@ -186,10 +186,6 @@ void T_MoveCompatibleCeiling(ceiling_t * ceiling)
               false
             );
 
-      // if not silent, make moving sound
-      if (!(leveltime & 7) && !ceiling->silent)
-        S_LoopSectorSound(ceiling->sector, g_sfx_stnmov, 8);
-
       // handle reaching destination height
       if (res == pastdest)
       {
@@ -248,10 +244,6 @@ void T_MoveCompatibleCeiling(ceiling_t * ceiling)
               ceiling->direction,
               ceiling->crushmode == crushHexen
             );
-
-      // if not silent, make moving sound
-      if (!(leveltime & 7) && !ceiling->silent)
-        S_LoopSectorSound(ceiling->sector, g_sfx_stnmov, 8);
 
       // handle reaching destination height
       if (res == pastdest)

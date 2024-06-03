@@ -323,10 +323,6 @@ void SN_StopSequence(mobj_t * mobj)
         next_node = node->next;
         if (node->mobj == mobj)
         {
-            if (node->stopSound)
-            {
-                S_StartSoundAtVolume(mobj, node->stopSound, node->volume, 0);
-            }
             if (SequenceListHead == node)
             {
                 SequenceListHead = node->next;
@@ -366,8 +362,6 @@ void SN_UpdateActiveSequences(void)
         {
             case SS_CMD_PLAY:
                 node->currentSoundID = *(node->sequencePtr + 1);
-                S_StartSoundAtVolume(node->mobj, node->currentSoundID,
-                                        node->volume, 0);
                 node->sequencePtr += 2;
                 break;
             case SS_CMD_WAITUNTILDONE:
@@ -376,8 +370,6 @@ void SN_UpdateActiveSequences(void)
                 break;
             case SS_CMD_PLAYREPEAT:
                 node->currentSoundID = *(node->sequencePtr + 1);
-                S_StartSoundAtVolume(node->mobj, node->currentSoundID,
-                                        node->volume, 0);
                 break;
             case SS_CMD_DELAY:
                 node->delayTics = *(node->sequencePtr + 1);

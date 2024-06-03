@@ -232,9 +232,6 @@ void T_MoveCompatibleFloor(floormove_t * floor)
     }
   }
 
-  if (!(leveltime&7))     // make the floormove sound
-    S_LoopSectorSound(floor->sector, g_sfx_stnmov, 8);
-
   if (res == pastdest)    // if destination height is reached
   {
     if (heretic && floor->type == buildStair)
@@ -446,10 +443,6 @@ void T_MoveElevator(elevator_t* elevator)
         false
       );
   }
-
-  // make floor move sound
-  if (!(leveltime&7))
-    S_LoopSectorSound(elevator->sector, sfx_stnmov, 8);
 
   if (res == pastdest)            // if destination height acheived
   {
@@ -1999,9 +1992,6 @@ void T_BuildZDoomPillar(pillar_t * pillar)
   res2 = !pillar->ceilingSpeed ? pastdest :
          T_MoveCeilingPlane(pillar->sector, pillar->ceilingSpeed, pillar->ceilingdest,
                             pillar->crush, -pillar->direction, pillar->hexencrush);
-
-  if (!(leveltime & 7))
-    S_LoopSectorSound(pillar->sector, g_sfx_stnmov, 8);
 
   if (res1 == pastdest && res2 == pastdest)
   {

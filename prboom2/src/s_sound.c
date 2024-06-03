@@ -97,9 +97,6 @@ static channel_t channels[MAX_CHANNELS];
 // Internal default is max out of 0-15.
 int snd_SfxVolume;
 
-// Derived value (not saved, accounts for muted sfx)
-static int sfx_volume;
-
 // number of channels available
 int numChannels;
 
@@ -117,9 +114,6 @@ int max_snd_dist = 1600;
 int dist_adjust = 160;
 
 static int AmbChan = -1;
-
-static mobj_t* GetSoundListener(void);
-static void Raven_S_StartSoundAtVolume(void *_origin, int sound_id, int volume, int loop_timeout);
 
 void S_ResetSfxVolume(void)
 {
@@ -170,69 +164,16 @@ void S_ResetAdjustments(void) {
   adjust_volume = 0;
 }
 
-void S_StartSoundAtVolume(void *origin_p, int sfx_id, int volume, int loop_timeout)
-{
-  if (raven) return Raven_S_StartSoundAtVolume(origin_p, sfx_id, volume, loop_timeout);
-}
-
 void S_StartSectorSound(sector_t *sector, int sfx_id)
 {
-  if (sector->flags & SECF_SILENT)
-    return;
-
-  S_StartSound((mobj_t *) &sector->soundorg, sfx_id);
-}
-
-void S_LoopSectorSound(sector_t *sector, int sfx_id, int timeout)
-{
-  if (sector->flags & SECF_SILENT)
-    return;
-
-  S_LoopSound((mobj_t *) &sector->soundorg, sfx_id, timeout);
 }
 
 void S_StartMobjSound(mobj_t *mobj, int sfx_id)
 {
-  if (mobj && mobj->subsector && mobj->subsector->sector->flags & SECF_SILENT)
-    return;
-
-  S_StartSound(mobj, sfx_id);
-}
-
-void S_LoopMobjSound(mobj_t *mobj, int sfx_id, int timeout)
-{
-  if (mobj && mobj->subsector && mobj->subsector->sector->flags & SECF_SILENT)
-    return;
-
-  S_LoopSound(mobj, sfx_id, timeout);
 }
 
 void S_StartVoidSound(int sfx_id)
 {
-  S_StartSound(NULL, sfx_id);
-}
-
-void S_LoopVoidSound(int sfx_id, int timeout)
-{
-  S_LoopSound(NULL, sfx_id, timeout);
-}
-
-void S_StartLineSound(line_t *line, degenmobj_t *soundorg, int sfx_id)
-{
-  if (line && line->frontsector && line->frontsector->flags & SECF_SILENT)
-    return;
-
-  S_StartSound((mobj_t *) soundorg, sfx_id);
-}
-
-void S_StartSound(void *origin, int sfx_id)
-{
-  S_StartSoundAtVolume(origin, sfx_id, raven ? 127 : sfx_volume, 0);
-}
-
-void S_LoopSound(void *origin, int sfx_id, int timeout)
-{
-  S_StartSoundAtVolume(origin, sfx_id, raven ? 127 : sfx_volume, timeout);
 }
 
 // [FG] disable sound cutoffs
@@ -401,37 +342,6 @@ static int Raven_S_getChannel(mobj_t *origin, sfxinfo_t *sfx, sfx_params_t *para
   }
 
   return i;
-}
-
-static mobj_t* GetSoundListener(void)
-{
-  static degenmobj_t dummy_listener;
-
-  // If we are at the title screen, the display player doesn't have an
-  // object yet, so return a pointer to a static dummy listener instead.
-
-  if (players[displayplayer].mo != NULL)
-  {
-    return players[displayplayer].mo;
-  }
-  else
-  {
-    dummy_listener.x = 0;
-    dummy_listener.y = 0;
-    dummy_listener.z = 0;
-
-    return (mobj_t *) &dummy_listener;
-  }
-}
-
-static void Raven_S_StartSoundAtVolume(void *_origin, int sound_id, int volume, int loop_timeout)
-{
-  GetSoundListener();
-}
-
-void S_StartAmbientSound(void *_origin, int sound_id, int volume)
-{
-  GetSoundListener();
 }
 
 // hexen

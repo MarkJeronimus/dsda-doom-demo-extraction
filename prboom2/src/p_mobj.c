@@ -1021,9 +1021,6 @@ floater:
             }
             P_AutoCorrectLookDir(mo->player);
           }
-          //e6y: compatibility optioned
-          else if (comp[comp_sound] || (mo->health > 0)) /* cph - prevent "oof" when dead */
-            S_StartSound (mo, sfx_oof);
         }
         else if (hexen && mo->type >= HEXEN_MT_POTTERY1 && mo->type <= HEXEN_MT_POTTERY3)
         {
@@ -1178,17 +1175,11 @@ static void P_NightmareRespawn(mobj_t* mobj)
                     mobj->subsector->sector->floorheight + g_telefog_height,
                     g_mt_tfog);
 
-  // initiate teleport sound
-
-  S_StartSound (mo, g_sfx_telept);
-
   // spawn a teleport fog at the new spot
 
   ss = R_PointInSubsector (x,y);
 
   mo = P_SpawnMobj (x, y, ss->sector->floorheight + g_telefog_height, g_mt_tfog);
-
-  S_StartSound (mo, g_sfx_telept);
 
   // spawn the new monster
 
@@ -1981,7 +1972,6 @@ void P_RespawnSpecials (void)
 
   ss = R_PointInSubsector (x,y);
   mo = P_SpawnMobj (x, y, ss->sector->floorheight , MT_IFOG);
-  S_StartSound (mo, sfx_itmbk);
 
   // find which type to spawn
 

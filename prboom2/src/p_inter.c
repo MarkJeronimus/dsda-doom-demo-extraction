@@ -255,7 +255,7 @@ dboolean P_GiveWeapon(player_t *player, weapontype_t weapon, dboolean dropped)
        * where only consoleplayer's pickup sounds are heard */
       // displayplayer, not consoleplayer, for viewing multiplayer demos
       if (!comp[comp_sound])
-        S_StartSound (player->mo, sfx_wpnup|PICKUP_SOUND); // killough 4/25/98
+        {} // killough 4/25/98
       else if (player == &players[displayplayer])
         S_StartVoidSound (sfx_wpnup|PICKUP_SOUND);
       return false;
@@ -802,7 +802,7 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
    * where only consoleplayer's pickup sounds are heard */
   // displayplayer, not consoleplayer, for viewing multiplayer demos
   if (!comp[comp_sound])
-    S_StartSound (player->mo, sound | PICKUP_SOUND);   // killough 4/25/98
+    {}   // killough 4/25/98
   else if (player == &players[displayplayer])
     S_StartVoidSound (sound | PICKUP_SOUND);
 }

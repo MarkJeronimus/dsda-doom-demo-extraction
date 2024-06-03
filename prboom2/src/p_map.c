@@ -2575,10 +2575,6 @@ dboolean PTR_UseTraverse (intercept_t* in)
         }
         S_StartMobjSound(usething, sound);
       }
-      else if (!heretic)
-      {
-        S_StartSound (usething, sfx_noway);
-      }
 
       // can't use through a wall
       return false;
@@ -2684,7 +2680,7 @@ void P_UseLines (player_t*  player)
 
   if (P_PathTraverse ( x1, y1, x2, y2, PT_ADDLINES, PTR_UseTraverse ))
     if (!comp[comp_sound] && !P_PathTraverse ( x1, y1, x2, y2, PT_ADDLINES, PTR_NoWayTraverse ))
-      S_StartSound (usething, sfx_noway);
+      {};
 }
 
 

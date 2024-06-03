@@ -3102,17 +3102,6 @@ void P_UpdateSpecials (void)
               buttonlist[i].btexture;
             break;
         }
-        if (!hexen)
-        {
-          /* don't take the address of the switch's sound origin,
-           * unless in a compatibility mode. */
-          degenmobj_t *so = buttonlist[i].soundorg;
-          if (comp[comp_sound] || compatibility_level < prboom_6_compatibility)
-            /* since the buttonlist array is usually zeroed out,
-             * button popouts generally appear to come from (0,0) */
-            so = (degenmobj_t *) &buttonlist[i].soundorg;
-          S_StartLineSound(buttonlist[i].line, so, g_sfx_swtchn);
-        }
         memset(&buttonlist[i],0,sizeof(button_t));
       }
     }
@@ -4815,7 +4804,6 @@ void P_InitAmbientSound(void)
 void P_AmbientSound(void)
 {
     afxcmd_t cmd;
-    int sound;
     dboolean done;
 
     if (!AmbSfxCount)
@@ -4834,15 +4822,14 @@ void P_AmbientSound(void)
         {
             case afxcmd_play:
                 AmbSfxVolume = P_Random(pr_heretic) >> 2;
-                S_StartAmbientSound(NULL, *AmbSfxPtr++, AmbSfxVolume);
+                AmbSfxPtr++;
                 break;
             case afxcmd_playabsvol:
-                sound = *AmbSfxPtr++;
+                AmbSfxPtr++;
                 AmbSfxVolume = *AmbSfxPtr++;
-                S_StartAmbientSound(NULL, sound, AmbSfxVolume);
                 break;
             case afxcmd_playrelvol:
-                sound = *AmbSfxPtr++;
+                AmbSfxPtr++;
                 AmbSfxVolume += *AmbSfxPtr++;
                 if (AmbSfxVolume < 0)
                 {
@@ -4852,7 +4839,6 @@ void P_AmbientSound(void)
                 {
                     AmbSfxVolume = 127;
                 }
-                S_StartAmbientSound(NULL, sound, AmbSfxVolume);
                 break;
             case afxcmd_delay:
                 AmbSfxTics = *AmbSfxPtr++;
