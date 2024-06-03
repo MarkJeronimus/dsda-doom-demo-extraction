@@ -17,7 +17,6 @@
 #include "doomdef.h"
 #include "doomstat.h"
 #include "p_mobj.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "p_map.h"
 #include "p_inter.h"

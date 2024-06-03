@@ -53,9 +53,7 @@
 #include "g_game.h"
 #include "p_inter.h"
 #include "p_enemy.h"
-#include "s_sound.h"
 #include "sounds.h"
-#include "i_sound.h"
 #include "m_bbox.h"                                         // phares 3/20/98
 #include "d_deh.h"
 #include "r_plane.h"

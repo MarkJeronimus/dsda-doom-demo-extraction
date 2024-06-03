@@ -38,7 +38,6 @@
 #include "p_inter.h"
 #include "p_tick.h"
 #include "m_cheat.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "dstrings.h"
 #include "r_main.h"

@@ -42,9 +42,7 @@
 #include "doomstat.h"
 #include "g_game.h"
 #include "i_system.h"
-#include "i_sound.h"
 #include "i_video.h"
-#include "s_sound.h"
 #include "lprintf.h"
 #include "m_file.h"
 #include "d_main.h"
@@ -103,14 +101,6 @@ cfg_def_t cfg_defs[] =
   MIGRATED_SETTING(dsda_config_movement_strafe50),
   MIGRATED_SETTING(dsda_config_movement_strafe50onturns),
   MIGRATED_SETTING(dsda_config_movement_shorttics),
-
-  SETTING_HEADING("Sound settings"),
-  MIGRATED_SETTING(dsda_config_pitched_sounds),
-  MIGRATED_SETTING(dsda_config_full_sounds),
-  MIGRATED_SETTING(dsda_config_snd_samplerate),
-  MIGRATED_SETTING(dsda_config_snd_samplecount),
-  MIGRATED_SETTING(dsda_config_sfx_volume),
-  MIGRATED_SETTING(dsda_config_snd_channels),
 
   SETTING_HEADING("Video settings"),
   MIGRATED_SETTING(dsda_config_videomode),
@@ -267,7 +257,6 @@ cfg_def_t cfg_defs[] =
   MIGRATED_SETTING(dsda_config_player_name),
   MIGRATED_SETTING(dsda_config_quickstart_cache_tics),
   MIGRATED_SETTING(dsda_config_death_use_action),
-  MIGRATED_SETTING(dsda_config_mute_sfx),
   MIGRATED_SETTING(dsda_config_cheat_codes),
   MIGRATED_SETTING(dsda_config_allow_jumping),
   MIGRATED_SETTING(dsda_config_parallel_sfx_limit),

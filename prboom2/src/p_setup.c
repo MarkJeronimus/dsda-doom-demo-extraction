@@ -47,7 +47,6 @@
 #include "p_spec.h"
 #include "p_tick.h"
 #include "p_enemy.h"
-#include "s_sound.h"
 #include "lprintf.h" //jff 10/6/98 for debug outputs
 #include "v_video.h"
 #include "smooth.h"

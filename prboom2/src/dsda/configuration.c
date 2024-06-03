@@ -26,7 +26,6 @@
 #include "lprintf.h"
 #include "r_main.h"
 #include "r_segs.h"
-#include "s_sound.h"
 #include "smooth.h"
 #include "v_video.h"
 #include "z_zone.h"
@@ -86,13 +85,11 @@ extern int demo_smoothturnsfactor;
 extern int sts_always_red;
 extern int sts_pct_always_gray;
 extern int sts_traditional_keys;
-extern int full_sounds;
 
 void I_Init2(void);
 void M_ChangeDemoSmoothTurns(void);
 void M_ChangeSkyMode(void);
 void M_ChangeMessages(void);
-void S_ResetSfxVolume(void);
 void M_ChangeAllowFog(void);
 void gld_ResetShadowParameters(void);
 void gld_MultisamplingInit(void);
@@ -103,8 +100,6 @@ void G_UpdateMouseSensitivity(void);
 void dsda_InitGameController(void);
 void M_ChangeSpeed(void);
 void M_ChangeShorttics(void);
-void I_InitSoundParams(void);
-void S_Init(void);
 void HU_InitCrosshair(void);
 void HU_InitThresholds(void);
 void dsda_InitKeyFrame(void);
@@ -354,10 +349,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
   [dsda_config_free_text] = {
     "dsda_free_text", dsda_config_free_text,
     CONF_STRING(""), NULL, NOT_STRICT, dsda_UpdateFreeText
-  },
-  [dsda_config_mute_sfx] = {
-    "dsda_mute_sfx", dsda_config_mute_sfx,
-    CONF_BOOL(0), NULL, NOT_STRICT, S_ResetSfxVolume
   },
   [dsda_config_cheat_codes] = {
     "dsda_cheat_codes", dsda_config_cheat_codes,
@@ -635,30 +626,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
   [dsda_config_startup_delay_ms] = {
     "startup_delay_ms", dsda_config_startup_delay_ms,
     dsda_config_int, 0, 1000, { 0 }
-  },
-  [dsda_config_pitched_sounds] = {
-    "pitched_sounds", dsda_config_pitched_sounds,
-    CONF_BOOL(0), NULL, NOT_STRICT, I_InitSoundParams
-  },
-  [dsda_config_full_sounds] = {
-    "full_sounds", dsda_config_full_sounds,
-    CONF_BOOL(0), &full_sounds
-  },
-  [dsda_config_snd_samplerate] = {
-    "snd_samplerate", dsda_config_snd_samplerate,
-    dsda_config_int, 11025, 48000, { 44100 }, NULL, NOT_STRICT, I_InitSoundParams
-  },
-  [dsda_config_snd_samplecount] = {
-    "snd_samplecount", dsda_config_snd_samplecount,
-    dsda_config_int, 0, 8192, { 0 }, NULL, NOT_STRICT, I_InitSoundParams
-  },
-  [dsda_config_sfx_volume] = {
-    "sfx_volume", dsda_config_sfx_volume,
-    dsda_config_int, 0, 15, { 8 }, NULL, NOT_STRICT, S_ResetSfxVolume
-  },
-  [dsda_config_snd_channels] = {
-    "snd_channels", dsda_config_snd_channels,
-    dsda_config_int, 1, MAX_CHANNELS, { 32 }, NULL, NOT_STRICT, S_Init
   },
   [dsda_config_hudadd_crosshair_color] = {
     "hudadd_crosshair_color", dsda_config_hudadd_crosshair_color,

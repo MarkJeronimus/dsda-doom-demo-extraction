@@ -69,7 +69,6 @@
 #include "d_deh.h"
 #include "i_video.h"
 #include "z_zone.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "w_wad.h"
 #include "st_stuff.h"
@@ -653,7 +652,7 @@ void I_PreInitGraphics(void)
 
   // Initialize SDL
   unsigned int flags = 0;
-  if (!(dsda_Flag(dsda_arg_nodraw) && dsda_Flag(dsda_arg_nosound)))
+  if (!(dsda_Flag(dsda_arg_nodraw)))
     flags = SDL_INIT_VIDEO;
 
   p = SDL_Init(flags);

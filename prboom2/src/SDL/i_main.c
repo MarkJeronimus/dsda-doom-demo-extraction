@@ -60,7 +60,6 @@
 #include "doomstat.h"
 #include "g_game.h"
 #include "m_misc.h"
-#include "i_sound.h"
 #include "i_main.h"
 #include "r_fps.h"
 #include "lprintf.h"

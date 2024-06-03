@@ -24,7 +24,6 @@
 #include "p_tick.h"
 #include "g_game.h"
 #include "sounds.h"
-#include "s_sound.h"
 #include "am_map.h"
 
 #include "dsda/analysis.h"

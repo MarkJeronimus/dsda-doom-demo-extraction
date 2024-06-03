@@ -23,7 +23,6 @@ extern "C" {
 #include "m_random.h"
 #include "lprintf.h"
 #include "p_tick.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "w_wad.h"
 #include "z_zone.h"

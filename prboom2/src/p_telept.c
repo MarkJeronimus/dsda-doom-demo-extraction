@@ -38,7 +38,6 @@
 #include "p_map.h"
 #include "r_main.h"
 #include "p_tick.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "p_user.h"
 #include "smooth.h"

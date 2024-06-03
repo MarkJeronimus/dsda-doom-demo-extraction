@@ -17,7 +17,6 @@
 #include "doomdef.h"
 #include "doomstat.h"
 #include "m_random.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "r_defs.h"
 #include "r_state.h"

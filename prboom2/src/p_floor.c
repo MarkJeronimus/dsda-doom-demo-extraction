@@ -37,7 +37,6 @@
 #include "p_map.h"
 #include "p_spec.h"
 #include "p_tick.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "lprintf.h"
 #include "g_overflow.h"

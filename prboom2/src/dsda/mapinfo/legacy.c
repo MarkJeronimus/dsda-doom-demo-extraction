@@ -20,7 +20,6 @@
 #include "m_misc.h"
 #include "p_setup.h"
 #include "r_data.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "w_wad.h"
 

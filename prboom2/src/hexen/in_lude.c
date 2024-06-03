@@ -17,7 +17,6 @@
 #include "am_map.h"
 #include "doomstat.h"
 #include "d_event.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "i_system.h"
 #include "i_video.h"

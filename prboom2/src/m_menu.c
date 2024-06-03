@@ -59,7 +59,6 @@
 #include "hu_stuff.h"
 #include "st_stuff.h"
 #include "g_game.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "m_menu.h"
 #include "d_deh.h"
@@ -70,7 +69,6 @@
 #include "i_main.h"
 #include "i_system.h"
 #include "i_video.h"
-#include "i_sound.h"
 #include "smooth.h"
 #include "r_fps.h"
 #include "r_main.h"
@@ -143,8 +141,6 @@
 
 /* S_SHOWDESC  = the set of items whose description should be displayed
  * S_SHOWSET   = the set of items whose setting should be displayed
- * S_STRING    = the set of items whose settings are strings -- killough 10/98:
- * S_HASDEFPTR = the set of items whose var field points to default array
  */
 
 #define S_SHOWDESC (S_LABEL|S_TITLE|S_YESNO|S_CRITEM|S_COLOR|S_PREV|S_NEXT|S_INPUT|S_WEAP|S_NUM|S_FILE|S_CREDIT|S_CHOICE|S_NAME)
@@ -153,7 +149,6 @@
 
 #define S_STRING (S_FILE|S_NAME)
 
-#define S_HASDEFPTR (S_STRING|S_YESNO|S_NUM|S_WEAP|S_COLOR|S_CRITEM|S_CHOICE)
 
 extern dboolean  message_dontfuckwithme;
 
@@ -2797,11 +2792,6 @@ setup_menu_t audiovideo_settings[] = {
   { "Background FPS Limit", S_NUM, m_conf, G_X, dsda_config_background_fps_limit },
   { "Fake Contrast", S_CHOICE, m_conf, G_X, dsda_config_fake_contrast_mode, 0, fake_contrast_list },
   { "GL Light Fade", S_CHOICE, m_conf, G_X, dsda_config_gl_fade_mode, 0, gl_fade_mode_list },
-  EMPTY_LINE,
-  { "Sound", S_SKIP | S_TITLE, m_null, G_X},
-  { "Number of Sound Channels", S_NUM, m_conf, G_X, dsda_config_snd_channels },
-  { "Enable v1.1 Pitch Effects", S_YESNO, m_conf, G_X, dsda_config_pitched_sounds },
-  { "Disable Sound Cutoffs", S_YESNO, m_conf, G_X, dsda_config_full_sounds },
 
   NEXT_PAGE(mouse_settings),
   FINAL_ENTRY
@@ -4038,7 +4028,6 @@ static toggle_input_t toggle_inputs[] = {
   { dsda_input_coordinate_display, dsda_config_coordinate_display, false, true, "Coordinate Display" },
   { dsda_input_fps, dsda_config_show_fps, true, true, "FPS" },
   { dsda_input_exhud, dsda_config_exhud, true, true, "Extended HUD" },
-  { dsda_input_mute_sfx, dsda_config_mute_sfx, true, true, "SFX", true },
   { dsda_input_cheat_codes, dsda_config_cheat_codes, false, true, "Cheat Codes" },
   { -1 }
 };

@@ -18,7 +18,6 @@
 #include "doomstat.h"
 #include "m_random.h"
 #include "sounds.h"
-#include "s_sound.h"
 #include "r_main.h"
 #include "p_map.h"
 #include "p_maputl.h"

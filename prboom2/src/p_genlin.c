@@ -37,7 +37,6 @@
 #include "p_spec.h"
 #include "p_tick.h"
 #include "m_random.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "e6y.h"
 

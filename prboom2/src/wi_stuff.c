@@ -39,7 +39,6 @@
 #include "r_main.h"
 #include "v_video.h"
 #include "wi_stuff.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "lprintf.h"  // jff 08/03/98 - declaration of lprintf
 #include "r_draw.h"

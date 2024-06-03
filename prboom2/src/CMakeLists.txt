@@ -308,7 +308,6 @@ set(COMMON_SRC
     i_glob.c
     i_glob.h
     i_main.h
-    i_sound.h
     i_system.h
     i_video.h
     lprintf.c
@@ -396,8 +395,6 @@ set(COMMON_SRC
     st_lib.h
     st_stuff.c
     st_stuff.h
-    s_sound.c
-    s_sound.h
     tables.c
     tables.h
     umapinfo.cpp
@@ -428,7 +425,6 @@ endif()
 
 set(SDLDOOM_SOURCES
     SDL/i_main.c
-    SDL/i_sound.c
     SDL/i_sshot.c
     SDL/i_system.c
     SDL/i_video.c

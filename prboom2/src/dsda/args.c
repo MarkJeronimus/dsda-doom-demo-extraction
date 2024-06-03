@@ -433,16 +433,6 @@ static arg_config_t arg_config[dsda_arg_count] = {
     "sets the level frag limit for deathmatch",
     arg_int, 1, INT_MAX,
   },
-  [dsda_arg_nosound] = {
-    "-nosound", NULL, NULL,
-    "turn off sound",
-    arg_null,
-  },
-  [dsda_arg_nosfx] = {
-    "-nosfx", NULL, NULL,
-    "turn off sfx",
-    arg_null,
-  },
   [dsda_arg_nodraw] = {
     "-nodraw", NULL, NULL,
     "turn off drawing",

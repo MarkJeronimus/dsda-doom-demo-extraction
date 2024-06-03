@@ -18,7 +18,6 @@
 #include "doomstat.h"
 #include "m_misc.h"
 #include "m_random.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "w_wad.h"
 #include "lprintf.h"

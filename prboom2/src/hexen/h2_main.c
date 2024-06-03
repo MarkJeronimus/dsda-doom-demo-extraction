@@ -14,7 +14,6 @@
 // GNU General Public License for more details.
 //
 
-#include "s_sound.h"
 #include "g_game.h"
 #include "d_main.h"
 

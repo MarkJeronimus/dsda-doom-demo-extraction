@@ -19,8 +19,6 @@
 #include "doomstat.h"
 #include "e6y.h"
 #include "i_main.h"
-#include "i_sound.h"
-#include "s_sound.h"
 #include "smooth.h"
 #include "v_video.h"
 #include "gl_struct.h"

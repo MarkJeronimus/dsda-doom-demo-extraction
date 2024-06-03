@@ -41,7 +41,6 @@
 #include "p_enemy.h"
 #include "p_tick.h"
 #include "m_random.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "d_event.h"
 #include "smooth.h"

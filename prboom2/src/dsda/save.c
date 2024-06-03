@@ -23,7 +23,6 @@
 #include "z_zone.h"
 #include "p_saveg.h"
 #include "p_map.h"
-#include "s_sound.h"
 
 #include "dsda/args.h"
 #include "dsda/configuration.h"

@@ -35,7 +35,6 @@
 #include "p_spec.h"
 #include "p_tick.h"
 #include "p_user.h"
-#include "s_sound.h"
 #include "smooth.h"
 #include "v_video.h"
 

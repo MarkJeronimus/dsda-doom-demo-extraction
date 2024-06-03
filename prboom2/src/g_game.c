@@ -69,7 +69,6 @@
 #include "r_main.h"
 #include "r_draw.h"
 #include "p_map.h"
-#include "s_sound.h"
 #include "dstrings.h"
 #include "sounds.h"
 #include "r_data.h"
@@ -2642,7 +2641,6 @@ void G_Compatibility(void)
     { lxdoom_1_compatibility, prboom_2_compatibility },
     // comp_respawn - objects which aren't on the map at game start respawn at (0,0)
     { prboom_2_compatibility, prboom_2_compatibility },
-    // comp_sound - see s_sound.c
     { boom_compatibility_compatibility, prboom_3_compatibility },
     // comp_666 - emulate pre-Ultimate BossDeath behaviour
     { ultdoom_compatibility, prboom_4_compatibility },

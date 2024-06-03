@@ -18,7 +18,6 @@
 
 #include "doomdef.h"
 #include "m_random.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "p_mobj.h"
 #include "lprintf.h"

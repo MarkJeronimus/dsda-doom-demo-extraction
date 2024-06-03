@@ -37,7 +37,6 @@
 #include "p_maputl.h"
 #include "p_spec.h"
 #include "g_game.h"
-#include "s_sound.h"
 #include "sounds.h"
 #include "lprintf.h"
 #include "e6y.h"//e6y

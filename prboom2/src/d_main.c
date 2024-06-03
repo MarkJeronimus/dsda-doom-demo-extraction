@@ -57,7 +57,6 @@
 #include "sounds.h"
 #include "z_zone.h"
 #include "w_wad.h"
-#include "s_sound.h"
 #include "v_video.h"
 #include "f_finale.h"
 #include "f_wipe.h"
@@ -66,7 +65,6 @@
 #include "m_menu.h"
 #include "i_main.h"
 #include "i_system.h"
-#include "i_sound.h"
 #include "i_video.h"
 #include "g_game.h"
 #include "hu_stuff.h"
@@ -1895,7 +1893,7 @@ static void D_DoomMainSetup(void)
   lprintf(LO_DEBUG, "dsda_InitFont: Loading the hud fonts.\n");
   dsda_InitFont();
 
-  if (!(dsda_Flag(dsda_arg_nodraw) && dsda_Flag(dsda_arg_nosound)))
+  if (!(dsda_Flag(dsda_arg_nodraw)))
     I_InitGraphics();
 
   //jff 9/3/98 use logical output routine
