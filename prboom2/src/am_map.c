@@ -52,7 +52,6 @@
 #include "lprintf.h"  // jff 08/03/98 - declaration of lprintf
 #include "g_game.h"
 #include "r_fps.h"
-#include "smooth.h"
 #include "m_misc.h"
 #include "m_bbox.h"
 #include "d_main.h"
@@ -635,16 +634,8 @@ static void AM_changeWindowLoc(void)
     dsda_UpdateIntConfig(dsda_config_automap_follow, false, true);
   }
 
-  if (movement_smooth)
-  {
-    incx = FixedMul(m_paninc.x, tic_vars.frac);
-    incy = FixedMul(m_paninc.y, tic_vars.frac);
-  }
-  else
-  {
-    incx = m_paninc.x;
-    incy = m_paninc.y;
-  }
+  incx = m_paninc.x;
+  incy = m_paninc.y;
 
   if (automap_rotate)
   {
@@ -1154,26 +1145,6 @@ void AM_rotatePoint(mpoint_t *p)
 //
 static void AM_changeWindowScale(void)
 {
-  if (movement_smooth)
-  {
-    float f_paninc = (float)F_PANINC / (float)FRACUNIT * (float)tic_vars.frac;
-
-    if (f_paninc < 0.01f)
-      f_paninc = 0.01f;
-
-    scale_mtof = prev_scale_mtof;
-    if (curr_mtof_zoommul == M_ZOOMIN)
-    {
-      mtof_zoommul = ((int) ((float)FRACUNIT * (1.00f + f_paninc / 200.0f)));
-      ftom_zoommul = ((int) ((float)FRACUNIT / (1.00f + f_paninc / 200.0f)));
-    }
-    if (curr_mtof_zoommul == M_ZOOMOUT)
-    {
-      mtof_zoommul = ((int) ((float)FRACUNIT / (1.00f + f_paninc / 200.0f)));
-      ftom_zoommul = ((int) ((float)FRACUNIT * (1.00f + f_paninc / 200.0f)));
-    }
-  }
-
   scale_mtof = FixedMul(scale_mtof, mtof_zoommul);
   scale_ftom = FixedDiv(FRACUNIT, scale_mtof);
 
@@ -1821,21 +1792,9 @@ static void AM_drawLineCharacter
 
 INLINE static void AM_GetMobjPosition(mobj_t *mo, mpoint_t *p, angle_t *angle)
 {
-  if (R_ViewInterpolation())
-  {
-    p->x = mo->PrevX + FixedMul(tic_vars.frac, mo->x - mo->PrevX);
-    p->y = mo->PrevY + FixedMul(tic_vars.frac, mo->y - mo->PrevY);
-    if (mo->player)
-      *angle = mo->player->prev_viewangle + FixedMul(tic_vars.frac, R_SmoothPlaying_Get(mo->player) - mo->player->prev_viewangle);
-    else
-      *angle = mo->angle;
-  }
-  else
-  {
-    p->x = mo->x;
-    p->y = mo->y;
-    *angle = mo->angle;
-  }
+  p->x = mo->x;
+  p->y = mo->y;
+  *angle = mo->angle;
 
   p->x = p->x >> FRACTOMAPBITS;
   p->y = p->y >> FRACTOMAPBITS;

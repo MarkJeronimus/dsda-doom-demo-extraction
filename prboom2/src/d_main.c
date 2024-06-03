@@ -368,7 +368,6 @@ void D_Display ()
   if ((wipe = (gamestate != wipegamestate)))
   {
     wipe_StartScreen();
-    R_ResetViewInterpolation();
   }
 
   if (gamestate != GS_LEVEL) { // Not a level
@@ -440,7 +439,7 @@ void D_Display ()
     // Boom colormaps should be applied for everything in R_RenderPlayerView
     use_boom_cm=true;
 
-    frac = I_GetTimeFrac();
+    frac = FRACUNIT;
 
     R_InterpolateView(&players[displayplayer], frac);
 
@@ -459,8 +458,6 @@ void D_Display ()
     {
       AM_Drawer(false);
     }
-
-    R_RestoreInterpolations();
 
     DSDA_ADD_CONTEXT(sf_status_bar);
     ST_Drawer(redrawborderstuff || BorderNeedRefresh);
@@ -531,7 +528,6 @@ static void D_DoomLoop(void)
     if (I_Interrupted())
       I_SafeExit(0);
 
-    WasRenderedInTryRunTics = false;
     // frame syncronous IO operations
     I_StartFrame ();
 
@@ -551,10 +547,7 @@ static void D_DoomLoop(void)
       TryRunTics (); // will run at least one tic
 
     // Update display, next frame, with current state.
-    if (!movement_smooth || !WasRenderedInTryRunTics || gamestate != wipegamestate)
-    {
-      D_Display();
-    }
+    D_Display();
   }
 }
 
@@ -1923,9 +1916,6 @@ static void D_DoomMainSetup(void)
     else
       D_StartTitle();                 // start up intro loop
   }
-
-  // do not try to interpolate during timedemo
-  M_ChangeUncappedFrameRate();
 
   lprintf(LO_DEBUG, "\n"); // Separator after setup
 }

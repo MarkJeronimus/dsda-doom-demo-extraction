@@ -44,7 +44,6 @@
 #include "p_enemy.h"
 #include "p_spec.h"
 #include "p_user.h"
-#include "smooth.h"
 #include "r_fps.h"
 #include "g_game.h"
 #include "p_tick.h"
@@ -354,11 +353,6 @@ void P_MovePlayer (player_t* player)
   mo = player->mo;
   mo->angle += cmd->angleturn << 16;
 
-  if (demo_smoothturns && player == &players[displayplayer])
-  {
-    R_SmoothPlaying_Add(cmd->angleturn << 16);
-  }
-
   onground = (mo->z <= mo->floorz || mo->flags2 & MF2_ONMOBJ);
 
   if ((player->mo->flags & MF_FLY) && player == &players[consoleplayer] && upmove != 0)
@@ -589,8 +583,6 @@ void P_DeathThink (player_t* player)
   {
     dsda_DeathUse(player);
   }
-
-  R_SmoothPlaying_Reset(player); // e6y
 }
 
 void P_PlayerEndFlight(player_t * player)
@@ -615,18 +607,6 @@ void P_PlayerThink (player_t* player)
   ticcmd_t*    cmd;
   weapontype_t newweapon;
   int floorType;
-
-  if (movement_smooth)
-  {
-    player->prev_viewz = player->viewz;
-    player->prev_viewangle = R_SmoothPlaying_Get(player);
-    player->prev_viewpitch = dsda_PlayerPitch(player);
-
-    if (&players[displayplayer] == player)
-    {
-      P_ResetWalkcam();
-    }
-  }
 
   // killough 2/8/98, 3/21/98:
   if (player->cheats & CF_NOCLIP)
@@ -1402,11 +1382,6 @@ void Raven_P_MovePlayer(player_t * player)
 
     cmd = &player->cmd;
     player->mo->angle += (cmd->angleturn << 16);
-
-    if (demo_smoothturns && player == &players[displayplayer])
-    {
-      R_SmoothPlaying_Add(cmd->angleturn << 16);
-    }
 
     onground = (player->mo->z <= player->mo->floorz
                 || (player->mo->flags2 & MF2_ONMOBJ));

@@ -385,8 +385,6 @@ set(COMMON_SRC
     scanner.h
     sc_man.c
     sc_man.h
-    smooth.c
-    smooth.h
     sounds.c
     sounds.h
     st_lib.c

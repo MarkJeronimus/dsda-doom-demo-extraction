@@ -79,7 +79,6 @@
 #include "lprintf.h"
 #include "i_main.h"
 #include "i_system.h"
-#include "smooth.h"
 #include "r_fps.h"
 #include "e6y.h"//e6y
 
@@ -1324,8 +1323,6 @@ dboolean G_Responder (event_t* ev)
 
     ST_Start();    // killough 3/7/98: switch status bar views too
     HU_Start();
-    R_ActivateSectorInterpolations();
-    R_SmoothPlaying_Reset(NULL);
     return true;
   }
 
@@ -1603,7 +1600,6 @@ void G_Ticker (void)
             gameaction = ga_loadgame;
             forced_loadgame = true;
             load_via_cmd = true;
-            R_SmoothPlaying_Reset(NULL);
           }
 
           if (ex->actions & XC_GOD)
@@ -2326,7 +2322,6 @@ void G_LoadGame(int slot)
   gameaction = ga_loadgame;
   savegameslot = slot;
   load_via_cmd = false;
-  R_SmoothPlaying_Reset(NULL); // e6y
 }
 
 // killough 5/15/98:
@@ -2378,9 +2373,6 @@ void G_AfterLoad(void)
   extern int BorderNeedRefresh;
 
   dsda_ResetTrackers();
-
-  R_ActivateSectorInterpolations(); //e6y
-  R_SmoothPlaying_Reset(NULL); // e6y
 
   RecalculateDrawnSubsectors();
 
@@ -3883,8 +3875,6 @@ void G_StartDemoPlayback(const byte *buffer, int length, int behaviour)
   dsda_InitDemoPlayback();
   demo_p = G_ReadDemoHeaderEx(demobuffer, demolength, RDH_SAFE);
   dsda_AttachPlaybackStream(demo_p, demolength, behaviour);
-
-  R_SmoothPlaying_Reset(NULL); // e6y
 }
 
 static int LoadDemo(const char *name, const byte **buffer, int *length)

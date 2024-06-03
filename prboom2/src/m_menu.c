@@ -69,7 +69,6 @@
 #include "i_main.h"
 #include "i_system.h"
 #include "i_video.h"
-#include "smooth.h"
 #include "r_fps.h"
 #include "r_main.h"
 #include "r_segs.h"
@@ -286,7 +285,6 @@ static void M_DrawStringCentered(int,int,int,const char*);
 void M_DrawStatusHUD(void);
 void M_DrawExtHelp(void);
 void M_DrawAutoMap(void);
-void M_ChangeDemoSmoothTurns(void);
 void M_ChangeTextureParams(void);
 void M_General(int);      // killough 10/98
 void M_DrawGeneral(void); // killough 10/98
@@ -2775,7 +2773,6 @@ setup_menu_t audiovideo_settings[] = {
   { "Fullscreen Video mode", S_YESNO, m_conf, G_X, dsda_config_use_fullscreen },
   { "Exclusive Fullscreen", S_YESNO, m_conf, G_X, dsda_config_exclusive_fullscreen },
   { "Vertical Sync", S_YESNO, m_conf, G_X, dsda_config_render_vsync },
-  { "Uncapped Framerate", S_YESNO, m_conf, G_X, dsda_config_uncapped_framerate },
   { "FPS Limit", S_NUM, m_conf, G_X, dsda_config_fps_limit },
   { "Background FPS Limit", S_NUM, m_conf, G_X, dsda_config_background_fps_limit },
   { "Fake Contrast", S_CHOICE, m_conf, G_X, dsda_config_fake_contrast_mode, 0, fake_contrast_list },
@@ -2907,8 +2904,6 @@ setup_menu_t demo_settings[] = {
   { "Show Split Data", S_YESNO, m_conf, G_X, dsda_config_show_split_data },
   { "Text File Author", S_NAME, m_conf, G_X, dsda_config_player_name },
   { "Quickstart Cache Tics", S_NUM, m_conf, G_X, dsda_config_quickstart_cache_tics },
-  { "Smooth Demo Playback", S_YESNO, m_conf, G_X, dsda_config_demo_smoothturns },
-  { "Smooth Demo Playback Factor", S_NUM, m_conf, G_X, dsda_config_demo_smoothturnsfactor },
   { "Show Precise Intermission Time", S_YESNO,  m_conf, G_X, dsda_config_show_level_splits },
   EMPTY_LINE,
   { "Organize Failed Demos", S_YESNO,  m_conf, G_X, dsda_config_organize_failed_demos },
@@ -2955,11 +2950,6 @@ void M_ChangeVideoMode(void)
 void M_ChangeUseGLSurface(void)
 {
   V_ChangeScreenResolution();
-}
-
-void M_ChangeDemoSmoothTurns(void)
-{
-  R_SmoothPlaying_Reset(NULL);
 }
 
 // Setting up for the General screen. Turn on flags, set pointers,
@@ -5096,11 +5086,6 @@ dboolean M_Responder (event_t* ev) {
       {
         walkcamera.type = (walkcamera.type+1)%3;
         P_SyncWalkcam (true, (walkcamera.type!=2));
-        R_ResetViewInterpolation ();
-        if (walkcamera.type==0)
-          R_SmoothPlaying_Reset(NULL);
-        // Don't eat the keypress in this case.
-        // return true;
       }
     }
 
@@ -5762,8 +5747,6 @@ void M_Init(void)
   M_ChangeSpeed();
   M_ChangeSkyMode();
   M_ChangeFOV();
-
-  M_ChangeDemoSmoothTurns();
 
   M_ChangeMapTextured();
   M_ChangeMapMultisamling();

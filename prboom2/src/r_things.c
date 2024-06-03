@@ -676,18 +676,9 @@ static void R_ProjectSprite (mobj_t* thing, int lightlevel)
     return;
   }
 
-  if (R_ViewInterpolation())
-  {
-    fx = thing->PrevX + FixedMul (tic_vars.frac, thing->x - thing->PrevX);
-    fy = thing->PrevY + FixedMul (tic_vars.frac, thing->y - thing->PrevY);
-    fz = thing->PrevZ + FixedMul (tic_vars.frac, thing->z - thing->PrevZ);
-  }
-  else
-  {
-    fx = thing->x;
-    fy = thing->y;
-    fz = thing->z;
-  }
+  fx = thing->x;
+  fy = thing->y;
+  fz = thing->z;
 
   tr_x = fx - viewx;
   tr_y = fy - viewy;
@@ -1197,44 +1188,6 @@ static void R_DrawPSprite (pspdef_t *psp)
     vis->colormap = spritelights[MAXLIGHTSCALE-1];  // local light
 
   R_UpdateVisSpriteTranMap(vis, NULL);
-
-  //e6y: interpolation for weapon bobbing
-  if (movement_smooth)
-  {
-    typedef struct interpolate_s
-    {
-      int x1;
-      int x1_prev;
-      int texturemid;
-      int texturemid_prev;
-      int lump;
-    } psp_interpolate_t;
-
-    static psp_interpolate_t psp_inter;
-
-    if (realframe)
-    {
-      psp_inter.x1 = psp_inter.x1_prev;
-      psp_inter.texturemid = psp_inter.texturemid_prev;
-    }
-
-    psp_inter.x1_prev = vis->x1;
-    psp_inter.texturemid_prev = vis->texturemid;
-
-    if (lump == psp_inter.lump)
-    {
-      int deltax = vis->x2 - vis->x1;
-      vis->x1 = psp_inter.x1 + FixedMul (tic_vars.frac, (vis->x1 - psp_inter.x1));
-      vis->x2 = vis->x1 + deltax;
-      vis->texturemid = psp_inter.texturemid + FixedMul (tic_vars.frac, (vis->texturemid - psp_inter.texturemid));
-    }
-    else
-    {
-      psp_inter.x1 = vis->x1;
-      psp_inter.texturemid = vis->texturemid;
-      psp_inter.lump=lump;
-    }
-  }
 
   if (dsda_HideWeapon())
     return;

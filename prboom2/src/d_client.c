@@ -121,22 +121,9 @@ void TryRunTics (void)
     FakeNetUpdate();
     runtics = maketic - gametic;
     if (!runtics) {
-      if (!movement_smooth) {
-          I_uSleep(ms_to_next_tick*1000);
-      }
+      I_uSleep(ms_to_next_tick*1000);
       if (dsda_GetTick() - entertime > 10) {
         M_Ticker(); return;
-      }
-
-      if (gametic > 0)
-      {
-        WasRenderedInTryRunTics = true;
-        if (movement_smooth && gamestate==wipegamestate)
-        {
-          isExtraDDisplay = true;
-          D_Display();
-          isExtraDDisplay = false;
-        }
       }
     } else break;
   }

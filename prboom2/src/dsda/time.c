@@ -101,13 +101,12 @@ static void dsda_Throttle(int timer, unsigned long long target_time) {
 }
 
 void dsda_LimitFPS(void) {
-  extern int movement_smooth;
   extern int window_focused;
 
   int allow_limit;
   int fps_limit;
 
-  allow_limit = movement_smooth || !window_focused;
+  allow_limit = !window_focused;
   fps_limit = window_focused ? dsda_IntConfig(dsda_config_fps_limit)
                              : dsda_IntConfig(dsda_config_background_fps_limit);
 

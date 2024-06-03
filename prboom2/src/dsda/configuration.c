@@ -26,7 +26,6 @@
 #include "lprintf.h"
 #include "r_main.h"
 #include "r_segs.h"
-#include "smooth.h"
 #include "v_video.h"
 #include "z_zone.h"
 
@@ -80,14 +79,11 @@ typedef struct {
 
 extern int dsda_input_profile;
 extern int weapon_preferences[2][NUMWEAPONS + 1];
-extern int demo_smoothturns;
-extern int demo_smoothturnsfactor;
 extern int sts_always_red;
 extern int sts_pct_always_gray;
 extern int sts_traditional_keys;
 
 void I_Init2(void);
-void M_ChangeDemoSmoothTurns(void);
 void M_ChangeSkyMode(void);
 void M_ChangeAllowFog(void);
 void gld_ResetShadowParameters(void);
@@ -111,7 +107,6 @@ void M_ChangeMapTextured(void);
 void AM_InitParams(void);
 void gld_ResetAutomapTransparency(void);
 void M_ChangeVideoMode(void);
-void M_ChangeUncappedFrameRate(void);
 void M_ChangeFullScreen(void);
 void R_SetViewSize(void);
 void M_ChangeApplyPalette(void);
@@ -274,16 +269,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
   [dsda_config_flashing_hom] = {
     "flashing_hom", dsda_config_flashing_hom,
     CONF_BOOL(0)
-  },
-  [dsda_config_demo_smoothturns] = {
-    "demo_smoothturns", dsda_config_demo_smoothturns,
-    CONF_BOOL(0), &demo_smoothturns,
-    NOT_STRICT, M_ChangeDemoSmoothTurns
-  },
-  [dsda_config_demo_smoothturnsfactor] = {
-    "demo_smoothturnsfactor", dsda_config_demo_smoothturnsfactor,
-    dsda_config_int, 1, SMOOTH_PLAYING_MAXFACTOR, { 6 }, &demo_smoothturnsfactor,
-    NOT_STRICT, M_ChangeDemoSmoothTurns
   },
   [dsda_config_weapon_attack_alignment] = {
     "weapon_attack_alignment", dsda_config_weapon_attack_alignment,
@@ -882,10 +867,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
   [dsda_config_render_vsync] = {
     "render_vsync", dsda_config_render_vsync,
     CONF_BOOL(0), NULL, NOT_STRICT, M_ChangeVideoMode
-  },
-  [dsda_config_uncapped_framerate] = {
-    "uncapped_framerate", dsda_config_uncapped_framerate,
-    CONF_BOOL(1), NULL, NOT_STRICT, M_ChangeUncappedFrameRate
   },
   [dsda_config_fps_limit] = {
     "dsda_fps_limit", dsda_config_fps_limit,

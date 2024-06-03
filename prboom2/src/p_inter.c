@@ -36,7 +36,6 @@
 #include "m_random.h"
 #include "am_map.h"
 #include "r_main.h"
-#include "smooth.h"
 #include "sounds.h"
 #include "d_deh.h"  // Ty 03/22/98 - externalized strings
 #include "p_tick.h"
@@ -2205,8 +2204,6 @@ void P_TouchWhirlwind(mobj_t * target)
     {
         P_DamageMobj(target, NULL, NULL, 3);
     }
-
-    if (target->player) R_SmoothPlaying_Reset(target->player); // e6y
 }
 
 dboolean P_ChickenMorphPlayer(player_t * player)

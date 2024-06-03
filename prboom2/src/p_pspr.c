@@ -43,7 +43,6 @@
 #include "m_random.h"
 #include "sounds.h"
 #include "d_event.h"
-#include "smooth.h"
 #include "g_game.h"
 #include "lprintf.h"
 #include "e6y.h"//e6y
@@ -805,7 +804,6 @@ void A_Punch(player_t *player, pspdef_t *psp)
 
   player->mo->angle = R_PointToAngle2(player->mo->x, player->mo->y,
                                       linetarget->x, linetarget->y);
-  R_SmoothPlaying_Reset(player); // e6y
 }
 
 //
@@ -859,7 +857,6 @@ void A_Saw(player_t *player, pspdef_t *psp)
   }
 
   player->mo->flags |= MF_JUSTATTACKED;
-  R_SmoothPlaying_Reset(player); // e6y
 }
 
 //
@@ -1297,7 +1294,6 @@ void A_WeaponMeleeAttack(player_t *player, pspdef_t *psp)
 
   // turn to face target
   player->mo->angle = R_PointToAngle2(player->mo->x, player->mo->y, linetarget->x, linetarget->y);
-  R_SmoothPlaying_Reset(player);
 }
 
 //
@@ -1588,7 +1584,6 @@ void A_StaffAttackPL1(player_t * player, pspdef_t * psp)
         player->mo->angle = R_PointToAngle2(player->mo->x,
                                             player->mo->y, linetarget->x,
                                             linetarget->y);
-        R_SmoothPlaying_Reset(player); // e6y
     }
 }
 
@@ -1611,7 +1606,6 @@ void A_StaffAttackPL2(player_t * player, pspdef_t * psp)
         player->mo->angle = R_PointToAngle2(player->mo->x,
                                             player->mo->y, linetarget->x,
                                             linetarget->y);
-        R_SmoothPlaying_Reset(player); // e6y
     }
 }
 
@@ -2297,7 +2291,6 @@ void A_GauntletAttack(player_t * player, pspdef_t * psp)
             player->mo->angle += ANG90 / 20;
     }
     player->mo->flags |= MF_JUSTATTACKED;
-    R_SmoothPlaying_Reset(player); // e6y
 }
 
 void P_RepositionMace(mobj_t * mo)
@@ -2572,7 +2565,6 @@ void AdjustPlayerAngle(mobj_t * pmo)
     {
         pmo->angle = angle;
     }
-    R_SmoothPlaying_Reset(pmo->player);
 }
 
 mobj_t *PuffSpawned;
@@ -3260,7 +3252,6 @@ void A_CStaffCheck(player_t * player, pspdef_t * psp)
             break;
         }
     }
-    R_SmoothPlaying_Reset(player); // e6y
 }
 
 void A_CStaffAttack(player_t * player, pspdef_t * psp)
