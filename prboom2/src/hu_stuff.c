@@ -64,15 +64,6 @@
 
 static player_t*  plr;
 
-typedef struct custom_message_s
-{
-  int ticks;
-  const char *msg;
-} custom_message_t;
-
-static custom_message_t custom_message[MAX_MAXPLAYERS];
-static custom_message_t *custom_message_p;
-
 //jff 2/16/98 status color change levels
 int hud_ammo_red;      // ammo percent less than which status is red
 int hud_ammo_yellow;   // ammo percent less is yellow more green
@@ -97,12 +88,6 @@ static void HU_FetchTitle(void)
     dsda_FreeString(&hud_title);
 
   dsda_HUTitle(&hud_title);
-}
-
-static void HU_InitMessages(void)
-{
-  custom_message_p = &custom_message[displayplayer];
-  custom_message_p->ticks = 0;
 }
 
 static void HU_InitPlayer(void)
@@ -337,7 +322,6 @@ void HU_Start(void)
 {
   HU_InitThresholds();
   HU_InitPlayer();
-  HU_InitMessages();
   HU_FetchTitle();
   HU_InitCrosshair();
 
@@ -368,20 +352,6 @@ void HU_Drawer(void)
   V_EndUIDraw();
 }
 
-char* secret_message;
-
-static void HU_UpdateSecretMessage(const char* message)
-{
-  if (secret_message)
-    Z_Free(secret_message);
-
-  secret_message = Z_Strdup(message);
-}
-
-char* HU_SecretMessage(void) {
-  return custom_message_p->ticks > 0 ? secret_message : NULL;
-}
-
 //
 // HU_Ticker()
 //
@@ -391,22 +361,6 @@ char* HU_SecretMessage(void) {
 //
 void HU_Ticker(void)
 {
-  int i;
-
-  // centered messages
-  for (i = 0; i < g_maxplayers; i++)
-  {
-    if (custom_message[i].ticks > 0)
-      custom_message[i].ticks--;
-  }
-
-  if (custom_message_p->msg)
-  {
-    HU_UpdateSecretMessage(custom_message_p->msg);
-
-    custom_message_p->msg = NULL;
-  }
-
   dsda_UpdateExHud();
 }
 
@@ -425,21 +379,4 @@ dboolean HU_Responder(event_t *ev)
   }
 
   return false;
-}
-
-int SetCustomMessage(int plr, const char *msg, int ticks)
-{
-  custom_message_t item;
-
-  if (plr < 0 || plr >= g_maxplayers || !msg || ticks < 0)
-  {
-    return false;
-  }
-
-  item.msg = msg;
-  item.ticks = ticks;
-
-  custom_message[plr] = item;
-
-  return true;
 }

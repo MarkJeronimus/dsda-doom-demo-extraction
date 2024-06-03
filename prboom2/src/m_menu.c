@@ -2479,7 +2479,6 @@ setup_menu_t stat_settings1[] =  // Status Bar and HUD Settings screen
   { "HEALTH GOOD/EXTRA", S_NUM, m_conf, SB_X, dsda_config_hud_health_green },
   { "AMMO LOW/OK", S_NUM, m_conf, SB_X, dsda_config_hud_ammo_red },
   { "AMMO OK/GOOD", S_NUM, m_conf, SB_X, dsda_config_hud_ammo_yellow },
-  { "REPORT REVEALED SECRETS", S_YESNO, m_conf, SB_X, dsda_config_hudadd_secretarea },
   { "DEMO PLAYBACK PROGRESS BAR", S_YESNO, m_conf, SB_X, dsda_config_hudadd_demoprogressbar },
 
   NEXT_PAGE(stat_settings2),

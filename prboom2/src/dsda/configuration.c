@@ -634,10 +634,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
     "hud_displayed", dsda_config_hud_displayed,
     CONF_BOOL(0), NULL, CONF_FEATURE | NOT_STRICT, R_SetViewSize
   },
-  [dsda_config_hudadd_secretarea] = {
-    "hudadd_secretarea", dsda_config_hudadd_secretarea,
-    CONF_BOOL(1)
-  },
   [dsda_config_hudadd_demoprogressbar] = {
     "hudadd_demoprogressbar", dsda_config_hudadd_demoprogressbar,
     CONF_BOOL(1)

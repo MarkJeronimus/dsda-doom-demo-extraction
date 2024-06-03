@@ -27,21 +27,6 @@ typedef struct {
 static local_component_t* local;
 
 static void dsda_UpdateComponentText(char* str, size_t max_size) {
-  char* HU_SecretMessage(void);
-
-  char* message;
-
-  message = HU_SecretMessage();
-
-  if (message)
-    snprintf(
-      str,
-      max_size,
-      "%s%s",
-      dsda_TextColor(dsda_tc_hud_secret_message),
-      message
-    );
-  else
     str[0] = '\0';
 }
 

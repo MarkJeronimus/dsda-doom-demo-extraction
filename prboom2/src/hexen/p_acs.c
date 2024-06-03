@@ -478,8 +478,6 @@ void P_CheckACSStore(void)
     }
 }
 
-static char ErrorMsg[128];
-
 dboolean P_StartACS(int number, int map, byte * args, mobj_t * activator,
                    line_t * line, int side)
 {
@@ -561,9 +559,6 @@ dboolean P_StartLockedACS(line_t * line, byte * args, mobj_t * mo, int side)
     int i;
     int lock;
     byte newArgs[5];
-
-    extern char *TextKeyMessages[11];
-    extern char LockedBuffer[80];
 
     lock = args[4];
     if (!mo->player)
@@ -1547,16 +1542,6 @@ static int CmdBeginPrint(void)
 
 static int CmdEndPrint(void)
 {
-    player_t *player;
-
-    if (ACScript->activator && ACScript->activator->player)
-    {
-        player = ACScript->activator->player;
-    }
-    else
-    {
-        player = &players[consoleplayer];
-    }
     return SCRIPT_CONTINUE;
 }
 

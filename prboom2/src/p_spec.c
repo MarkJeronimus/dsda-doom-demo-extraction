@@ -1389,11 +1389,6 @@ void P_AddMobjSecret(mobj_t *mobj)
 void P_PlayerCollectSecret(player_t *player)
 {
   player->secretcount++;
-
-  if (dsda_IntConfig(dsda_config_hudadd_secretarea))
-  {
-    SetCustomMessage(player - players, "A secret is revealed!", 2 * TICRATE);
-  }
 }
 
 static void P_CollectSecretCommon(sector_t *sector, player_t *player)
