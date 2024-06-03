@@ -409,6 +409,10 @@ typedef struct mobj_s
     byte color;
     const byte* tranmap;
 
+    int damageDealt;
+    int selfDamage;
+    double distanceTraveled;
+
     // SEE WARNING ABOVE ABOUT POINTER FIELDS!!!
 } mobj_t;
 

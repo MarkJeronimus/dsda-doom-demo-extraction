@@ -31,6 +31,8 @@
  *
  *-----------------------------------------------------------------------------*/
 
+#include <stdlib.h>
+
 #include "doomstat.h"
 #include "dstrings.h"
 #include "m_random.h"
@@ -1606,6 +1608,14 @@ void P_DamageMobj(mobj_t *target,mobj_t *inflictor, mobj_t *source, int damage)
   }
 
   dsda_WatchDamage(target, inflictor, source, damage);
+
+if (source) { // Nukage damages without source
+  if (target == source) {
+    source->selfDamage += damage;
+  } else {
+    source->damageDealt += MAX(0, MIN(damage, target->health));
+  }
+}
 
   // do the damage
   target->health -= damage;

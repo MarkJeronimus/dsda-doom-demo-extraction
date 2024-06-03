@@ -95,6 +95,7 @@
 #include "dsda/mapinfo.h"
 #include "dsda/mobjinfo.h"
 #include "dsda/options.h"
+#include "dsda/palette.h"
 #include "dsda/pause.h"
 #include "dsda/playback.h"
 #include "dsda/preferences.h"
@@ -535,23 +536,48 @@ void D_Display (fixed_t frac)
 //  calls I_GetTime, I_StartFrame, and I_StartTic
 //
 
+FILE *stats_file;
+
+void close_stats_file(void) {
+  if (stats_file) {
+    fflush(stats_file);
+    fclose(stats_file);
+  }
+}
+
 static void D_DoomLoop(void)
 {
+  int arena = 0;
+  const char *name;
+  char *filename;
+
   if (dsda_IntConfig(dsda_config_startup_delay_ms) > 0)
     I_uSleep(dsda_IntConfig(dsda_config_startup_delay_ms) * 1000);
+
+  I_AtExit(close_stats_file, true, "close_stats_file", exit_priority_normal);
+
+  name = dsda_PlaybackName();
+  lprintf(LO_INFO, "Playing from: \"%s\"\n", name);
+  filename = strcpy(Z_Malloc(strlen(name)+5), name);
+  filename[strlen(name)-4]=0;
+  filename = AddDefaultExtension(filename, ".tsv");
+  lprintf(LO_INFO, "Exporting to: \"%s\"\n", filename);
+  stats_file = M_OpenFile(filename, "wb");
+  fprintf(stats_file, "Tic\tKills\tItems\tSecrets\tHealth\tArmor\tSavings\tWeapons\tCurrent weapon\tBullets\tShels\tRockets\tCell\tAngle\tX\tY\tDistance walked\tDamage dealt\tSelf-damage\tBlack\tGray\tWhite\tSector\tArena\n");
 
   for (;;)
   {
     if (I_Interrupted())
       I_SafeExit(0);
 
-    WasRenderedInTryRunTics = false;
-    // frame syncronous IO operations
-    I_StartFrame ();
+    if (players[0].mo) {
+      players[0].mo->damageDealt = 0;
+      players[0].mo->selfDamage = 0;
+    }
 
-    // process one or more tics
-    if (singletics)
-    {
+    // // process one or more tics
+    // if (singletics)
+    // {
       I_StartTic ();
       G_BuildTiccmd (&local_cmds[consoleplayer][maketic%BACKUPTICS]);
       if (advancedemo)
@@ -560,43 +586,98 @@ static void D_DoomLoop(void)
       G_Ticker ();
       gametic++;
       maketic++;
-    }
-    else
-      TryRunTics (); // will run at least one tic
-
-    // killough 3/16/98: change consoleplayer to displayplayer
-    if (players[displayplayer].mo) // cph 2002/08/10
-      S_UpdateSounds();// move positional sounds
+    // }
+    // else
+    //   TryRunTics (); // will run at least one tic
 
     // Update display, next frame, with current state.
-    if (!movement_smooth || !WasRenderedInTryRunTics || gamestate != wipegamestate)
-    {
-      // NSM
-      if (capturing_video && !dsda_SkipMode())
-      {
-        dboolean first = true;
-        int cap_step = TICRATE * FRACUNIT / cap_fps;
-        cap_frac += cap_step;
-        while(cap_frac <= FRACUNIT)
-        {
-          isExtraDDisplay = !first;
-          first = false;
+    D_Display(-1);
 
-          if (gamestate == wipegamestate || cap_wipescreen)
-          {
-            I_QueueFrameCapture();
-          }
+    if (!dsda_Paused() && !dsda_PausedViaMenu()) {
+      R_ResetColorMap();
+      if (players[0].mo) {
+        int health  = players[0].health;
+        int armor   = players[0].armorpoints[ARMOR_ARMOR];
+        int savings = 4 - players[0].armortype; // 0→<don't care>, 1→3, 2→2
+        // int hitpoints, gameSpeed;
 
-          D_Display(cap_frac);
+        unsigned char* palette = dsda_PlayPalData()->lump + 768 * st_palette;
+        unsigned char* black = palette + 3 * fullcolormap[0 - 32 * 256 * players[0].powers[pw_invulnerability]];
+        unsigned char* gray  = palette + 3 * fullcolormap[97 - 32 * 256 * players[0].powers[pw_invulnerability]];
+        unsigned char* white = palette + 3 * fullcolormap[4 - 32 * 256 * players[0].powers[pw_invulnerability]];
 
-          isExtraDDisplay = false;
-          cap_frac += cap_step;
-        }
-        cap_frac -= FRACUNIT + cap_step;
-      }
-      else
-      {
-        D_Display(-1);
+        double vx = (double) (players[0].mo->PrevX - players[0].mo->x) / FRACUNIT;
+        double vy = (double) (players[0].mo->PrevY - players[0].mo->y) / FRACUNIT;
+        double vz = (double) (players[0].mo->PrevZ - players[0].mo->z) / FRACUNIT;
+
+        int x = players[0].mo->x >> FRACBITS;
+        int y = players[0].mo->y >> FRACBITS;
+
+        int sector = players[0].mo->subsector->sector->iSectorID;
+             if (arena ==  0 &&   sector ==   16                                      ) arena++; //  1 Imp Staircase     (0)
+        else if (arena ==  1 &&  (sector >=  696 && sector <=  701)                   ) arena++; //  2 Mastermind Prison (~354)
+        else if (arena ==  2 && ((sector >=  702 && sector <=  707) || sector ==   66)) arena++; //  3 Arch Vile Cave    (~726)
+        else if (arena ==  3 &&   sector ==  742                                      ) arena++; //  4 Mancubus Cliff    (~815)
+        else if (arena ==  4 &&                     y      < -6500                    ) arena++; //  5 Blood Oasis       (~1276)
+        else if (arena ==  5 &&   sector ==  105                                      ) arena++; //  6 Pinky Descent     (2374)
+        else if (arena ==  6 &&   sector ==  157                                      ) arena++; //  7 Commando Crossing (2713)
+        else if (arena ==  7 &&   sector ==  176                                      ) arena++; //  8 Marble dungeon    (2794)
+        else if (arena ==  8 &&                     x      <  9664                    ) arena++; //  9 Stairway to Cybers(3296)
+        else if (arena ==  9 &&  (sector ==  261 || sector == 1145)                   ) arena++; // 10 Revenant Halls    (3692)
+        else if (arena == 10 &&   sector ==  370                                      ) arena++; // 11 Baron Attic       (3937)
+        else if (arena == 11 &&                     x      <  4288                    ) arena++; // 12 Crimson Colosseum (4007)
+        else if (arena == 12 &&   sector ==  364                                      ) arena++; // 13 Commando Snake    (4946)
+        else if (arena == 13 &&   sector ==  680                                      ) arena++; // 14 Castle Siege      (5021)
+        else if (arena == 14 &&   sector ==  375                                      ) arena++; // 15 Toxic Courtyard   (6140)
+        else if (arena == 15 &&                     y      <  6144                    ) arena++; // 16 Imp Canyon        (6568)
+        else if (arena == 16 &&   sector ==  512                                      ) arena++; // 17 Silent Mausoleum  (10044)
+        else if (arena == 17 &&   sector == 1377                                      ) arena++; // 18 Torture Square    (~11715)
+        else if (arena == 18 &&   sector == 1280                                      ) arena++; // 19 Nuclear Ossuary   (12004)
+        else if (arena == 19 &&   sector == 1333                                      ) arena++; // 20 Rusty Roundabout  (12219)
+        else if (arena == 20 &&   sector == 1347                                      ) arena++; // 21 Revenant Snake    (12309)
+        else if (arena == 21 &&   sector == 1382                                      ) arena++; // 22 Lava Park         (12559)
+        else if (arena == 22 &&   sector == 1402                                      ) arena++; // 23 Pinky Alley       (~13275)
+        else if (arena == 23 &&   sector == 1478                                      ) arena++; // 24 Archie Condo      (13616)
+        else if (arena == 24 &&                     x      > -2444                    ) arena++; // 25 Revenant Peekaboo (14380)
+        else if (arena == 25 &&   sector == 2070                                      ) arena++; // 26 Baron Crusher     (14590)
+        else if (arena == 26 &&   sector == 2148                                      ) arena++; // 27 Crossfire Arena   (14724)
+        else if (arena == 27 &&   sector == 3480                                      ) arena++; // 28 Spider Den        (16280)
+        else if (arena == 28 &&   sector == 3473                                      ) arena++; // 29 Skeletal Cavern   (17233)
+        else if (arena == 29 &&                     x      <  1280                    ) arena++; // 30 Caco Pit          (17459)
+        else if (arena == 30 &&   sector == 2271                                      ) arena++; // 31 Purgatory Gateway (18496)
+        else if (arena == 31 &&   sector == 2346                                      ) arena++; // 32 Hell's Deep       (20802)
+        else if (arena == 32 &&   sector == 3793                                      ) arena++; // 33 Exit              (23211)
+
+        players[0].mo->distanceTraveled += sqrt(vx * vx + vy * vy + vz * vz);
+
+        if (!(gametic & 0xFF))
+          lprintf(LO_INFO, "%d/%d\t%d\t%d\t%d\t%d\n", gametic, demo_tics_count, x, y, sector, arena);
+
+        fprintf(stats_file, "%d\t%d\t%d\t%d\t%d\t%d\t%d\t%c2%c%c%c%c%c%c%c\t%d\t%d\t%d\t%d\t%d\t%d\t%.2f\t%.2f\t%d\t%d\t%d\t#%06X\t#%06X\t#%06X\t%d\t%d\n",
+                gametic,
+                players[0].killcount-players[0].maxkilldiscount,
+                players[0].itemcount,
+                players[0].secretcount,
+                health,
+                armor,
+                savings,
+                players[0].powers[pw_strength]?'B':'1', players[0].weaponowned[wp_shotgun]?'3':'-', players[0].weaponowned[wp_chaingun]?'4':'-', players[0].weaponowned[wp_missile]?'5':'-', players[0].weaponowned[wp_plasma]?'6':'-', players[0].weaponowned[wp_bfg]?'7':'-', players[0].weaponowned[wp_chainsaw]?'8':'-', players[0].weaponowned[wp_supershotgun]?'9':'-',
+                players[0].readyweapon+1,
+                players[0].ammo[am_clip],
+                players[0].ammo[am_shell],
+                players[0].ammo[am_misl],
+                players[0].ammo[am_cell],
+                players[0].mo->angle>>ANGLETOFINESHIFT,
+                players[0].mo->x/(float)FRACUNIT,
+                players[0].mo->y/(float)FRACUNIT,
+                (int)players[0].mo->distanceTraveled,
+                players[0].mo->damageDealt,
+                players[0].mo->selfDamage,
+                black[0]<<16|black[1]<<8|black[2],
+                gray [0]<<16|gray [1]<<8|gray [2],
+                white[0]<<16|white[1]<<8|white[2],
+                sector,
+                arena);
       }
     }
   }

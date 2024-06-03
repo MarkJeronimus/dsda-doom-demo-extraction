@@ -20,7 +20,8 @@
                 "-skill", "1",
                 // "-fast",
                 // "-warp", "1",
-                "-playdemo","/home/zom-b/Resources/Doom/demos/pwad/oku-2-segments-00005.lmp",
+                "-nosound"
+                "-playdemo","/home/zom-b/Resources/Doom/demos/pwad/oku-2-segments-00022.lmp",
                 "-complevel", "9"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
