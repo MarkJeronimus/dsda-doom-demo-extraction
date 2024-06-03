@@ -1161,10 +1161,6 @@ void A_BFGSpray(mobj_t *mo)
     }
 }
 
-void A_BFGsound(player_t *player, pspdef_t *psp)
-{
-}
-
 //
 // [XA] New mbf21 codepointers
 //
@@ -1311,10 +1307,6 @@ void A_WeaponMeleeAttack(player_t *player, pspdef_t *psp)
   // turn to face target
   player->mo->angle = R_PointToAngle2(player->mo->x, player->mo->y, linetarget->x, linetarget->y);
   R_SmoothPlaying_Reset(player);
-}
-
-void A_WeaponSound(player_t *player, pspdef_t *psp)
-{
 }
 
 //

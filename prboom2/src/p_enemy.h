@@ -55,10 +55,7 @@ extern struct brain_s {         /* killough 3/26/98: global state of boss brain 
 
 // Doesn't work with g++, needs actionf_p1
 void A_Explode(mobj_t *);
-void A_Pain(mobj_t *);
-void A_PlayerScream(mobj_t *);
 void A_Fall(mobj_t *);
-void A_XScream(mobj_t *);
 void A_Look(mobj_t *);
 void A_Chase(mobj_t *);
 void A_FaceTarget(mobj_t *);
@@ -66,7 +63,6 @@ void A_PosAttack(mobj_t *);
 void A_Scream(mobj_t *);
 void A_SPosAttack(mobj_t *);
 void A_VileChase(mobj_t *);
-void A_VileStart(mobj_t *);
 void A_VileTarget(mobj_t *);
 void A_VileAttack(mobj_t *);
 void A_StartFire(mobj_t *);
@@ -97,7 +93,6 @@ void A_CyberAttack(mobj_t *);
 void A_PainAttack(mobj_t *);
 void A_PainDie(mobj_t *);
 void A_KeenDie(mobj_t *);
-void A_BrainPain(mobj_t *);
 void A_BrainScream(mobj_t *);
 void A_BrainDie(mobj_t *);
 void A_BrainAwake(mobj_t *);
@@ -112,7 +107,6 @@ void A_Spawn(mobj_t *);           // killough 11/98
 void A_Turn(mobj_t *);            // killough 11/98
 void A_Face(mobj_t *);            // killough 11/98
 void A_Scratch(mobj_t *);         // killough 11/98
-void A_PlaySound(mobj_t *);       // killough 11/98
 void A_RandomJump(mobj_t *);      // killough 11/98
 void A_LineEffect(mobj_t *);      // killough 11/98
 

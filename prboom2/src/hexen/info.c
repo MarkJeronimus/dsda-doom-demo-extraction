@@ -95,7 +95,6 @@ void A_BridgeInit();
 void A_BridgeOrbit();
 void A_TreeDeath();
 void A_PoisonShroom();
-void A_Pain();
 void A_SoAExplode();
 void A_BellReset1();
 void A_BellReset2();

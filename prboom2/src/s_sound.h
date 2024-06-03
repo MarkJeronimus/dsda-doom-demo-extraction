@@ -56,8 +56,6 @@ void S_Stop(void);
 //
 void S_Start(void);
 
-void S_StartVoidSound(int sfx_id);
-
 // killough 4/25/98: mask used to indicate sound origin is player item pickup
 #define PICKUP_SOUND (0x8000)
 

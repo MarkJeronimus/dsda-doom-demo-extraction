@@ -1415,22 +1415,16 @@ static const deh_bexptr deh_bexptrs[] = // CPhipps - static const
   {A_Light2,          "A_Light2"},
   {A_FireShotgun2,    "A_FireShotgun2"},
   {A_CheckReload,     "A_CheckReload"},
-  {A_OpenShotgun2,    "A_OpenShotgun2"},
-  {A_LoadShotgun2,    "A_LoadShotgun2"},
   {A_CloseShotgun2,   "A_CloseShotgun2"},
   {A_FireCGun,        "A_FireCGun"},
   {A_GunFlash,        "A_GunFlash"},
   {A_FireMissile,     "A_FireMissile"},
   {A_Saw,             "A_Saw"},
   {A_FirePlasma,      "A_FirePlasma"},
-  {A_BFGsound,        "A_BFGsound"},
   {A_FireBFG,         "A_FireBFG"},
   {A_BFGSpray,        "A_BFGSpray"},
   {A_Explode,         "A_Explode"},
-  {A_Pain,            "A_Pain"},
-  {A_PlayerScream,    "A_PlayerScream"},
   {A_Fall,            "A_Fall"},
-  {A_XScream,         "A_XScream"},
   {A_Look,            "A_Look"},
   {A_Chase,           "A_Chase"},
   {A_FaceTarget,      "A_FaceTarget"},
@@ -1438,7 +1432,6 @@ static const deh_bexptr deh_bexptrs[] = // CPhipps - static const
   {A_Scream,          "A_Scream"},
   {A_SPosAttack,      "A_SPosAttack"},
   {A_VileChase,       "A_VileChase"},
-  {A_VileStart,       "A_VileStart"},
   {A_VileTarget,      "A_VileTarget"},
   {A_VileAttack,      "A_VileAttack"},
   {A_StartFire,       "A_StartFire"},
@@ -1469,7 +1462,6 @@ static const deh_bexptr deh_bexptrs[] = // CPhipps - static const
   {A_PainAttack,      "A_PainAttack"},
   {A_PainDie,         "A_PainDie"},
   {A_KeenDie,         "A_KeenDie"},
-  {A_BrainPain,       "A_BrainPain"},
   {A_BrainScream,     "A_BrainScream"},
   {A_BrainDie,        "A_BrainDie"},
   {A_BrainAwake,      "A_BrainAwake"},
@@ -1484,7 +1476,6 @@ static const deh_bexptr deh_bexptrs[] = // CPhipps - static const
   {A_Turn,            "A_Turn"},           // killough 11/98
   {A_Face,            "A_Face"},           // killough 11/98
   {A_Scratch,         "A_Scratch"},        // killough 11/98
-  {A_PlaySound,       "A_PlaySound"},      // killough 11/98
   {A_RandomJump,      "A_RandomJump"},     // killough 11/98
   {A_LineEffect,      "A_LineEffect"},     // killough 11/98
 
@@ -1514,7 +1505,6 @@ static const deh_bexptr deh_bexptrs[] = // CPhipps - static const
   {A_WeaponProjectile,    "A_WeaponProjectile", 5, {0}, TI_ARGS1},
   {A_WeaponBulletAttack,  "A_WeaponBulletAttack", 5, {0, 0, 1, 5, 3}},
   {A_WeaponMeleeAttack,   "A_WeaponMeleeAttack", 5, {2, 10, 1 * FRACUNIT, 0, 0}},
-  {A_WeaponSound,         "A_WeaponSound", 2},
   {A_WeaponAlert,         "A_WeaponAlert", 0},
   {A_WeaponJump,          "A_WeaponJump", 2},
   {A_ConsumeAmmo,         "A_ConsumeAmmo", 1},

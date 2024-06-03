@@ -1975,10 +1975,6 @@ void A_VileChase(mobj_t* actor)
     A_Chase(actor);  // Return to normal attack.
 }
 
-void A_VileStart(mobj_t *actor)
-{
-}
-
 //
 // A_Fire
 // Keep fire in front of player unless out of sight
@@ -2350,10 +2346,6 @@ void A_Scream(mobj_t *actor)
     }
 }
 
-void A_XScream(mobj_t *actor)
-{
-}
-
 void A_SkullPop(mobj_t *actor)
 {
   mobj_t *mo;
@@ -2385,10 +2377,6 @@ void A_SkullPop(mobj_t *actor)
     player->lookdir = 0;
     player->damagecount = 32;
   }
-}
-
-void A_Pain(mobj_t *actor)
-{
 }
 
 void A_Fall(mobj_t *actor)
@@ -2697,14 +2685,6 @@ void A_BabyMetal(mobj_t *mo)
   A_Chase(mo);
 }
 
-void A_OpenShotgun2(player_t *player, pspdef_t *psp)
-{
-}
-
-void A_LoadShotgun2(player_t *player, pspdef_t *psp)
-{
-}
-
 void A_CloseShotgun2(player_t *player, pspdef_t *psp)
 {
   A_ReFire(player,psp);
@@ -2755,10 +2735,6 @@ void A_BrainAwake(mobj_t *mo)
     brain.targeton = 0;
     brain.easy = 0;
   }
-}
-
-void A_BrainPain(mobj_t *mo)
-{
 }
 
 void A_BrainScream(mobj_t *mo)
@@ -2899,10 +2875,6 @@ void A_SpawnFly(mobj_t *mo)
   P_RemoveMobj(mo);
 }
 
-void A_PlayerScream(mobj_t *mo)
-{
-}
-
 /* cph - MBF-added codepointer functions */
 
 // killough 11/98: kill an object
@@ -3030,10 +3002,6 @@ void A_Scratch(mobj_t *mo)
   // x ? y ? 0 : 0, b : 0;
   // x ? (y ? 0 : 0), b : 0;
   // x ? 0, b : 0;
-}
-
-void A_PlaySound(mobj_t *mo)
-{
 }
 
 void A_RandomJump(mobj_t *mo)
@@ -7898,9 +7866,9 @@ void A_KoraxChase(mobj_t * actor)
     {
         P_SetMobjState(actor, actor->info->missilestate);
     }
-    else if (P_Random(pr_hexen) < 30)
+    else
     {
-        S_StartVoidSound(hexen_sfx_korax_active);
+        P_Random(pr_hexen); // Sound
     }
 
     // Teleport away
@@ -8281,10 +8249,7 @@ void A_KSpiritRoam(mobj_t * actor)
                             actor->special_args[0] * ANG1 * 2);
         }
         A_KSpiritWeave(actor);
-        if (P_Random(pr_hexen) < 50)
-        {
-            S_StartVoidSound(hexen_sfx_spirit_active);
-        }
+        P_Random(pr_hexen); // Sound
     }
 }
 

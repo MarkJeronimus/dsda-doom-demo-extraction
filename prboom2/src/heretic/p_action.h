@@ -28,7 +28,6 @@ void A_WeaponReady();
 void A_Lower();
 void A_Raise();
 void A_ReFire();
-void A_Pain();
 void A_SkullPop();
 void A_FaceTarget();
 void A_Look();
