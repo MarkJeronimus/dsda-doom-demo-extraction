@@ -222,8 +222,6 @@ int G_ReloadLevel(void)
     result = true;
   }
 
-  dsda_WatchLevelReload(&result);
-
   return result;
 }
 

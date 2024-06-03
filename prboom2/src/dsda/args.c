@@ -183,11 +183,6 @@ static arg_config_t arg_config[dsda_arg_count] = {
     "sets a random player class in hexen deathmatch",
     arg_null,
   },
-  [dsda_arg_dsdademo] = {
-    "-dsdademo", NULL, NULL,
-    "turns on extended demo format (for testing)",
-    arg_null,
-  },
   [dsda_arg_solo_net] = {
     "-solo-net", NULL, NULL,
     "play a net game with one player",
@@ -392,11 +387,6 @@ static arg_config_t arg_config[dsda_arg_count] = {
     "-shotdir", NULL, NULL,
     "sets the screenshot directory",
     arg_string,
-  },
-  [dsda_arg_movie] = {
-    "-movie", NULL, NULL,
-    "sets the target final level for movie demos (for automatic exit detection)",
-    arg_int, 0, 99,
   },
   [dsda_arg_dehout] = {
     "-dehout", "-bexout", NULL,

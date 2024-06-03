@@ -39,14 +39,10 @@ dboolean dsda_AllowJumping(void);
 dboolean dsda_AllowFreeLook(void);
 dboolean dsda_FreeAim(void);
 void dsda_ReadExCmd(ticcmd_t* cmd, const byte** p);
-void dsda_WriteExCmd(char** p, ticcmd_t* cmd);
 void dsda_ResetExCmdQueue(void);
 void dsda_PopExCmdQueue(ticcmd_t* cmd);
 void dsda_QueueExCmdJump(void);
 void dsda_QueueExCmdLook(short look);
-void dsda_QueueExCmdSave(int slot);
 void dsda_QueueExCmdLoad(int slot);
-void dsda_QueueExCmdGod(void);
-void dsda_QueueExCmdNoClip(void);
 
 #endif

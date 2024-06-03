@@ -542,12 +542,6 @@ static void P_LoadSegs (int lump)
         char str[200] =
           "P_LoadSegs: compatibility loss - seg %d references a non-existent vertex %d\n";
 
-        if (demorecording)
-        {
-          I_Error(strcat(str, "Demo recording on levels with invalid nodes is not allowed"),
-            i, (v1 >= numvertexes ? v1 : v2));
-        }
-
         if (v1 >= numvertexes)
           lprintf(LO_WARN, str, i, v1);
         if (v2 >= numvertexes)
@@ -659,12 +653,6 @@ static void P_LoadSegs_V4(int lump)
     {
       char str[200] =
         "P_LoadSegs_V4: compatibility loss - seg %d references a non-existent vertex %d\n";
-
-      if (demorecording)
-      {
-        I_Error(strcat(str, "Demo recording on levels with invalid nodes is not allowed"),
-          i, (v1 >= numvertexes ? v1 : v2));
-      }
 
       if (v1 >= numvertexes)
         lprintf(LO_WARN, str, i, v1);

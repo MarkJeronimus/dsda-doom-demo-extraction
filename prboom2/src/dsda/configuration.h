@@ -46,7 +46,6 @@ typedef enum {
   dsda_config_sts_always_red,
   dsda_config_sts_pct_always_gray,
   dsda_config_sts_traditional_keys,
-  dsda_config_strict_mode,
   dsda_config_vertmouse,
   dsda_config_freelook,
   dsda_config_autorun,
@@ -148,7 +147,6 @@ typedef enum {
   dsda_config_ex_text_scale_x,
   dsda_config_ex_text_ratio_y,
   dsda_config_wipe_at_full_speed,
-  dsda_config_show_demo_attempts,
   dsda_config_hide_horns,
   dsda_config_hide_weapon,
   dsda_config_organized_saves,
@@ -234,7 +232,6 @@ typedef enum {
 } dsda_config_type_t;
 
 void dsda_UpdateStrictMode(void);
-void dsda_TrackConfigFeatures(void);
 void dsda_RevertIntConfig(dsda_config_identifier_t id);
 int dsda_MaxConfigLength(void);
 void dsda_InitConfig(void);

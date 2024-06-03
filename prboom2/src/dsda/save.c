@@ -219,50 +219,6 @@ char* dsda_SaveGameName(int slot, dboolean via_cmd) {
   return name;
 }
 
-static int* demo_save_slots;
-static int allocated_save_slot_count;
-static int demo_save_slot_count;
-
-void dsda_ResetDemoSaveSlots(void) {
-  demo_save_slot_count = 0;
-}
-
-static void dsda_MarkSaveSlotUsed(int slot) {
-  int i;
-
-  if (!demorecording) return;
-
-  for (i = 0; i < demo_save_slot_count; ++i)
-    if (demo_save_slots[i] == slot)
-      return;
-
-  ++demo_save_slot_count;
-  if (demo_save_slot_count > allocated_save_slot_count) {
-    allocated_save_slot_count = allocated_save_slot_count ? allocated_save_slot_count * 2 : 8;
-    demo_save_slots =
-      Z_Realloc(demo_save_slots, allocated_save_slot_count * sizeof(*demo_save_slots));
-  }
-
-  demo_save_slots[demo_save_slot_count - 1] = slot;
-}
-
-int dsda_AllowMenuLoad(int slot) {
-  int i;
-
-  if (!demorecording) return true;
-  if (!dsda_AllowCasualExCmdFeatures()) return false;
-
-  for (i = 0; i < demo_save_slot_count; ++i)
-    if (demo_save_slots[i] == slot)
-      return true;
-
-  return false;
-}
-
-int dsda_AllowAnyMenuLoad(void) {
-  return !demorecording || dsda_AllowCasualExCmdFeatures();
-}
-
 static int last_save_file_slot = -1;
 
 void dsda_SetLastLoadSlot(int slot) {
@@ -270,7 +226,6 @@ void dsda_SetLastLoadSlot(int slot) {
 }
 
 void dsda_SetLastSaveSlot(int slot) {
-  dsda_MarkSaveSlotUsed(slot);
   last_save_file_slot = slot;
 }
 

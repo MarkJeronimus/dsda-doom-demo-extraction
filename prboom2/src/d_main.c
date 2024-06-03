@@ -1910,8 +1910,6 @@ static void D_DoomMainSetup(void)
     if (autostart || netgame)
     {
       G_InitNew(startskill, startepisode, startmap, true);
-      if (demorecording)
-        G_BeginRecording();
     }
     else
       D_StartTitle();                 // start up intro loop

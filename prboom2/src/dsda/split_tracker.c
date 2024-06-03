@@ -156,7 +156,6 @@ static void dsda_LoadSplits(void) {
       dsda_splits[i].leveltime.ref = ref_tics;
       dsda_splits[i].totalleveltimes.ref = ref_total_tics;
       dsda_splits[i].exits = exits;
-      dsda_splits[i].run_counter = 0;
 
       // in version 0, a time of 0 was considered unset
       if (version == 0) {
@@ -247,7 +246,6 @@ void dsda_RecordSplit(void) {
   }
 
   current_split = i;
-  dsda_splits[i].run_counter = attempts;
   dsda_splits[i].exits++;
   dsda_TrackSplitTime(&dsda_splits[i].leveltime, leveltime);
   dsda_TrackSplitTime(&dsda_splits[i].totalleveltimes, totalleveltimes);
@@ -264,8 +262,4 @@ void dsda_ResetSplits(void) {
 
   dsda_LoadSplits();
   ++attempts;
-}
-
-int dsda_DemoAttempts(void) {
-  return attempts;
 }

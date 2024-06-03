@@ -44,6 +44,7 @@
         "sdl_thread.h": "c",
         "memory.h": "c",
         "i_main.h": "c",
-        "s_sound.h": "c"
+        "s_sound.h": "c",
+        "split_tracker.h": "c"
     }
 }

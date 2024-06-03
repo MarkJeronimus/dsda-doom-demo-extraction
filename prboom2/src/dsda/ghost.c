@@ -221,9 +221,6 @@ void dsda_SpawnGhost(void) {
   state_t* ghost_state;
   int ghost_i;
 
-  if (dsda_StrictMode())
-    return;
-
   for (ghost_i = 0; ghost_i < dsda_ghost_import.count; ++ghost_i) {
     if (dsda_ghost_import.ghosts[ghost_i].fstream == NULL) {
       dsda_ghost_import.ghosts[ghost_i].mobj = NULL;

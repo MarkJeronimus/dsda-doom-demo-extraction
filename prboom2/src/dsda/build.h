@@ -19,7 +19,6 @@
 #include "d_ticcmd.h"
 #include "tables.h"
 
-dboolean dsda_AllowBuilding(void);
 dboolean dsda_BuildMode(void);
 void dsda_QueueBuildCommands(ticcmd_t* cmds, int depth);
 dboolean dsda_BuildPlayback(void);

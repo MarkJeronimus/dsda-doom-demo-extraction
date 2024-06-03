@@ -389,10 +389,6 @@ static void resetCmd(void) {
   memset(&build_cmd, 0, sizeof(build_cmd));
 }
 
-dboolean dsda_AllowBuilding(void) {
-  return !dsda_StrictMode();
-}
-
 dboolean dsda_BuildMode(void) {
   return build_mode;
 }
@@ -442,12 +438,10 @@ void dsda_ReadBuildCmd(ticcmd_t* cmd) {
 void dsda_EnterBuildMode(void) {
   dsda_TrackFeature(uf_build);
 
-  if (!demorecording) {
-    if (!build_mode)
-      dsda_StoreTempKeyFrame();
+  if (!build_mode)
+    dsda_StoreTempKeyFrame();
 
-    advance_frame = true;
-  }
+  advance_frame = true;
 
   if (!true_logictic)
     advance_frame = true;
@@ -481,9 +475,6 @@ void dsda_RefreshBuildMode(void) {
 }
 
 dboolean dsda_BuildResponder(event_t* ev) {
-  if (!dsda_AllowBuilding())
-    return false;
-
   if (dsda_InputActivated(dsda_input_build)) {
     if (dsda_BuildMode())
       dsda_ExitBuildMode();
@@ -530,27 +521,13 @@ dboolean dsda_BuildResponder(event_t* ev) {
 
     overwritten_logictic = true_logictic;
 
-    if (!demorecording)
-      dsda_StoreTempKeyFrame();
+    dsda_StoreTempKeyFrame();
 
     return true;
   }
 
   if (dsda_InputActivated(dsda_input_build_reverse_frame)) {
-    if (!demorecording) {
-      doom_printf("Cannot reverse outside demo");
-      return true;
-    }
-
-    if (true_logictic > 1) {
-      dsda_CopyPriorCmd(&build_cmd, 2);
-      overwritten_cmd = build_cmd;
-      overwritten_logictic = true_logictic - 2;
-      replace_source = false;
-
-      dsda_JumpToLogicTic(true_logictic - 1);
-    }
-
+    doom_printf("Cannot reverse outside demo");
     return true;
   }
 
@@ -686,9 +663,6 @@ dboolean dsda_BuildResponder(event_t* ev) {
 
     return true;
   }
-
-  if (dsda_InputActivated(dsda_input_join_demo))
-    dsda_JoinDemo(NULL);
 
   return false;
 }

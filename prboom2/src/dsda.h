@@ -74,16 +74,9 @@ void dsda_WatchNewLevel(void);
 void dsda_WatchLevelCompletion(void);
 void dsda_WatchWeaponFire(weapontype_t weapon);
 void dsda_WatchSecret(void);
-void dsda_WatchDeferredInitNew(int skill, int episode, int map);
-void dsda_WatchNewGame(void);
-void dsda_WatchLevelReload(int* reloaded);
 void dsda_WatchLineActivation(line_t* line, mobj_t* mo);
 void dsda_WatchPTickCompleted(void);
 
-dboolean dsda_ILComplete(void);
-dboolean dsda_MovieComplete(void);
-void dsda_DecomposeILTime(dsda_level_time_t* level_time);
-void dsda_DecomposeMovieTime(dsda_movie_time_t* total_time);
 int dsda_MaxKillRequirement(void);
 int* dsda_PlayerActivatedLines(void);
 

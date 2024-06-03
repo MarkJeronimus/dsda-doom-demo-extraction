@@ -92,6 +92,4 @@ void dsda_TrackFeature(int feature);
 void dsda_ResetFeatures(void);
 uint64_t dsda_UsedFeatures(void);
 void dsda_MergeFeatures(uint64_t source);
-void dsda_CopyFeatures(byte* result);
 void dsda_CopyFeatures2(byte* result, uint64_t source);
-char* dsda_DescribeFeatures(void);

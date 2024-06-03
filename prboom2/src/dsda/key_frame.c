@@ -143,12 +143,12 @@ static dsda_key_frame_t* dsda_ClosestKeyFrame(int target_tic_count) {
         }
   }
 
-  if (!demorecording && temp_kf.buffer)
+  if (temp_kf.buffer)
     if (temp_kf.game_tic_count <= target_tic_count)
       if (!closest || temp_kf.game_tic_count > closest->game_tic_count)
         closest = &temp_kf;
 
-  if (!demorecording && quick_kf.buffer)
+  if (quick_kf.buffer)
     if (quick_kf.game_tic_count <= target_tic_count)
       if (!closest || quick_kf.game_tic_count > closest->game_tic_count)
         closest = &quick_kf;
@@ -200,21 +200,6 @@ void dsda_InitKeyFrame(void) {
   last_auto_kf = &auto_key_frames[auto_kf_size - 1];
 }
 
-void dsda_ExportKeyFrame(byte* buffer, int length) {
-  char name[40];
-  int timestamp;
-
-  timestamp = totalleveltimes + leveltime;
-
-  snprintf(name, sizeof(name), "backup-%010d.kf", timestamp);
-
-  if (M_FileExists(name))
-    snprintf(name, sizeof(name), "backup-%010d-%lld.kf", timestamp, (long long) time(NULL));
-
-  if (!M_WriteFile(name, buffer, length))
-    I_Error("dsda_ExportKeyFrame: Failed to write key frame.");
-}
-
 // Stripped down version of G_DoSaveGame
 void dsda_StoreKeyFrame(dsda_key_frame_t* key_frame, byte complete, byte export) {
   key_frame->game_tic_count = true_logictic;
@@ -242,9 +227,6 @@ void dsda_StoreKeyFrame(dsda_key_frame_t* key_frame, byte complete, byte export)
   dsda_AttachAutoKF(key_frame);
 
   if (complete) {
-    if (demorecording && export)
-      dsda_ExportKeyFrame(key_frame->buffer, key_frame->buffer_length);
-
     doom_printf("Stored key frame");
   }
 }
@@ -277,8 +259,6 @@ void dsda_RestoreKeyFrame(dsda_key_frame_t* key_frame, dboolean skip_wipe) {
   dsda_RestoreDemoData(complete);
 
   dsda_UnArchiveAll();
-
-  dsda_RestoreCommandHistory();
 
   restore_key_frame_index = (totalleveltimes + leveltime) / (35 * autoKeyFrameInterval());
 

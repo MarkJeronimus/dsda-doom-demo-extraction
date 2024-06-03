@@ -226,7 +226,6 @@ cfg_def_t cfg_defs[] =
   MIGRATED_SETTING(dsda_config_hudadd_crosshair_lock_target),
 
   SETTING_HEADING("DSDA-Doom settings"),
-  MIGRATED_SETTING(dsda_config_strict_mode),
   MIGRATED_SETTING(dsda_config_cycle_ghost_colors),
   MIGRATED_SETTING(dsda_config_auto_key_frame_interval),
   MIGRATED_SETTING(dsda_config_auto_key_frame_depth),
@@ -236,7 +235,6 @@ cfg_def_t cfg_defs[] =
   MIGRATED_SETTING(dsda_config_ex_text_ratio_y),
   MIGRATED_SETTING(dsda_config_free_text),
   MIGRATED_SETTING(dsda_config_wipe_at_full_speed),
-  MIGRATED_SETTING(dsda_config_show_demo_attempts),
   MIGRATED_SETTING(dsda_config_hide_horns),
   MIGRATED_SETTING(dsda_config_hide_weapon),
   MIGRATED_SETTING(dsda_config_organized_saves),
@@ -373,7 +371,6 @@ cfg_input_def_t input_defs[] = {
   INPUT_SETTING("input_demo_skip", dsda_input_demo_skip, KEYD_INSERT, -1, -1),
   INPUT_SETTING("input_demo_endlevel", dsda_input_demo_endlevel, KEYD_END, -1, -1),
   INPUT_SETTING("input_walkcamera", dsda_input_walkcamera, KEYD_KEYPAD0, -1, -1),
-  INPUT_SETTING("input_join_demo", dsda_input_join_demo, 0, -1, -1),
   INPUT_SETTING("input_restart", dsda_input_restart, KEYD_HOME, -1, -1),
   INPUT_SETTING("input_nextlevel", dsda_input_nextlevel, KEYD_PAGEDOWN, -1, -1),
   INPUT_SETTING("input_showalive", dsda_input_showalive, 0, -1, -1),

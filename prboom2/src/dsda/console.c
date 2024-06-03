@@ -566,45 +566,6 @@ static dboolean console_PlayerRoundAngle(const char* command, const char* args) 
   return true;
 }
 
-static dboolean console_DemoExport(const char* command, const char* args) {
-  char name[CONSOLE_ENTRY_SIZE];
-
-  if (sscanf(args, "%s", name) == 1) {
-    dsda_ExportDemo(name);
-    return true;
-  }
-
-  return false;
-}
-
-static dboolean console_DemoStart(const char* command, const char* args) {
-  char name[CONSOLE_ENTRY_SIZE];
-
-  if (sscanf(args, "%s", name) == 1)
-    return dsda_StartDemoSegment(name);
-
-  return false;
-}
-
-static dboolean console_DemoStop(const char* command, const char* args) {
-  if (!demorecording)
-    return false;
-
-  G_CheckDemoStatus();
-  dsda_UpdateStrictMode();
-
-  return true;
-}
-
-static dboolean console_DemoJoin(const char* command, const char* args) {
-  if (!demoplayback)
-    return false;
-
-  dsda_JoinDemo(NULL);
-
-  return true;
-}
-
 static dboolean console_GameQuit(const char* command, const char* args) {
   I_SafeExit(0);
 
@@ -2408,12 +2369,6 @@ static console_command_entry_t console_commands[] = {
   { "lc", console_BuildLC, CF_DEMO },
   { "ua", console_BuildUA, CF_DEMO },
 
-  // demos
-  { "demo.export", console_DemoExport, CF_ALWAYS },
-  { "demo.start", console_DemoStart, CF_NEVER },
-  { "demo.stop", console_DemoStop, CF_ALWAYS },
-  { "demo.join", console_DemoJoin, CF_ALWAYS },
-
   { "game.quit", console_GameQuit, CF_ALWAYS },
   { "game.describe", console_GameDescribe, CF_ALWAYS },
 
@@ -2493,13 +2448,8 @@ static void dsda_AddConsoleMessage(const char* message) {
 }
 
 static dboolean dsda_AuthorizeCommand(console_command_entry_t* entry) {
-  if (!(entry->flags & CF_DEMO) && (demorecording || demoplayback)) {
+  if (!(entry->flags & CF_DEMO) && demoplayback) {
     dsda_AddConsoleMessage("command not allowed in demo mode");
-    return false;
-  }
-
-  if (!(entry->flags & CF_STRICT) && dsda_StrictMode()) {
-    dsda_AddConsoleMessage("command not allowed in strict mode");
     return false;
   }
 

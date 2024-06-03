@@ -219,10 +219,9 @@ extern  int levels_completed;
 // DEMO playback/recording related stuff.
 
 extern  dboolean demoplayback;
-extern  dboolean demorecording;
 extern  int demover;
 
-#define allow_incompatibility (!demorecording && !demoplayback)
+#define allow_incompatibility (!demoplayback)
 #define comperr(i) (default_comperr[i] && allow_incompatibility)
 
 extern  dboolean userdemo;

@@ -50,8 +50,6 @@ int dsda_track_100k;
 int dsda_last_leveltime;
 int dsda_last_gamemap;
 int dsda_startmap;
-int dsda_movie_target;
-dboolean dsda_any_map_completed;
 
 // other
 int dsda_max_kill_requirement;
@@ -70,14 +68,6 @@ static int dsda_time_secrets;
 
 dboolean dsda_IsWeapon(mobj_t* thing);
 void dsda_ResetMapVariables(void);
-
-dboolean dsda_ILComplete(void) {
-  return dsda_any_map_completed && dsda_last_gamemap == dsda_startmap && !dsda_movie_target;
-}
-
-dboolean dsda_MovieComplete(void) {
-  return dsda_any_map_completed && dsda_last_gamemap == dsda_movie_target && dsda_movie_target;
-}
 
 void dsda_WatchLineActivation(line_t* line, mobj_t* mo) {
   if (mo && mo->player) {
@@ -130,7 +120,7 @@ dboolean dsda_FrozenMode(void) {
 }
 
 void dsda_ToggleFrozenMode(void) {
-  if (demorecording || demoplayback)
+  if (demoplayback)
     return;
 
   frozen_mode = !frozen_mode;
@@ -156,9 +146,6 @@ void dsda_ReadCommandLine(void) {
   dsda_time_secrets = dsda_SimpleIntArg(dsda_arg_time_secrets);
   dsda_time_all = dsda_SimpleIntArg(dsda_arg_time_all);
 
-  if ((arg = dsda_Arg(dsda_arg_movie))->found)
-    dsda_movie_target = arg->value.v_int;
-
   if (dsda_time_all) {
     dsda_time_keys = dsda_time_all;
     dsda_time_use = dsda_time_all;
@@ -182,19 +169,11 @@ void dsda_ReadCommandLine(void) {
   dsda_InitCommandHistory();
 }
 
-static int dsda_shown_attempt = 0;
-
 int dsda_SessionAttempts(void) {
   return dsda_session_attempts;
 }
 
 void dsda_DisplayNotifications(void) {
-  if (dsda_ShowDemoAttempts() && dsda_session_attempts > dsda_shown_attempt) {
-    doom_printf("Attempt %d / %d", dsda_session_attempts, dsda_DemoAttempts());
-
-    dsda_shown_attempt = dsda_session_attempts;
-  }
-
   if (!dsda_pacifist && dsda_track_pacifist && !dsda_pacifist_note_shown) {
     dsda_pacifist_note_shown = true;
   }
@@ -204,20 +183,6 @@ void dsda_DisplayNotifications(void) {
 
     dsda_100k_note_shown = true;
   }
-}
-
-void dsda_DecomposeILTime(dsda_level_time_t* level_time) {
-  level_time->m = dsda_last_leveltime / 35 / 60;
-  level_time->s = (dsda_last_leveltime % (60 * 35)) / 35;
-  level_time->t = round(100.f * (dsda_last_leveltime % 35) / 35);
-}
-
-void dsda_DecomposeMovieTime(dsda_movie_time_t* total_time) {
-  extern int totalleveltimes;
-
-  total_time->h = totalleveltimes / 35 / 60 / 60;
-  total_time->m = (totalleveltimes % (60 * 60 * 35)) / 35 / 60;
-  total_time->s = (totalleveltimes % (60 * 35)) / 35;
 }
 
 void dsda_WatchReborn(int playernum) {
@@ -492,7 +457,6 @@ void dsda_WatchLevelCompletion(void) {
 
   dsda_last_leveltime = leveltime;
   dsda_last_gamemap = gamemap;
-  dsda_any_map_completed = true;
 
   dsda_RecordSplit();
   dsda_WadStatsExitMap(missed_monsters);
@@ -528,40 +492,4 @@ static void dsda_ResetTracking(void) {
   dsda_ResetAnalysis();
 
   dsda_pacifist_note_shown = false;
-}
-
-void dsda_WatchDeferredInitNew(int skill, int episode, int map) {
-  if (!demorecording) return;
-
-  ++dsda_session_attempts;
-
-  dsda_ResetTracking();
-  dsda_QueueQuickstart();
-
-  dsda_ResetRevealMap();
-  G_CheckDemoStatus();
-
-  dsda_last_gamemap = 0;
-  dsda_last_leveltime = 0;
-  dsda_any_map_completed = false;
-
-  dsda_InitDemoRecording();
-
-  boom_basetic = gametic;
-  true_basetic = gametic;
-}
-
-void dsda_WatchNewGame(void) {
-  if (!demorecording) return;
-
-  G_BeginRecording();
-}
-
-void dsda_WatchLevelReload(int* reloaded) {
-  extern int startmap;
-
-  if (!demorecording || *reloaded) return;
-
-  G_DeferedInitNew(gameskill, gameepisode, startmap);
-  *reloaded = 1;
 }

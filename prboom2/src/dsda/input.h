@@ -74,7 +74,6 @@ typedef enum {
   dsda_input_invleft,
   dsda_input_invright,
   dsda_input_spy,
-  dsda_input_join_demo,
   dsda_input_pause,
   dsda_input_map,
   dsda_input_hud,

@@ -118,68 +118,6 @@ void dsda_InitExHud(void);
 void dsda_UpdateFreeText(void);
 void dsda_ResetAirControl(void);
 
-void dsda_TrackConfigFeatures(void) {
-  if (!demorecording)
-    return;
-
-  if (R_PartialView() && dsda_IntConfig(dsda_config_exhud))
-    dsda_TrackFeature(uf_exhud);
-
-  if (R_FullView() && dsda_IntConfig(dsda_config_hud_displayed))
-    dsda_TrackFeature(uf_advhud);
-
-  if (dsda_IntConfig(dsda_config_game_speed) > 100)
-    dsda_TrackFeature(uf_speedup);
-
-  if (dsda_IntConfig(dsda_config_game_speed) < 100)
-    dsda_TrackFeature(uf_slowdown);
-
-  if (dsda_IntConfig(dsda_config_coordinate_display) || dsda_IntConfig(dsda_config_map_coordinates))
-    dsda_TrackFeature(uf_coordinates);
-
-  if (dsda_IntConfig(dsda_config_weapon_attack_alignment))
-    dsda_TrackFeature(uf_weaponalignment);
-
-  if (dsda_IntConfig(dsda_config_command_display))
-    dsda_TrackFeature(uf_commanddisplay);
-
-  if (dsda_IntConfig(dsda_config_hudadd_crosshair))
-    dsda_TrackFeature(uf_crosshair);
-
-  if (dsda_IntConfig(dsda_config_hudadd_crosshair_target))
-    dsda_TrackFeature(uf_crosshaircolor);
-
-  if (dsda_IntConfig(dsda_config_hudadd_crosshair_lock_target))
-    dsda_TrackFeature(uf_crosshairlock);
-
-  if (!dsda_IntConfig(dsda_config_palette_ondamage))
-    dsda_TrackFeature(uf_painpalette);
-
-  if (!dsda_IntConfig(dsda_config_palette_onbonus))
-    dsda_TrackFeature(uf_bonuspalette);
-
-  if (!dsda_IntConfig(dsda_config_palette_onpowers))
-    dsda_TrackFeature(uf_powerpalette);
-
-  if (dsda_IntConfig(dsda_config_gl_health_bar))
-    dsda_TrackFeature(uf_healthbar);
-
-  if (dsda_IntConfig(dsda_config_movement_strafe50))
-    dsda_TrackFeature(uf_alwayssr50);
-
-  if (dsda_IntConfig(dsda_config_max_player_corpse) != 32)
-    dsda_TrackFeature(uf_maxplayercorpse);
-
-  if (dsda_IntConfig(dsda_config_hide_weapon))
-    dsda_TrackFeature(uf_hideweapon);
-
-  if (dsda_IntConfig(dsda_config_show_alive_monsters))
-    dsda_TrackFeature(uf_showalive);
-
-  if (dsda_IntConfig(dsda_config_map_textured) || dsda_IntConfig(dsda_config_show_minimap))
-    dsda_TrackFeature(uf_advanced_map);
-}
-
 // TODO: migrate all kinds of stuff from M_Init
 
 // TODO: automatically go through strict list
@@ -194,7 +132,6 @@ void dsda_UpdateStrictMode(void) {
   dsda_RefreshExHudCoordinateDisplay();
   dsda_RefreshExHudCommandDisplay();
   dsda_RefreshExHudMinimap();
-  dsda_TrackConfigFeatures();
 }
 
 dsda_config_t dsda_config[dsda_config_count] = {
@@ -285,10 +222,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
   [dsda_config_sts_traditional_keys] = {
     "sts_traditional_keys", dsda_config_sts_traditional_keys,
     CONF_BOOL(0), &sts_traditional_keys
-  },
-  [dsda_config_strict_mode] = {
-    "dsda_strict_mode", dsda_config_strict_mode,
-    CONF_BOOL(1), NULL, NOT_STRICT, dsda_UpdateStrictMode
   },
   [dsda_config_vertmouse] = {
     "movement_vertmouse", dsda_config_vertmouse,
@@ -689,10 +622,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
   },
   [dsda_config_wipe_at_full_speed] = {
     "dsda_wipe_at_full_speed", dsda_config_wipe_at_full_speed,
-    CONF_BOOL(1)
-  },
-  [dsda_config_show_demo_attempts] = {
-    "dsda_show_demo_attempts", dsda_config_show_demo_attempts,
     CONF_BOOL(1)
   },
   [dsda_config_hide_horns] = {
@@ -1215,9 +1144,6 @@ int dsda_UpdateIntConfig(dsda_config_identifier_t id, int value, dboolean persis
   if (dsda_config[id].onUpdate)
     dsda_config[id].onUpdate();
 
-  if (dsda_config[id].flags & CONF_FEATURE)
-    dsda_TrackConfigFeatures();
-
   return dsda_IntConfig(id);
 }
 
@@ -1250,11 +1176,6 @@ const char* dsda_HackStringConfig(dsda_config_identifier_t id, const char* value
 }
 
 int dsda_IntConfig(dsda_config_identifier_t id) {
-  dboolean dsda_StrictMode(void);
-
-  if (dsda_config[id].flags & CONF_STRICT && dsda_StrictMode())
-    return dsda_config[id].strict_value;
-
   return dsda_config[id].transient_value.v_int;
 }
 

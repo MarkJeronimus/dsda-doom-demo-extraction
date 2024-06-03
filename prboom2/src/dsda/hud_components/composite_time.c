@@ -60,7 +60,7 @@ static void dsda_UpdateComponentText(char* str, size_t max_size) {
       (float) (leveltime % (60 * 35)) / 35
     );
 
-  if (dsda_reborn && (demorecording || demoplayback)) {
+  if (dsda_reborn && demoplayback) {
     int demo_tic = dsda_DemoTic();
 
     snprintf(

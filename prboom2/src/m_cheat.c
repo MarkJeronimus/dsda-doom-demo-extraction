@@ -276,12 +276,6 @@ void M_CheatGod(void)
 
 static void cheat_god()
 {                                    // 'dqd' cheat for toggleable god mode
-  if (demorecording)
-  {
-    dsda_QueueExCmdGod();
-    return;
-  }
-
   M_CheatGod();
 }
 
@@ -370,12 +364,6 @@ void M_CheatNoClip(void)
 
 static void cheat_noclip()
 {
-  if (demorecording)
-  {
-    dsda_QueueExCmdNoClip();
-    return;
-  }
-
   M_CheatNoClip();
 }
 
@@ -742,13 +730,12 @@ static void cheat_fly()
 
 static dboolean M_ClassicDemo(void)
 {
-  return (demorecording || demoplayback) && !dsda_AllowCasualExCmdFeatures();
+  return demoplayback && !dsda_AllowCasualExCmdFeatures();
 }
 
 static dboolean M_CheatAllowed(int when)
 {
-  return !dsda_StrictMode() &&
-         !(when & not_demo         && (demorecording || demoplayback)) &&
+  return !(when & not_demo         && demoplayback) &&
          !(when & not_classic_demo && M_ClassicDemo()) &&
          !(when & not_menu         && menuactive);
 }

@@ -71,7 +71,6 @@ typedef enum {
   dsda_tc_exhud_weapon_label,
   dsda_tc_exhud_weapon_owned,
   dsda_tc_exhud_weapon_berserk,
-  dsda_tc_exhud_attempts,
   dsda_tc_exhud_event_split,
   dsda_tc_exhud_line_activation,
   dsda_tc_exhud_local_time,

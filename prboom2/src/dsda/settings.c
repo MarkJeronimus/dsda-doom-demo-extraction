@@ -140,10 +140,6 @@ dboolean dsda_VertMouse(void) {
   return dsda_IntConfig(dsda_config_vertmouse);
 }
 
-dboolean dsda_StrictMode(void) {
-  return dsda_IntConfig(dsda_config_strict_mode) && demorecording && !dsda_tas;
-}
-
 dboolean dsda_ProcessCheatCodes(void) {
   return dsda_IntConfig(dsda_config_cheat_codes);
 }
@@ -173,7 +169,7 @@ dboolean dsda_SkipQuitPrompt(void) {
 }
 
 dboolean dsda_TrackSplits(void) {
-  return demorecording || (demoplayback && dsda_Flag(dsda_arg_track_playback));
+  return (demoplayback && dsda_Flag(dsda_arg_track_playback));
 }
 
 dboolean dsda_ShowSplitData(void) {
@@ -198,10 +194,6 @@ dboolean dsda_ShowMinimap(void) {
 
 dboolean dsda_ShowLevelSplits(void) {
   return dsda_IntConfig(dsda_config_show_level_splits);
-}
-
-dboolean dsda_ShowDemoAttempts(void) {
-  return dsda_IntConfig(dsda_config_show_demo_attempts) && demorecording;
 }
 
 dboolean dsda_MapCoordinates(void) {
@@ -247,13 +239,7 @@ int dsda_ShowAliveMonsters(void) {
 int dsda_reveal_map;
 
 int dsda_RevealAutomap(void) {
-  if (dsda_StrictMode()) return 0;
-
   return dsda_reveal_map;
-}
-
-void dsda_ResetRevealMap(void) {
-  dsda_reveal_map = 0;
 }
 
 int dsda_GameSpeed(void) {
@@ -289,14 +275,6 @@ dboolean dsda_SkipWipe(void) {
 
 static dboolean game_controller_used;
 static dboolean mouse_used;
-
-dboolean dsda_AllowGameController(void) {
-  return !dsda_StrictMode() || !mouse_used;
-}
-
-dboolean dsda_AllowMouse(void) {
-  return !dsda_StrictMode() || !game_controller_used;
-}
 
 void dsda_WatchGameControllerEvent(void) {
   game_controller_used = true;

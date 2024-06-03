@@ -193,10 +193,6 @@ void I_SafeExit(int rc)
 
 static void I_EssentialQuit (void)
 {
-  if (demorecording)
-  {
-    G_CheckDemoStatus();
-  }
   dsda_ExportTextFile();
   dsda_WriteAnalysis();
   dsda_WriteSplits();

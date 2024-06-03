@@ -40,8 +40,7 @@ typedef enum {
 
 static int dsda_DeathUseAction(void)
 {
-  if (demorecording ||
-      demoplayback ||
+  if (demoplayback ||
       map_info.flags & MI_ALLOW_RESPAWN ||
       skill_info.flags & SI_PLAYER_RESPAWN)
     return death_use_default;

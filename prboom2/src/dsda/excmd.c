@@ -93,25 +93,6 @@ void dsda_ReadExCmd(ticcmd_t* cmd, const byte** p) {
   *p = demo_p;
 }
 
-void dsda_WriteExCmd(char** p, ticcmd_t* cmd) {
-  char* demo_p = *p;
-
-  if (!dsda_AllowExCmd()) return;
-
-  *demo_p++ = cmd->ex.actions;
-  if (cmd->ex.actions & XC_SAVE)
-    *demo_p++ = cmd->ex.save_slot;
-  if (cmd->ex.actions & XC_LOAD)
-    *demo_p++ = cmd->ex.load_slot;
-
-  if (cmd->ex.actions & XC_LOOK) {
-    *demo_p++ = cmd->ex.look & 0xff;
-    *demo_p++ = (cmd->ex.look >> 8) & 0xff;
-  }
-
-  *p = demo_p;
-}
-
 static excmd_t excmd_queue;
 
 void dsda_ResetExCmdQueue(void) {
@@ -132,20 +113,7 @@ void dsda_QueueExCmdLook(short look) {
   excmd_queue.look = look;
 }
 
-void dsda_QueueExCmdSave(int slot) {
-  excmd_queue.actions |= XC_SAVE;
-  excmd_queue.save_slot = slot;
-}
-
 void dsda_QueueExCmdLoad(int slot) {
   excmd_queue.actions |= XC_LOAD;
   excmd_queue.load_slot = slot;
-}
-
-void dsda_QueueExCmdGod(void) {
-  excmd_queue.actions |= XC_GOD;
-}
-
-void dsda_QueueExCmdNoClip(void) {
-  excmd_queue.actions |= XC_NOCLIP;
 }

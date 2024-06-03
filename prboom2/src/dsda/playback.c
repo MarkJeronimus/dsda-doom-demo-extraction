@@ -225,9 +225,6 @@ void dsda_JoinDemo(ticcmd_t* cmd) {
   if (dsda_SkipMode())
     dsda_ExitSkipMode();
 
-  if (demorecording)
-    dsda_WriteQueueToDemo(playback_p, playback_length - (playback_p - playback_origin_p));
-
   dsda_ClearPlaybackStream();
 
   if (cmd)
@@ -258,6 +255,4 @@ void dsda_TryPlaybackOneTick(ticcmd_t* cmd) {
     else
       G_CheckDemoStatus();
   }
-  else if (dsda_InputActive(dsda_input_join_demo) || dsda_InputJoyBActive(dsda_input_use))
-    dsda_JoinDemo(cmd);
 }

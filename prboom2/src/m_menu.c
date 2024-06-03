@@ -643,13 +643,6 @@ void M_DrawSkillMenu(void)
 
 void M_NewGame(int choice)
 {
-  if (demorecording) {  /* killough 5/26/98: exclude during demo recordings */
-    M_StartMessage("you can't start a new game\n"
-       "while recording a demo!\n\n"PRESSKEY,
-       NULL, false); // killough 5/26/98: not externalized
-    return;
-  }
-
   // Chex Quest disabled the episode select screen, as did Doom II.
   if (num_episodes <= 1 && !hexen)
     M_SetupNextMenu(&SkillDef);
@@ -832,15 +825,6 @@ void M_DrawSaveLoadBorder(int x,int y)
 
 void M_LoadSelect(int choice)
 {
-  if (!dsda_AllowMenuLoad(choice + save_page * g_menu_save_page_size))
-  {
-    M_StartMessage(
-      "you can't load this game\n"
-      "under these conditions!\n\n"PRESSKEY,
-      NULL, false); // killough 5/26/98: not externalized
-    return;
-  }
-
   // CPhipps - Modified so savegame filename is worked out only internal
   //  to g_game.c, this only passes the slot.
 
@@ -876,15 +860,6 @@ void M_ForcedLoadGame(const char *msg)
 void M_LoadGame (int choice)
 {
   delete_verify = false;
-
-  if (!dsda_AllowAnyMenuLoad())
-  {
-    M_StartMessage(
-      "you can't load a game\n"
-      "under these conditions!\n\n"PRESSKEY,
-      NULL, false); // killough 5/26/98: not externalized
-    return;
-  }
 
   M_SetupNextMenu(&LoadDef);
   M_ReadSaveStrings();
@@ -1181,24 +1156,6 @@ void M_QuickLoad(void)
 {
   char *name;
 
-  if (!dsda_AllowAnyMenuLoad())
-  {
-    M_StartMessage(
-      "you can't load a game\n"
-      "under these conditions!\n\n"PRESSKEY,
-      NULL, false); // killough 5/26/98: not externalized
-    return;
-  }
-
-  if (!dsda_AllowMenuLoad(QUICKSAVESLOT))
-  {
-    M_StartMessage(
-      "you can't load this game\n"
-      "under these conditions!\n\n"PRESSKEY,
-      NULL, false); // killough 5/26/98: not externalized
-    return;
-  }
-
   name = dsda_SaveGameName(QUICKSAVESLOT, false);
 
   if (M_FileExists(name))
@@ -1225,7 +1182,7 @@ static void M_EndGameResponse(dboolean affirmative)
     return;
 
   // killough 5/26/98: make endgame quit if recording or playing back demo
-  if (demorecording || userplayback)
+  if (userplayback)
     G_CheckDemoStatus();
 
   currentMenu->lastOn = itemOn;
@@ -2143,7 +2100,6 @@ setup_menu_t keys_settings5[] =  // Key Binding screen strings
   {"START/STOP SKIPPING"  ,S_INPUT   ,m_scrn,KB_X,0,dsda_input_demo_skip},
   {"END LEVEL"            ,S_INPUT   ,m_scrn,KB_X,0,dsda_input_demo_endlevel},
   {"CAMERA MODE"          ,S_INPUT   ,m_scrn,KB_X,0,dsda_input_walkcamera},
-  {"JOIN"                 ,S_INPUT   ,m_scrn,KB_X,0,dsda_input_join_demo},
   {"RESTART DEMO ATTEMPT" ,S_INPUT   ,m_scrn,KB_X,0,dsda_input_restart},
   EMPTY_LINE,
   {"MISC"                 ,S_SKIP|S_TITLE,m_null,KB_X},
@@ -2898,9 +2854,7 @@ setup_menu_t mapping_settings[] = {
 
 setup_menu_t demo_settings[] = {
   { "Demo Settings", S_SKIP | S_TITLE, m_null, G_X},
-  { "Strict Mode", S_YESNO, m_conf, G_X, dsda_config_strict_mode },
   { "Cycle Ghost Colors", S_YESNO, m_conf, G_X, dsda_config_cycle_ghost_colors },
-  { "Show Demo Attempts", S_YESNO, m_conf, G_X, dsda_config_show_demo_attempts },
   { "Show Split Data", S_YESNO, m_conf, G_X, dsda_config_show_split_data },
   { "Text File Author", S_NAME, m_conf, G_X, dsda_config_player_name },
   { "Quickstart Cache Tics", S_NUM, m_conf, G_X, dsda_config_quickstart_cache_tics },
@@ -3997,7 +3951,6 @@ typedef struct {
 } toggle_input_t;
 
 static toggle_input_t toggle_inputs[] = {
-  { dsda_input_strict_mode, dsda_config_strict_mode, true, false, "Strict Mode" },
   { dsda_input_novert, dsda_config_vertmouse, true, false, "Vertical Mouse Movement", .play_sound = true },
   { dsda_input_mlook, dsda_config_freelook, true, true, "Free Look", .play_sound = true },
   { dsda_input_autorun, dsda_config_autorun, true, true, "Auto Run", .play_sound = true },
@@ -4014,10 +3967,7 @@ static void M_HandleToggles(void)
   toggle_input_t* toggle;
 
   for (toggle = toggle_inputs; toggle->input != -1; toggle++) {
-    if (
-      dsda_InputActivated(toggle->input) &&
-      (toggle->allowed_in_strict_mode || !dsda_StrictMode())
-    )
+    if (dsda_InputActivated(toggle->input))
     {
       int value;
 
@@ -4983,14 +4933,14 @@ dboolean M_Responder (event_t* ev) {
     }
 
     //e6y
-    if (dsda_InputActivated(dsda_input_speed_default) && !dsda_StrictMode())
+    if (dsda_InputActivated(dsda_input_speed_default))
     {
       dsda_UpdateGameSpeed(100);
       doom_printf("Game Speed 100");
       // Don't eat the keypress in this case.
       // return true;
     }
-    if (dsda_InputActivated(dsda_input_speed_up) && !dsda_StrictMode())
+    if (dsda_InputActivated(dsda_input_speed_up))
     {
       int value = MIN(dsda_GameSpeed() * 2, 10000);
       dsda_UpdateGameSpeed(value);
@@ -4998,7 +4948,7 @@ dboolean M_Responder (event_t* ev) {
       // Don't eat the keypress in this case.
       // return true;
     }
-    if (dsda_InputActivated(dsda_input_speed_down) && !dsda_StrictMode())
+    if (dsda_InputActivated(dsda_input_speed_down))
     {
       int value = MAX(dsda_GameSpeed() / 2, 10);
       dsda_UpdateGameSpeed(value);
@@ -5048,21 +4998,20 @@ dboolean M_Responder (event_t* ev) {
     {
       if (
         gamestate == GS_LEVEL &&
-        gameaction == ga_nothing &&
-        !dsda_StrictMode()
+        gameaction == ga_nothing
       ) dsda_StoreQuickKeyFrame();
       return true;
     }
 
     if (dsda_InputActivated(dsda_input_restore_quick_key_frame))
     {
-      if (!dsda_StrictMode()) dsda_RestoreQuickKeyFrame();
+      dsda_RestoreQuickKeyFrame();
       return true;
     }
 
     if (dsda_InputActivated(dsda_input_rewind))
     {
-      if (!dsda_StrictMode()) dsda_RewindAutoKeyFrame();
+      dsda_RewindAutoKeyFrame();
       return true;
     }
 
@@ -5091,7 +5040,7 @@ dboolean M_Responder (event_t* ev) {
 
     if (V_IsOpenGLMode())
     {
-      if (dsda_InputActivated(dsda_input_showalive) && !dsda_StrictMode())
+      if (dsda_InputActivated(dsda_input_showalive))
       {
         const char* const show_alive_message[3] = { "off", "(mode 1) on", "(mode 2) on" };
         int show_alive = dsda_CycleConfig(dsda_config_show_alive_monsters, false);

@@ -416,11 +416,9 @@ void I_StartTic (void)
 {
   I_GetEvent();
 
-  if (dsda_AllowMouse())
-    I_ReadMouse();
+  I_ReadMouse();
 
-  if (dsda_AllowGameController())
-    dsda_PollGameController();
+  dsda_PollGameController();
 }
 
 //

@@ -169,7 +169,6 @@ int             gametic;
 int             boom_basetic;       /* killough 9/29/98: for demo sync */
 int             true_basetic;
 int             totalkills, totallive, totalitems, totalsecret;    // for intermission
-dboolean         demorecording;
 wbstartstruct_t wminfo;               // parms for world map / intermission
 dboolean         haswolflevels = false;// jff 4/18/98 wolf levels present
 int             totalleveltimes;      // CPhipps - total time for all completed levels
@@ -499,22 +498,13 @@ void G_BuildTiccmd(ticcmd_t* cmd)
   int forward;
   int side;
   int newweapon;                                          // phares
-  dboolean strict_input;
 
   dsda_pclass_t *player_class = &pclass[players[consoleplayer].pclass];
-
-  strict_input = dsda_StrictMode();
 
   G_SetSpeed(false);
   dsda_EvaluateSkipModeBuildTiccmd();
 
   memset(cmd, 0, sizeof(*cmd));
-
-  if (demoplayback && demorecording)
-  {
-    G_ResetMotion();
-    return;
-  }
 
   strafe = dsda_InputActive(dsda_input_strafe);
   //e6y: the "RUN" key inverts the autorun state
@@ -537,10 +527,7 @@ void G_BuildTiccmd(ticcmd_t* cmd)
   if (dsda_InputTickActivated(dsda_input_reverse))
   {
     if (!strafe) {
-      if (strict_input)
-        doom_printf("180 key disabled by strict mode");
-      else
-        cmd->angleturn += QUICKREVERSE;
+      cmd->angleturn += QUICKREVERSE;
     }
   }
 
@@ -1072,7 +1059,7 @@ void G_BuildTiccmd(ticcmd_t* cmd)
   cmd->forwardmove += fudgef((signed char)forward);
   cmd->sidemove += side;
 
-  if ((demorecording && !longtics) || shorttics)
+  if (shorttics)
   {
     // Chocolate Doom Mouse Behaviour
     // Don't discard mouse delta even if value is too small to
@@ -1101,20 +1088,18 @@ void G_BuildTiccmd(ticcmd_t* cmd)
 
   dsda_PopExCmdQueue(cmd);
 
-  if (!dsda_StrictMode()) {
-    if (leveltime == 0 && totalleveltimes == 0) {
-      dsda_arg_t* arg;
+  if (leveltime == 0 && totalleveltimes == 0) {
+    dsda_arg_t* arg;
 
-      arg = dsda_Arg(dsda_arg_first_input);
-      if (arg->found) {
-        dsda_TrackFeature(uf_buildzero);
+    arg = dsda_Arg(dsda_arg_first_input);
+    if (arg->found) {
+      dsda_TrackFeature(uf_buildzero);
 
-        cmd->forwardmove = (signed char) arg->value.v_int_array[0];
-        cmd->sidemove = (signed char) arg->value.v_int_array[1];
-        cmd->angleturn = (signed short) (arg->value.v_int_array[2] << 8);
+      cmd->forwardmove = (signed char) arg->value.v_int_array[0];
+      cmd->sidemove = (signed char) arg->value.v_int_array[1];
+      cmd->angleturn = (signed short) (arg->value.v_int_array[2] << 8);
 
-        dsda_JoinDemoCmd(cmd);
-      }
+      dsda_JoinDemoCmd(cmd);
     }
   }
 }
@@ -1233,7 +1218,6 @@ static void G_DoLoadLevel (void)
       const char message[] = "The -pistolstart option is not supported"
                              " for demos and\n"
                              " network play.";
-      demorecording = false;
       I_Error(message);
     }
   }
@@ -1559,9 +1543,6 @@ void G_Ticker (void)
 
         if (demoplayback)
           dsda_TryPlaybackOneTick(cmd);
-
-        if (demorecording)
-          G_WriteDemoTiccmd(cmd);
       }
     }
 
@@ -2300,12 +2281,6 @@ void G_ForcedLoadGame(void)
 // killough 3/16/98: add slot info
 void G_LoadGame(int slot)
 {
-  if (demorecording)
-  {
-    dsda_QueueExCmdLoad(slot);
-    return;
-  }
-
   if (!demoplayback)
   {
     forced_loadgame = netgame; // CPhipps - always force load netgames
@@ -2476,15 +2451,8 @@ void G_SaveGame(int slot, const char *description)
 {
   strcpy(savedescription, description);
 
-  if (demorecording && dsda_AllowCasualExCmdFeatures())
-  {
-    dsda_QueueExCmdSave(slot);
-  }
-  else
-  {
-    savegameslot = slot;
-    G_DoSaveGame(false);
-  }
+  savegameslot = slot;
+  G_DoSaveGame(false);
 }
 
 static void G_DoSaveGame(dboolean via_cmd)
@@ -2563,8 +2531,6 @@ void G_DeferedInitNew(int skill, int episode, int map)
   d_episode = episode;
   d_map = map;
   gameaction = ga_newgame;
-
-  dsda_WatchDeferredInitNew(skill, episode, map);
 }
 
 /* cph -
@@ -2812,8 +2778,6 @@ void G_DoNewGame (void)
 
   G_InitNew (d_skill, realEpisode, realMap, true);
   gameaction = ga_nothing;
-
-  dsda_WatchNewGame();
 
   //jff 4/26/98 wake up the status bar in case were coming out of a DM demo
   ST_Start();
@@ -3072,49 +3036,6 @@ void G_ReadOneTick(ticcmd_t* cmd, const byte **data_p)
   dsda_ReadExCmd(cmd, data_p);
 }
 
-/* Demo limits removed -- killough
- * cph - record straight to file
- */
-void G_WriteDemoTiccmd (ticcmd_t* cmd)
-{
-  char buf[10];
-  char *p = buf;
-
-  if (compatibility_level == tasdoom_compatibility)
-  {
-    *p++ = cmd->buttons;
-    *p++ = cmd->forwardmove;
-    *p++ = cmd->sidemove;
-    *p++ = (cmd->angleturn+128)>>8;
-  }
-  else
-  {
-    *p++ = cmd->forwardmove;
-    *p++ = cmd->sidemove;
-    if (!longtics) {
-      *p++ = (cmd->angleturn+128)>>8;
-    } else {
-      signed short a = cmd->angleturn;
-      *p++ = a & 0xff;
-      *p++ = (a >> 8) & 0xff;
-    }
-    *p++ = cmd->buttons;
-
-    if (raven)
-    {
-      *p++ = cmd->lookfly;
-      *p++ = cmd->arti;
-    }
-  }
-
-  dsda_WriteExCmd(&p, cmd);
-
-  dsda_WriteTicToDemo(buf, p - buf);
-
-  p = buf; // make SURE it is exactly the same
-  G_ReadOneTick(cmd, (const byte **) &p);
-}
-
 // These functions are used to read and write game-specific options in demos
 // and savegames so that demo sync is preserved and savegame restoration is
 // complete. Not all options (for example "compatibility"), however, should
@@ -3302,7 +3223,6 @@ void G_BeginRecording (void)
   demostart = demo_p = Z_Malloc(1000);
   longtics = 0;
 
-  dsda_ResetDemoSaveSlots();
   dsda_ApplyDSDADemoFormat(&demo_p);
 
   /* cph - 3 demo record formats supported: MBF+, BOOM, and Doom v1.9 */
@@ -3913,7 +3833,6 @@ static int LoadDemo(const char *name, const byte **buffer, int *length)
   return (len > 0);
 }
 
-
 void G_DoPlayDemo(void)
 {
   if (LoadDemo(defdemoname, &demobuffer, &demolength))
@@ -3951,13 +3870,6 @@ void G_DoPlayDemo(void)
 dboolean G_CheckDemoStatus (void)
 {
   dsda_EvaluateSkipModeCheckDemoStatus();
-
-  if (demorecording)
-  {
-    dsda_EndDemoRecording();
-
-    return false;  // killough
-  }
 
   if (timingdemo)
   {

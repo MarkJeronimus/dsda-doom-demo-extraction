@@ -70,7 +70,6 @@ typedef enum {
   exhud_weapon_text,
   exhud_render_stats,
   exhud_fps,
-  exhud_attempts,
   exhud_local_time,
   exhud_coordinate_display,
   exhud_line_display,
@@ -218,13 +217,6 @@ exhud_component_t components_template[exhud_component_count] = {
     "fps",
     .default_vpt = VPT_EX_TEXT,
     .off_by_default = true,
-  },
-  [exhud_attempts] = {
-    dsda_InitAttemptsHC,
-    dsda_UpdateAttemptsHC,
-    dsda_DrawAttemptsHC,
-    "attempts",
-    .default_vpt = VPT_EX_TEXT,
   },
   [exhud_local_time] = {
     dsda_InitLocalTimeHC,
@@ -645,8 +637,7 @@ static void dsda_UpdateComponents(exhud_component_t* update_components) {
   for (i = 0; i < exhud_component_count; ++i)
     if (
       update_components[i].on &&
-      !update_components[i].not_level &&
-      (!update_components[i].strict || !dsda_StrictMode())
+      !update_components[i].not_level
     )
       update_components[i].update(update_components[i].data);
 }
@@ -671,8 +662,7 @@ static void dsda_DrawComponents(exhud_component_t* draw_components) {
   for (i = 0; i < exhud_component_count; ++i)
     if (
       draw_components[i].on &&
-      !draw_components[i].not_level &&
-      (!draw_components[i].strict || !dsda_StrictMode())
+      !draw_components[i].not_level
     )
       draw_components[i].draw(draw_components[i].data);
 }
@@ -701,8 +691,7 @@ void dsda_DrawExIntermission(void) {
   for (i = 0; i < exhud_component_count; ++i)
     if (
       components[i].on &&
-      components[i].intermission &&
-      (!components[i].strict || !dsda_StrictMode())
+      components[i].intermission
     )
       components[i].draw(components[i].data);
 }
