@@ -415,11 +415,6 @@ void HU_Ticker(void)
     HU_UpdateSecretMessage(custom_message_p->msg);
 
     custom_message_p->msg = NULL;
-
-    if (custom_message_p->sfx > 0 && custom_message_p->sfx < num_sfx)
-    {
-      S_StartVoidSound(custom_message_p->sfx);
-    }
   }
 
   dsda_UpdateExHud();

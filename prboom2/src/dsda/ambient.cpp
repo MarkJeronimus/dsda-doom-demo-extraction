@@ -76,7 +76,6 @@ void dsda_UpdateAmbientSource(ambient_source_t* source) {
 
     if (!source->data.attenuation) {
       S_AdjustVolume(source->data.volume);
-      S_StartVoidSound(source->data.sfx_id);
       S_ResetAdjustments();
     }
     else {

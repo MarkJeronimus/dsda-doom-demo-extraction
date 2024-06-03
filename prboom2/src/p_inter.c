@@ -251,13 +251,6 @@ dboolean P_GiveWeapon(player_t *player, weapontype_t weapon, dboolean dropped)
       P_GiveAmmo(player, weaponinfo[weapon].ammo, deathmatch ? 5 : 2);
 
       player->pendingweapon = weapon;
-      /* cph 20028/10 - for old-school DM addicts, allow old behavior
-       * where only consoleplayer's pickup sounds are heard */
-      // displayplayer, not consoleplayer, for viewing multiplayer demos
-      if (!comp[comp_sound])
-        {} // killough 4/25/98
-      else if (player == &players[displayplayer])
-        S_StartVoidSound (sfx_wpnup|PICKUP_SOUND);
       return false;
     }
 
@@ -458,7 +451,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
 {
   player_t *player;
   int      i;
-  int      sound;
   fixed_t  delta = special->z - toucher->z;
 
   if (heretic) return Heretic_P_TouchSpecialThing(special, toucher);
@@ -467,7 +459,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
   if (delta > toucher->height || delta < -8*FRACUNIT)
     return;        // out of reach
 
-  sound = sfx_itemup;
   player = toucher->player;
 
   // Dead thing touching.
@@ -529,7 +520,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
         player->health = max_soul;
       player->mo->health = player->health;
       dsda_AddPlayerMessage(s_GOTSUPER, player);
-      sound = sfx_getpow;
       break;
 
     case SPR_MEGA:
@@ -544,7 +534,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
          ((!demo_compatibility || prboom_comp[PC_APPLY_BLUE_ARMOR_CLASS_TO_MEGASPHERE].state) ?
           blue_armor_class : 2));
       dsda_AddPlayerMessage(s_GOTMSPHERE, player);
-      sound = sfx_getpow;
       break;
 
         // cards
@@ -620,7 +609,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!P_GivePower (player, pw_invulnerability))
         return;
       dsda_AddPlayerMessage(s_GOTINVUL, player);
-      sound = sfx_getpow;
       break;
 
     case SPR_PSTR:
@@ -629,35 +617,30 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       dsda_AddPlayerMessage(s_GOTBERSERK, player);
       if (player->readyweapon != wp_fist)
         player->pendingweapon = wp_fist;
-      sound = sfx_getpow;
       break;
 
     case SPR_PINS:
       if (!P_GivePower (player, pw_invisibility))
         return;
       dsda_AddPlayerMessage(s_GOTINVIS, player);
-      sound = sfx_getpow;
       break;
 
     case SPR_SUIT:
       if (!P_GivePower (player, pw_ironfeet))
         return;
       dsda_AddPlayerMessage(s_GOTSUIT, player);
-      sound = sfx_getpow;
       break;
 
     case SPR_PMAP:
       if (!P_GivePower (player, pw_allmap))
         return;
       dsda_AddPlayerMessage(s_GOTMAP, player);
-      sound = sfx_getpow;
       break;
 
     case SPR_PVIS:
       if (!P_GivePower (player, pw_infrared))
         return;
       dsda_AddPlayerMessage(s_GOTVISOR, player);
-      sound = sfx_getpow;
       break;
 
       // ammo
@@ -734,49 +717,42 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
       if (!P_GiveWeapon (player, wp_bfg, false) )
         return;
       dsda_AddPlayerMessage(s_GOTBFG9000, player);
-      sound = sfx_wpnup;
       break;
 
     case SPR_MGUN:
       if (!P_GiveWeapon (player, wp_chaingun, (special->flags&MF_DROPPED)!=0) )
         return;
       dsda_AddPlayerMessage(s_GOTCHAINGUN, player);
-      sound = sfx_wpnup;
       break;
 
     case SPR_CSAW:
       if (!P_GiveWeapon (player, wp_chainsaw, false) )
         return;
       dsda_AddPlayerMessage(s_GOTCHAINSAW, player);
-      sound = sfx_wpnup;
       break;
 
     case SPR_LAUN:
       if (!P_GiveWeapon (player, wp_missile, false) )
         return;
       dsda_AddPlayerMessage(s_GOTLAUNCHER, player);
-      sound = sfx_wpnup;
       break;
 
     case SPR_PLAS:
       if (!P_GiveWeapon (player, wp_plasma, false) )
         return;
       dsda_AddPlayerMessage(s_GOTPLASMA, player);
-      sound = sfx_wpnup;
       break;
 
     case SPR_SHOT:
       if (!P_GiveWeapon (player, wp_shotgun, (special->flags&MF_DROPPED)!=0 ) )
         return;
       dsda_AddPlayerMessage(s_GOTSHOTGUN, player);
-      sound = sfx_wpnup;
       break;
 
     case SPR_SGN2:
       if (!P_GiveWeapon(player, wp_supershotgun, (special->flags&MF_DROPPED)!=0))
         return;
       dsda_AddPlayerMessage(s_GOTSHOTGUN2, player);
-      sound = sfx_wpnup;
       break;
 
     default:
@@ -797,14 +773,6 @@ void P_TouchSpecialThing(mobj_t *special, mobj_t *toucher)
 
   P_RemoveMobj (special);
   player->bonuscount += BONUSADD;
-
-  /* cph 20028/10 - for old-school DM addicts, allow old behavior
-   * where only consoleplayer's pickup sounds are heard */
-  // displayplayer, not consoleplayer, for viewing multiplayer demos
-  if (!comp[comp_sound])
-    {}   // killough 4/25/98
-  else if (player == &players[displayplayer])
-    S_StartVoidSound (sound | PICKUP_SOUND);
 }
 
 //
@@ -879,10 +847,6 @@ static void P_KillMobj(mobj_t *source, mobj_t *target)
 
       if (heretic && target != source)
       {
-        if (source->player == &players[consoleplayer])
-        {
-          S_StartVoidSound(heretic_sfx_gfrag);
-        }
         if (source->player->chickenTics)
         {               // Make a super chicken
           P_GivePower(source->player, pw_weaponlevel2);
@@ -1823,7 +1787,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
     int i;
     player_t *player;
     fixed_t delta;
-    int sound;
 
     delta = special->z - toucher->z;
     if (delta > toucher->height || delta < -32 * FRACUNIT)
@@ -1834,7 +1797,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
     {                           // Toucher is dead
         return;
     }
-    sound = heretic_sfx_itemup;
     player = toucher->player;
 
     switch (special->sprite)
@@ -1892,7 +1854,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
                 P_SetMessage(player, HERETIC_TXT_GOTBLUEKEY, false);
             }
             P_GiveCard(player, key_blue);
-            sound = heretic_sfx_keyup;
             if (!netgame)
             {
                 break;
@@ -1903,7 +1864,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
             {
                 P_SetMessage(player, HERETIC_TXT_GOTYELLOWKEY, false);
             }
-            sound = heretic_sfx_keyup;
             P_GiveCard(player, key_yellow);
             if (!netgame)
             {
@@ -1915,7 +1875,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
             {
                 P_SetMessage(player, HERETIC_TXT_GOTGREENKEY, false);
             }
-            sound = heretic_sfx_keyup;
             P_GiveCard(player, key_green);
             if (!netgame)
             {
@@ -2088,7 +2047,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
                 return;
             }
             P_SetMessage(player, HERETIC_TXT_WPNMACE, false);
-            sound = heretic_sfx_wpnup;
             break;
         case HERETIC_SPR_WBOW:         // Weapon_Crossbow
             if (!P_GiveWeapon(player, wp_crossbow, false))
@@ -2096,7 +2054,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
                 return;
             }
             P_SetMessage(player, HERETIC_TXT_WPNCROSSBOW, false);
-            sound = heretic_sfx_wpnup;
             break;
         case HERETIC_SPR_WBLS:         // Weapon_Blaster
             if (!P_GiveWeapon(player, wp_blaster, false))
@@ -2104,7 +2061,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
                 return;
             }
             P_SetMessage(player, HERETIC_TXT_WPNBLASTER, false);
-            sound = heretic_sfx_wpnup;
             break;
         case HERETIC_SPR_WSKL:         // Weapon_SkullRod
             if (!P_GiveWeapon(player, wp_skullrod, false))
@@ -2112,7 +2068,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
                 return;
             }
             P_SetMessage(player, HERETIC_TXT_WPNSKULLROD, false);
-            sound = heretic_sfx_wpnup;
             break;
         case HERETIC_SPR_WPHX:         // Weapon_PhoenixRod
             if (!P_GiveWeapon(player, wp_phoenixrod, false))
@@ -2120,7 +2075,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
                 return;
             }
             P_SetMessage(player, HERETIC_TXT_WPNPHOENIXROD, false);
-            sound = heretic_sfx_wpnup;
             break;
         case HERETIC_SPR_WGNT:         // Weapon_Gauntlets
             if (!P_GiveWeapon(player, wp_gauntlets, false))
@@ -2128,7 +2082,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
                 return;
             }
             P_SetMessage(player, HERETIC_TXT_WPNGAUNTLETS, false);
-            sound = heretic_sfx_wpnup;
             break;
         default:
             I_Error("Heretic_P_TouchSpecialThing: Unknown gettable thing");
@@ -2148,7 +2101,6 @@ static void Heretic_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
     player->bonuscount += BONUSADD;
     if (player == &players[consoleplayer])
     {
-        S_StartVoidSound(sound);
         SB_PaletteFlash(false);
     }
 }
@@ -2276,10 +2228,6 @@ dboolean Heretic_P_GiveWeapon(player_t * player, weapontype_t weapon)
         player->weaponowned[weapon] = true;
         P_GiveAmmo(player, wpnlev1info[weapon].ammo, GetWeaponAmmo[weapon]);
         player->pendingweapon = weapon;
-        if (player == &players[consoleplayer])
-        {
-            S_StartVoidSound(heretic_sfx_wpnup);
-        }
         return (false);
     }
     gaveAmmo = P_GiveAmmo(player, wpnlev1info[weapon].ammo,
@@ -2869,7 +2817,6 @@ void TryPickupWeapon(player_t * player, pclass_t weaponClass,
     player->bonuscount += BONUSADD;
     if (player == &players[consoleplayer])
     {
-        S_StartVoidSound(hexen_sfx_pickup_weapon);
         SB_PaletteFlash(false);
     }
 }
@@ -2981,16 +2928,10 @@ static void TryPickupWeaponPiece(player_t * player, pclass_t matchClass,
     if (gaveWeapon)
     {
         P_SetMessage(player, fourthWeaponText[matchClass], false);
-        // Play the build-sound full volume for all players
-        S_StartVoidSound(hexen_sfx_weapon_build);
     }
     else
     {
         P_SetMessage(player, weaponPieceText[matchClass], false);
-        if (player == &players[consoleplayer])
-        {
-            S_StartVoidSound(hexen_sfx_pickup_weapon);
-        }
     }
 }
 
@@ -3092,7 +3033,6 @@ static void TryPickupArtifact(player_t * player, artitype_t artifactType, mobj_t
         }
         else
         {                       // Puzzle item
-            S_StartVoidSound(hexen_sfx_pickup_item);
             P_SetMessage(player, artifactMessages[artifactType], true);
             if (!netgame || deathmatch)
             {                   // Remove puzzle items if not cooperative netplay
@@ -3106,7 +3046,6 @@ static void Hexen_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
 {
     player_t *player;
     fixed_t delta;
-    int sound;
     dboolean respawn;
 
     delta = special->z - toucher->z;
@@ -3118,7 +3057,6 @@ static void Hexen_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
     {                           // Toucher is dead
         return;
     }
-    sound = hexen_sfx_pickup_item;
     player = toucher->player;
     respawn = true;
     switch (special->sprite)
@@ -3178,7 +3116,6 @@ static void Hexen_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
             }
             P_SetMessage(player, TextKeyMessages[special->sprite - HEXEN_SPR_KEY1],
                          true);
-            sound = hexen_sfx_pickup_key;
 
             // Check and process the special now in case the key doesn't
             // get removed for coop netplay
@@ -3195,7 +3132,6 @@ static void Hexen_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
             player->bonuscount += BONUSADD;
             if (player == &players[consoleplayer])
             {
-                S_StartVoidSound(sound);
                 SB_PaletteFlash(false);
             }
             return;
@@ -3408,7 +3344,6 @@ static void Hexen_P_TouchSpecialThing(mobj_t * special, mobj_t * toucher)
     player->bonuscount += BONUSADD;
     if (player == &players[consoleplayer])
     {
-        S_StartVoidSound(sound);
         SB_PaletteFlash(false);
     }
 }

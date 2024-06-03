@@ -401,7 +401,6 @@ while (SDL_PollEvent(Event))
     break;
 
   case SDL_QUIT:
-    S_StartVoidSound(sfx_swtchn);
     M_QuitDOOM(0);
 
   default:

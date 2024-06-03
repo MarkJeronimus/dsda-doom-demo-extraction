@@ -5344,14 +5344,6 @@ dboolean EV_LineSearchForPuzzleItem(line_t * line, byte * args, mobj_t * mo)
                 P_PlayerRemoveArtifact(player, i);
                 if (player == &players[consoleplayer])
                 {
-                    if (arti < hexen_arti_firstpuzzitem)
-                    {
-                        S_StartVoidSound(hexen_sfx_artifact_use);
-                    }
-                    else
-                    {
-                        S_StartVoidSound(hexen_sfx_puzzle_success);
-                    }
                     ArtifactFlash = 4;
                 }
                 return true;

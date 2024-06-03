@@ -870,7 +870,6 @@ void M_ScreenShot(void)
 
     if (!M_FileExists(lbmname))
     {
-      S_StartVoidSound(gamemode==commercial ? sfx_radio : sfx_tink);
       M_DoScreenShot(lbmname); // cph
       success = 1;
     }

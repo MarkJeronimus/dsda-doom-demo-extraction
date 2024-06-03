@@ -169,26 +169,6 @@ void P_ExplodeMissile (mobj_t* mo)
   }
 
   mo->flags &= ~MF_MISSILE;
-
-  if (!hexen)
-  {
-  }
-  else
-  {
-    switch (mo->type)
-    {
-      case HEXEN_MT_SORCBALL1:
-      case HEXEN_MT_SORCBALL2:
-      case HEXEN_MT_SORCBALL3:
-        S_StartVoidSound(hexen_sfx_sorcerer_bigballexplode);
-        break;
-      case HEXEN_MT_SORCFX1:
-        S_StartVoidSound(hexen_sfx_sorcerer_headscream);
-        break;
-      default:
-        break;
-    }
-  }
 }
 
 

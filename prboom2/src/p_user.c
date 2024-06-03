@@ -1193,8 +1193,6 @@ void P_ArtiTele(player_t * player)
     {                           // Teleporting away will undo any morph effects (pig)
       P_UndoPlayerMorph(player);
     }
-    if (heretic)
-      S_StartVoidSound(heretic_sfx_wpnup);      // Full volume laugh
 }
 
 void P_PlayerNextArtifact(player_t * player)
@@ -1276,21 +1274,6 @@ void P_PlayerUseArtifact(player_t * player, artitype_t arti)
                 P_PlayerRemoveArtifact(player, i);
                 if (player == &players[consoleplayer])
                 {
-                    if (hexen)
-                    {
-                        if (arti < hexen_arti_firstpuzzitem)
-                        {
-                            S_StartVoidSound(hexen_sfx_artifact_use);
-                        }
-                        else
-                        {
-                            S_StartVoidSound(hexen_sfx_puzzle_success);
-                        }
-                    }
-                    else
-                    {
-                        S_StartVoidSound(heretic_sfx_artiuse);
-                    }
                     ArtifactFlash = 4;
                 }
             }

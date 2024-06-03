@@ -477,7 +477,6 @@ void F_StartCast (const char* background)
 void F_CastTicker (void)
 {
   int st;
-  int sfx;
 
   if (--casttics > 0)
     return;                 // not time to change state yet
@@ -489,8 +488,6 @@ void F_CastTicker (void)
     castdeath = false;
     if (castorder[castnum].name == NULL)
       castnum = 0;
-    if (mobjinfo[castorder[castnum].type].seesound)
-      S_StartVoidSound(mobjinfo[castorder[castnum].type].seesound);
     caststate = &states[mobjinfo[castorder[castnum].type].seestate];
     castframes = 0;
   }
@@ -502,41 +499,6 @@ void F_CastTicker (void)
     st = caststate->nextstate;
     caststate = &states[st];
     castframes++;
-
-    // sound hacks....
-    switch (st)
-    {
-      case S_PLAY_ATK1:     sfx = sfx_dshtgn; break;
-      case S_POSS_ATK2:     sfx = sfx_pistol; break;
-      case S_SPOS_ATK2:     sfx = sfx_shotgn; break;
-      case S_VILE_ATK2:     sfx = sfx_vilatk; break;
-      case S_SKEL_FIST2:    sfx = sfx_skeswg; break;
-      case S_SKEL_FIST4:    sfx = sfx_skepch; break;
-      case S_SKEL_MISS2:    sfx = sfx_skeatk; break;
-      case S_FATT_ATK8:
-      case S_FATT_ATK5:
-      case S_FATT_ATK2:     sfx = sfx_firsht; break;
-      case S_CPOS_ATK2:
-      case S_CPOS_ATK3:
-      case S_CPOS_ATK4:     sfx = sfx_shotgn; break;
-      case S_TROO_ATK3:     sfx = sfx_claw; break;
-      case S_SARG_ATK2:     sfx = sfx_sgtatk; break;
-      case S_BOSS_ATK2:
-      case S_BOS2_ATK2:
-      case S_HEAD_ATK2:     sfx = sfx_firsht; break;
-      case S_SKULL_ATK2:    sfx = sfx_sklatk; break;
-      case S_SPID_ATK2:
-      case S_SPID_ATK3:     sfx = sfx_shotgn; break;
-      case S_BSPI_ATK2:     sfx = sfx_plasma; break;
-      case S_CYBER_ATK2:
-      case S_CYBER_ATK4:
-      case S_CYBER_ATK6:    sfx = sfx_rlaunc; break;
-      case S_PAIN_ATK3:     sfx = sfx_sklatk; break;
-      default: sfx = 0; break;
-    }
-
-    if (sfx)
-      S_StartVoidSound(sfx);
   }
 
   if (castframes == 12)
@@ -595,8 +557,6 @@ dboolean F_CastResponder (event_t* ev)
   casttics = caststate->tics;
   castframes = 0;
   castattacking = false;
-  if (mobjinfo[castorder[castnum].type].deathsound)
-    S_StartVoidSound(mobjinfo[castorder[castnum].type].deathsound);
 
   return true;
 }
@@ -771,7 +731,6 @@ void F_BunnyScroll (void)
     stage = 6;
   if (stage > laststage)
   {
-    S_StartVoidSound(sfx_pistol);
     laststage = stage;
   }
 
