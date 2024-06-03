@@ -1,33 +1,8 @@
 cmake_minimum_required(VERSION 3.9)
 
-option(WITH_DUMB "Use DUMB if available" ON)
-if(WITH_DUMB)
-    list(APPEND VCPKG_MANIFEST_FEATURES "dumb")
-endif()
-
-option(WITH_FLUIDSYNTH "Use FluidSynth if available" ON)
-if(WITH_FLUIDSYNTH)
-    list(APPEND VCPKG_MANIFEST_FEATURES "fluidsynth")
-endif()
-
 option(WITH_IMAGE "Use SDL2_image if available" ON)
 if(WITH_IMAGE)
     list(APPEND VCPKG_MANIFEST_FEATURES "sdl2-image")
-endif()
-
-option(WITH_MAD "Use libmad if available" ON)
-if(WITH_MAD)
-    list(APPEND VCPKG_MANIFEST_FEATURES "libmad")
-endif()
-
-option(WITH_PORTMIDI "Use PortMidi if available" ON)
-if(WITH_PORTMIDI)
-    list(APPEND VCPKG_MANIFEST_FEATURES "portmidi")
-endif()
-
-option(WITH_VORBISFILE "Use vorbisfile if available" ON)
-if(WITH_VORBISFILE)
-    list(APPEND VCPKG_MANIFEST_FEATURES "libvorbis")
 endif()
 
 # Automatically install dependencies
@@ -126,41 +101,6 @@ if(WITH_IMAGE)
         if(NOT TARGET SDL2_image::SDL2_image)
             add_library(SDL2_image::SDL2_image ALIAS SDL2_image::SDL2_image-static)
         endif()
-    endif()
-endif()
-
-if(WITH_MAD)
-    find_package(LibMad)
-    if(LibMad_FOUND)
-        set(HAVE_LIBMAD TRUE)
-    endif()
-endif()
-
-if(WITH_FLUIDSYNTH)
-    find_package(FluidSynth)
-    if(FluidSynth_FOUND)
-        set(HAVE_LIBFLUIDSYNTH TRUE)
-    endif()
-endif()
-
-if(WITH_DUMB)
-    find_package(DUMB)
-    if(DUMB_FOUND)
-        set(HAVE_LIBDUMB TRUE)
-    endif()
-endif()
-
-if(WITH_VORBISFILE)
-    find_package(Vorbis COMPONENTS File)
-    if(Vorbis_File_FOUND)
-        set(HAVE_LIBVORBISFILE TRUE)
-    endif()
-endif()
-
-if(WITH_PORTMIDI)
-    find_package(PortMidi)
-    if(PortMidi_FOUND)
-        set(HAVE_LIBPORTMIDI TRUE)
     endif()
 endif()
 

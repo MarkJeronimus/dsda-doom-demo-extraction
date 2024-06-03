@@ -17,15 +17,6 @@
 #include "doomtype.h"
 #include "sounds.h"
 
-// Hexen map music is set dynamically in SNDINFO
-musicinfo_t hexen_S_music[HEXEN_NUMMUSIC] = {
-    [hexen_mus_hexen] = { "HEXEN", 0 },
-    [hexen_mus_hub]   = { "HUB", 0 },
-    [hexen_mus_hall]  = { "HALL", 0 },
-    [hexen_mus_orb]   = { "ORB", 0 },
-    [hexen_mus_chess] = { "CHESS", 0 },
-};
-
 sfxinfo_t hexen_S_sfx[] = {
     { "", 0, 0, 0, 0, 0, 0, "" },
     { "", 256, 0, 1, 0, 0, 2, "PlayerFighterNormalDeath" },

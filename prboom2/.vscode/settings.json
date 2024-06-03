@@ -37,6 +37,7 @@
         "configuration.h": "c",
         "p_map.h": "c",
         "data_organizer.h": "c",
-        "exdemo.h": "c"
+        "exdemo.h": "c",
+        "sounds.h": "c"
     }
 }

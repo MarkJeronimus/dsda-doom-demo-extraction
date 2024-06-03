@@ -585,10 +585,6 @@ extern const char* s_AMSTR_TEXTUREDOFF;
 //      ST_stuff.C
 //
 
-//#define STSTR_MUS             "Music Change"
-extern const char* s_STSTR_MUS; // = STSTR_MUS;
-//#define STSTR_NOMUS           "IMPOSSIBLE SELECTION"
-extern const char* s_STSTR_NOMUS; // = STSTR_NOMUS;
 //#define STSTR_DQDON           "Degreelessness Mode On"
 extern const char* s_STSTR_DQDON; // = STSTR_DQDON;
 //#define STSTR_DQDOFF  "Degreelessness Mode Off"

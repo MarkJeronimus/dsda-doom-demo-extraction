@@ -42,7 +42,7 @@
 
 //
 // Initializes sound stuff, including volume
-// Sets channels, SFX and music volume,
+// Sets channels, SFX volume,
 //  allocates channel buffer, sets S_sfx lookup.
 //
 void S_Init(void);
@@ -52,8 +52,7 @@ void S_Stop(void);
 
 //
 // Per level startup code.
-// Kills playing sounds at start of level,
-//  determines music if any, changes music.
+// Kills playing sounds at start of level.
 //
 void S_Start(void);
 
@@ -89,37 +88,18 @@ void S_StopSoundLoops(void);
 extern int full_sounds;
 void S_UnlinkSound(void *origin);
 
-// Start music using <music_id> from sounds.h
-void S_StartMusic(int music_id);
-
-// Start music using <music_id> from sounds.h, and set whether looping
-void S_ChangeMusic(int music_id, int looping);
-void S_ChangeMusInfoMusic(int lumpnum, int looping);
-dboolean S_ChangeMusicByName(const char *name, dboolean looping);
-void S_RestartMusic(void);
-
-// Stops the music fer sure.
-void S_StopMusic(void);
-
-// Stop and resume music, during game PAUSE.
-void S_PauseSound(void);
-void S_ResumeSound(void);
-
 void S_AdjustAttenuation(float attenuation);
 void S_AdjustVolume(float volume);
 void S_ResetAdjustments(void);
 
 //
-// Updates music & sounds
+// Updates sounds
 //
 void S_UpdateSounds(void);
 
 // machine-independent sound params
 extern int default_numChannels;
 extern int numChannels;
-
-//jff 3/17/98 holds last IDMUS number, or -1
-extern int idmusnum;
 
 // heretic
 
@@ -130,7 +110,6 @@ void S_StartAmbientSound(void *origin, int sound_id, int volume);
 
 // hexen
 
-void S_StartSongName(const char *songLump, dboolean loop);
 dboolean S_GetSoundPlayingInfo(void * mobj, int sound_id);
 int S_GetSoundID(const char *name);
 

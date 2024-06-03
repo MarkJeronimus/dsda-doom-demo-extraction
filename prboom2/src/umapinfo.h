@@ -43,13 +43,11 @@ struct MapEntry
 	char levelpic[9];
 	char nextmap[9];
 	char nextsecret[9];
-	char music[9];
 	char skytexture[9];
 	char endpic[9];
 	char exitpic[9];
 	char enterpic[9];
 	char interbackdrop[9];
-	char intermusic[9];
 	int partime;
 	int nointermission;
 	int numbossactions;

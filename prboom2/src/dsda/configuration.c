@@ -93,7 +93,6 @@ void M_ChangeDemoSmoothTurns(void);
 void M_ChangeSkyMode(void);
 void M_ChangeMessages(void);
 void S_ResetSfxVolume(void);
-void I_ResetMusicVolume(void);
 void M_ChangeAllowFog(void);
 void gld_ResetShadowParameters(void);
 void gld_MultisamplingInit(void);
@@ -106,7 +105,6 @@ void M_ChangeSpeed(void);
 void M_ChangeShorttics(void);
 void I_InitSoundParams(void);
 void S_Init(void);
-void M_ChangeMIDIPlayer(void);
 void HU_InitCrosshair(void);
 void HU_InitThresholds(void);
 void dsda_InitKeyFrame(void);
@@ -360,10 +358,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
   [dsda_config_mute_sfx] = {
     "dsda_mute_sfx", dsda_config_mute_sfx,
     CONF_BOOL(0), NULL, NOT_STRICT, S_ResetSfxVolume
-  },
-  [dsda_config_mute_music] = {
-    "dsda_mute_music", dsda_config_mute_music,
-    CONF_BOOL(0), NULL, NOT_STRICT, I_ResetMusicVolume
   },
   [dsda_config_cheat_codes] = {
     "dsda_cheat_codes", dsda_config_cheat_codes,
@@ -686,93 +680,9 @@ dsda_config_t dsda_config[dsda_config_count] = {
     "sfx_volume", dsda_config_sfx_volume,
     dsda_config_int, 0, 15, { 8 }, NULL, NOT_STRICT, S_ResetSfxVolume
   },
-  [dsda_config_music_volume] = {
-    "music_volume", dsda_config_music_volume,
-    dsda_config_int, 0, 15, { 8 }, NULL, NOT_STRICT, I_ResetMusicVolume
-  },
-  [dsda_config_mus_pause_opt] = {
-    "mus_pause_opt", dsda_config_mus_pause_opt,
-    dsda_config_int, 0, 2, { 1 }
-  },
   [dsda_config_snd_channels] = {
     "snd_channels", dsda_config_snd_channels,
     dsda_config_int, 1, MAX_CHANNELS, { 32 }, NULL, NOT_STRICT, S_Init
-  },
-  [dsda_config_snd_midiplayer] = {
-    "snd_midiplayer", dsda_config_snd_midiplayer,
-    CONF_STRING("fluidsynth"), NULL, NOT_STRICT, M_ChangeMIDIPlayer
-  },
-  [dsda_config_snd_mididev] = {
-    "snd_mididev", dsda_config_snd_mididev,
-    CONF_STRING("")
-  },
-  [dsda_config_snd_soundfont] = {
-    "snd_soundfont", dsda_config_snd_soundfont,
-    CONF_STRING("")
-  },
-  [dsda_config_mus_fluidsynth_chorus] = {
-    "mus_fluidsynth_chorus", dsda_config_mus_fluidsynth_chorus,
-    CONF_BOOL(0)
-  },
-  [dsda_config_mus_fluidsynth_reverb] = {
-    "mus_fluidsynth_reverb", dsda_config_mus_fluidsynth_reverb,
-    CONF_BOOL(0)
-  },
-  [dsda_config_mus_fluidsynth_gain] = {
-    "mus_fluidsynth_gain", dsda_config_mus_fluidsynth_gain,
-    dsda_config_int, 0, 1000, { 50 }
-  },
-  [dsda_config_mus_fluidsynth_chorus_depth] = {
-    "mus_fluidsynth_chorus_depth", dsda_config_mus_fluidsynth_chorus_depth,
-    dsda_config_int, 0, 10000, { 500 }
-  },
-  [dsda_config_mus_fluidsynth_chorus_level] = {
-    "mus_fluidsynth_chorus_level", dsda_config_mus_fluidsynth_chorus_level,
-    dsda_config_int, 0, 1000, { 35 }
-  },
-  [dsda_config_mus_fluidsynth_reverb_damp] = {
-    "mus_fluidsynth_reverb_damp", dsda_config_mus_fluidsynth_reverb_damp,
-    dsda_config_int, 0, 1000, { 40 }
-  },
-  [dsda_config_mus_fluidsynth_reverb_level] = {
-    "mus_fluidsynth_reverb_level", dsda_config_mus_fluidsynth_reverb_level,
-    dsda_config_int, 0, 1000, { 15 }
-  },
-  [dsda_config_mus_fluidsynth_reverb_width] = {
-    "mus_fluidsynth_reverb_width", dsda_config_mus_fluidsynth_reverb_width,
-    dsda_config_int, 0, 10000, { 400 }
-  },
-  [dsda_config_mus_fluidsynth_reverb_room_size] = {
-    "mus_fluidsynth_reverb_room_size", dsda_config_mus_fluidsynth_reverb_room_size,
-    dsda_config_int, 0, 1000, { 60 }
-  },
-  [dsda_config_mus_opl_gain] = {
-    "mus_opl_gain", dsda_config_mus_opl_gain,
-    dsda_config_int, 0, 1000, { 50 }
-  },
-  [dsda_config_mus_opl_opl3mode] = {
-    "mus_opl_opl3mode", dsda_config_mus_opl_opl3mode,
-    CONF_BOOL(1)
-  },
-  [dsda_config_mus_portmidi_reset_type] = {
-    "mus_portmidi_reset_type", dsda_config_mus_portmidi_reset_type,
-    CONF_STRING("gm") // none, gs, gm, gm2, xg
-  },
-  [dsda_config_mus_portmidi_reset_delay] = {
-    "mus_portmidi_reset_delay", dsda_config_mus_portmidi_reset_delay,
-    dsda_config_int, 0, 2000, { 0 }
-  },
-  [dsda_config_mus_portmidi_filter_sysex] = {
-    "mus_portmidi_filter_sysex", dsda_config_mus_portmidi_filter_sysex,
-    dsda_config_int, 0, 1, { 1 }
-  },
-  [dsda_config_mus_portmidi_reverb_level] = {
-    "mus_portmidi_reverb_level", dsda_config_mus_portmidi_reverb_level,
-    dsda_config_int, -1, 127, { -1 }
-  },
-  [dsda_config_mus_portmidi_chorus_level] = {
-    "mus_portmidi_chorus_level", dsda_config_mus_portmidi_chorus_level,
-    dsda_config_int, -1, 127, { -1 }
   },
   [dsda_config_cap_soundcommand] = {
     "cap_soundcommand", dsda_config_cap_soundcommand,

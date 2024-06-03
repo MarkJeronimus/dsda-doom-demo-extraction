@@ -205,10 +205,6 @@ static int ParseStandardProperty(Scanner &scanner, MapEntry *mape)
 	{
 		ParseLumpName(scanner, mape->skytexture);
 	}
-	else if (!stricmp(pname, "music"))
-	{
-		ParseLumpName(scanner, mape->music);
-	}
 	else if (!stricmp(pname, "endpic"))
 	{
 		ParseLumpName(scanner, mape->endpic);
@@ -266,10 +262,6 @@ static int ParseStandardProperty(Scanner &scanner, MapEntry *mape)
 	else if (!stricmp(pname, "interbackdrop"))
 	{
 		ParseLumpName(scanner, mape->interbackdrop);
-	}
-	else if (!stricmp(pname, "intermusic"))
-	{
-		ParseLumpName(scanner, mape->intermusic);
 	}
 	else if (!stricmp(pname, "episode"))
 	{

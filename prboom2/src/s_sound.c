@@ -39,7 +39,6 @@
 
 #include "doomstat.h"
 #include "s_sound.h"
-#include "s_advsound.h"
 #include "i_sound.h"
 #include "i_system.h"
 #include "d_main.h"
@@ -57,7 +56,6 @@
 #include "dsda/map_format.h"
 #include "dsda/mapinfo.h"
 #include "dsda/memory.h"
-#include "dsda/music.h"
 #include "dsda/settings.h"
 #include "dsda/sfx.h"
 #include "dsda/skip.h"
@@ -103,23 +101,8 @@ int snd_SfxVolume;
 // Derived value (not saved, accounts for muted sfx)
 static int sfx_volume;
 
-// Maximum volume of music.
-int snd_MusicVolume = 15;
-
-// whether songs are mus_paused
-static dboolean mus_paused;
-
-// music currently being played
-musicinfo_t *mus_playing;
-
-// music currently should play
-static int musicnum_current;
-
 // number of channels available
 int numChannels;
-
-//jff 3/17/98 to keep track of last IDMUS specified music num
-int idmusnum;
 
 //
 // Internals.
@@ -157,14 +140,12 @@ void S_ResetSfxVolume(void)
 }
 
 // Initializes sound stuff, including volume
-// Sets channels, SFX and music volume,
+// Sets channels, SFX volume,
 //  allocates channel buffer, sets S_sfx lookup.
 //
 
 void S_Init(void)
 {
-  idmusnum = -1; //jff 3/17/98 insure idmus number is blank
-
   S_Stop();
 
   numChannels = dsda_IntConfig(dsda_config_snd_channels);
@@ -222,16 +203,6 @@ void S_Init(void)
       memcpy(soundCurve, (const byte *) W_LumpByNum(snd_curve_lump), max_snd_dist);
     }
   }
-
-  // CPhipps - music init reformatted
-  if (!nomusicparm) {
-    void I_ResetMusicVolume(void);
-
-    I_ResetMusicVolume();
-
-    // no sounds are playing, and they are not mus_paused
-    mus_paused = 0;
-  }
 }
 
 void S_Stop(void)
@@ -250,40 +221,12 @@ void S_Stop(void)
 
 //
 // Per level startup code.
-// Kills playing sounds at start of level,
-//  determines music if any, changes music.
+// Kills playing sounds at start of level.
 //
 
 void S_Start(void)
 {
-  int mnum;
-  int muslump;
-
-  // kill all playing sounds at start of level
-  //  (trust me - a good idea)
-
   S_Stop();
-
-  // start new music for the level
-  mus_paused = 0;
-
-  dsda_MapMusic(&mnum, &muslump);
-
-  if (muslump >= 0)
-  {
-    musinfo.items[0] = muslump;
-  }
-
-  if (musinfo.items[0] != -1)
-  {
-    if (!dsda_StartQueuedMusic())
-      S_ChangeMusInfoMusic(musinfo.items[0], true);
-  }
-  else
-  {
-    if (!dsda_StartQueuedMusic())
-      S_ChangeMusic(mnum, true);
-  }
 }
 
 static float adjust_attenuation;
@@ -531,37 +474,7 @@ void S_UnlinkSound(void *origin)
 }
 
 //
-// Stop and resume music, during game PAUSE.
-//
-void S_PauseSound(void)
-{
-  //jff 1/22/98 return if music is not enabled
-  if (nomusicparm)
-    return;
-
-  if (mus_playing && !mus_paused)
-    {
-      I_PauseSong(mus_playing->handle);
-      mus_paused = true;
-    }
-}
-
-void S_ResumeSound(void)
-{
-  //jff 1/22/98 return if music is not enabled
-  if (nomusicparm)
-    return;
-
-  if (mus_playing && mus_paused)
-    {
-      I_ResumeSong(mus_playing->handle);
-      mus_paused = false;
-    }
-}
-
-
-//
-// Updates music & sounds
+// Updates sounds
 //
 void S_UpdateSounds(void)
 {
@@ -571,10 +484,6 @@ void S_UpdateSounds(void)
   //jff 1/22/98 return if sound is not enabled
   if (nosfxparm)
     return;
-
-#ifdef UPDATE_MUSIC
-  I_UpdateMusic();
-#endif
 
   listener = GetSoundListener();
   if (sfx_volume == 0)
@@ -620,150 +529,6 @@ void S_UpdateSounds(void)
     }
   }
 }
-
-// Starts some music with the music id found in sounds.h.
-//
-void S_StartMusic(int m_id)
-{
-  S_ChangeMusic(m_id, false);
-}
-
-dboolean S_ChangeMusicByName(const char *name, dboolean looping)
-{
-  int lump = W_CheckNumForName(name);
-
-  if (lump == LUMP_NOT_FOUND)
-  {
-    S_StopMusic();
-    return false;
-  }
-
-  S_ChangeMusInfoMusic(lump, looping);
-  return true;
-}
-
-void S_ChangeMusic(int musicnum, int looping)
-{
-  musicinfo_t *music;
-
-  // current music which should play
-  musicnum_current = musicnum;
-  musinfo.current_item = -1;
-  S_music[mus_musinfo].lumpnum = -1;
-
-  //jff 1/22/98 return if music is not enabled
-  if (nomusicparm)
-    return;
-
-  if (musicnum <= mus_None || musicnum >= num_music)
-    I_Error("S_ChangeMusic: Bad music number %d", musicnum);
-
-  music = &S_music[musicnum];
-
-  if (mus_playing == music)
-    return;
-
-  // shutdown old music
-  S_StopMusic();
-
-  // get lumpnum if necessary
-  if (!music->lumpnum)
-    music->lumpnum = dsda_MusicIndexToLumpNum(musicnum);
-
-  // load & register it
-  music->data = W_LumpByNum(music->lumpnum);
-  music->handle = I_RegisterSong(music->data, W_LumpLength(music->lumpnum));
-
-  // play it
-  I_PlaySong(music->handle, looping);
-
-  mus_playing = music;
-
-  musinfo.current_item = -1;
-
-  // [crispy] MUSINFO value 0 is reserved for the map's default music
-  if (musinfo.items[0] == -1)
-  {
-     musinfo.items[0] = music->lumpnum;
-     S_music[mus_musinfo].lumpnum = -1;
-  }
-}
-
-void S_RestartMusic(void)
-{
-  if (musinfo.current_item != -1)
-  {
-    S_ChangeMusInfoMusic(musinfo.current_item, true);
-  }
-  else
-  {
-    if (musicnum_current > mus_None && musicnum_current < num_music)
-    {
-      S_ChangeMusic(musicnum_current, true);
-    }
-  }
-}
-
-void S_ChangeMusInfoMusic(int lumpnum, int looping)
-{
-  musicinfo_t *music;
-
-  if (dsda_SkipMode())
-  {
-    musinfo.current_item = lumpnum;
-    return;
-  }
-
-  //jff 1/22/98 return if music is not enabled
-  if (nomusicparm)
-    return;
-
-  if (mus_playing && mus_playing->lumpnum == lumpnum)
-    return;
-
-  music = &S_music[mus_musinfo];
-
-  if (music->lumpnum == lumpnum)
-    return;
-
-  // shutdown old music
-  S_StopMusic();
-
-  // save lumpnum
-  music->lumpnum = lumpnum;
-
-  // load & register it
-  music->data = W_LumpByNum(music->lumpnum);
-  music->handle = I_RegisterSong(music->data, W_LumpLength(music->lumpnum));
-
-  // play it
-  I_PlaySong(music->handle, looping);
-
-  mus_playing = music;
-
-  musinfo.current_item = lumpnum;
-}
-
-void S_StopMusic(void)
-{
-  //jff 1/22/98 return if music is not enabled
-  if (nomusicparm)
-    return;
-
-  if (mus_playing)
-    {
-      if (mus_paused)
-        I_ResumeSong(mus_playing->handle);
-
-      I_StopSong(mus_playing->handle);
-      I_UnRegisterSong(mus_playing->handle);
-
-      mus_playing->data = 0;
-      mus_playing = 0;
-    }
-}
-
-
 
 void S_StopChannel(int cnum)
 {
@@ -1334,34 +1099,4 @@ int S_GetSoundID(const char *name)
         }
     }
     return 0;
-}
-
-void S_StartSongName(const char *songLump, dboolean loop)
-{
-    int musicnum;
-
-    // lazy shortcut hack - this is a unique character
-    switch (songLump[1])
-    {
-      case 'e':
-        musicnum = hexen_mus_hexen;
-        break;
-      case 'u':
-        musicnum = hexen_mus_hub;
-        break;
-      case 'a':
-        musicnum = hexen_mus_hall;
-        break;
-      case 'r':
-        musicnum = hexen_mus_orb;
-        break;
-      case 'h':
-        musicnum = hexen_mus_chess;
-        break;
-      default:
-        musicnum = hexen_mus_hub;
-        break;
-    }
-
-    S_ChangeMusic(musicnum, loop);
 }

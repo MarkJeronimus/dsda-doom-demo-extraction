@@ -94,174 +94,6 @@ struct sfxinfo_struct {
 };
 
 //
-// MusicInfo struct.
-//
-
-typedef struct {
-  // up to 6-character name
-  const char *name; // CPhipps - const
-
-  // lump number of music
-  int lumpnum;
-
-  /* music data - cphipps 4/11 made const void* */
-  const void *data;
-
-  // music handle once registered
-  int handle;
-} musicinfo_t;
-
-//
-// Identifiers for all music in game.
-//
-
-extern int mus_musinfo;
-
-typedef enum {
-  mus_None,
-  mus_e1m1,
-  mus_e1m2,
-  mus_e1m3,
-  mus_e1m4,
-  mus_e1m5,
-  mus_e1m6,
-  mus_e1m7,
-  mus_e1m8,
-  mus_e1m9,
-  mus_e2m1,
-  mus_e2m2,
-  mus_e2m3,
-  mus_e2m4,
-  mus_e2m5,
-  mus_e2m6,
-  mus_e2m7,
-  mus_e2m8,
-  mus_e2m9,
-  mus_e3m1,
-  mus_e3m2,
-  mus_e3m3,
-  mus_e3m4,
-  mus_e3m5,
-  mus_e3m6,
-  mus_e3m7,
-  mus_e3m8,
-  mus_e3m9,
-  mus_inter,
-  mus_intro,
-  mus_bunny,
-  mus_victor,
-  mus_introa,
-  mus_runnin,
-  mus_stalks,
-  mus_countd,
-  mus_betwee,
-  mus_doom,
-  mus_the_da,
-  mus_shawn,
-  mus_ddtblu,
-  mus_in_cit,
-  mus_dead,
-  mus_stlks2,
-  mus_theda2,
-  mus_doom2,
-  mus_ddtbl2,
-  mus_runni2,
-  mus_dead2,
-  mus_stlks3,
-  mus_romero,
-  mus_shawn2,
-  mus_messag,
-  mus_count2,
-  mus_ddtbl3,
-  mus_ampie,
-  mus_theda3,
-  mus_adrian,
-  mus_messg2,
-  mus_romer2,
-  mus_tense,
-  mus_shawn3,
-  mus_openin,
-  mus_evil,
-  mus_ultima,
-  mus_read_m,
-  mus_dm2ttl,
-  mus_dm2int,
-  DOOM_MUSINFO,
-  DOOM_NUMMUSIC,
-
-  // heretic
-  heretic_mus_e1m1 = mus_e1m1,
-  heretic_mus_e1m2,
-  heretic_mus_e1m3,
-  heretic_mus_e1m4,
-  heretic_mus_e1m5,
-  heretic_mus_e1m6,
-  heretic_mus_e1m7,
-  heretic_mus_e1m8,
-  heretic_mus_e1m9,
-
-  heretic_mus_e2m1,
-  heretic_mus_e2m2,
-  heretic_mus_e2m3,
-  heretic_mus_e2m4,
-  heretic_mus_e2m5,
-  heretic_mus_e2m6,
-  heretic_mus_e2m7,
-  heretic_mus_e2m8,
-  heretic_mus_e2m9,
-
-  heretic_mus_e3m1,
-  heretic_mus_e3m2,
-  heretic_mus_e3m3,
-  heretic_mus_e3m4,
-  heretic_mus_e3m5,
-  heretic_mus_e3m6,
-  heretic_mus_e3m7,
-  heretic_mus_e3m8,
-  heretic_mus_e3m9,
-
-  heretic_mus_e4m1,
-  heretic_mus_e4m2,
-  heretic_mus_e4m3,
-  heretic_mus_e4m4,
-  heretic_mus_e4m5,
-  heretic_mus_e4m6,
-  heretic_mus_e4m7,
-  heretic_mus_e4m8,
-  heretic_mus_e4m9,
-
-  heretic_mus_e5m1,
-  heretic_mus_e5m2,
-  heretic_mus_e5m3,
-  heretic_mus_e5m4,
-  heretic_mus_e5m5,
-  heretic_mus_e5m6,
-  heretic_mus_e5m7,
-  heretic_mus_e5m8,
-  heretic_mus_e5m9,
-
-  heretic_mus_e6m1,
-  heretic_mus_e6m2,
-  heretic_mus_e6m3,
-
-  heretic_mus_titl,
-  heretic_mus_intr,
-  heretic_mus_cptd,
-  HERETIC_MUSINFO,
-  HERETIC_NUMMUSIC,
-
-  // hexen
-  hexen_mus_map = mus_e1m1,
-  hexen_mus_hexen = hexen_mus_map + 99, // hexen mapinfo supports up to 99 entries
-  hexen_mus_hub,
-  hexen_mus_hall,
-  hexen_mus_orb,
-  hexen_mus_chess,
-  HEXEN_MUSINFO,
-  HEXEN_NUMMUSIC
-} musicenum_t;
-
-//
 // Identifiers for all sfx in game.
 //
 
@@ -991,17 +823,12 @@ typedef enum {
 // all the stuff - dynamically selected in global.c
 
 extern sfxinfo_t hexen_S_sfx[];
-extern musicinfo_t hexen_S_music[];
 
 extern sfxinfo_t heretic_S_sfx[];
-extern musicinfo_t heretic_S_music[];
 
 extern sfxinfo_t doom_S_sfx[];
-extern musicinfo_t doom_S_music[];
 
 extern sfxinfo_t* S_sfx;
 extern int num_sfx;
-extern musicinfo_t* S_music;
-extern int num_music;
 
 #endif

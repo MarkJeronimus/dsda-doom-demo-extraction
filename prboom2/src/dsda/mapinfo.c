@@ -289,62 +289,6 @@ int dsda_ResolveINIT(void) {
   return init;
 }
 
-int dsda_MusicIndexToLumpNum(int music_index) {
-  int lump;
-
-  if (dsda_DoomMusicIndexToLumpNum(&lump, music_index))
-    return lump;
-
-  if (dsda_HexenMusicIndexToLumpNum(&lump, music_index))
-    return lump;
-
-  if (dsda_UMusicIndexToLumpNum(&lump, music_index))
-    return lump;
-
-  dsda_LegacyMusicIndexToLumpNum(&lump, music_index);
-
-  return lump;
-}
-
-void dsda_MapMusic(int* music_index, int* music_lump) {
-  if (dsda_DoomMapMusic(music_index, music_lump))
-    return;
-
-  if (dsda_HexenMapMusic(music_index, music_lump))
-    return;
-
-  if (dsda_UMapMusic(music_index, music_lump))
-    return;
-
-  dsda_LegacyMapMusic(music_index, music_lump);
-}
-
-void dsda_IntermissionMusic(int* music_index, int* music_lump) {
-  if (dsda_DoomIntermissionMusic(music_index, music_lump))
-    return;
-
-  if (dsda_HexenIntermissionMusic(music_index, music_lump))
-    return;
-
-  if (dsda_UIntermissionMusic(music_index, music_lump))
-    return;
-
-  dsda_LegacyIntermissionMusic(music_index, music_lump);
-}
-
-void dsda_InterMusic(int* music_index, int* music_lump) {
-  if (dsda_DoomInterMusic(music_index, music_lump))
-    return;
-
-  if (dsda_HexenInterMusic(music_index, music_lump))
-    return;
-
-  if (dsda_UInterMusic(music_index, music_lump))
-    return;
-
-  dsda_LegacyInterMusic(music_index, music_lump);
-}
-
 typedef enum {
   finale_owner_legacy,
   finale_owner_u,

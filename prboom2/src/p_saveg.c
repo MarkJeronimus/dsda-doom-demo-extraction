@@ -43,7 +43,6 @@
 #include "am_map.h"
 #include "p_enemy.h"
 #include "lprintf.h"
-#include "s_advsound.h"
 #include "e6y.h"//e6y
 
 #include "hexen/a_action.h"
@@ -245,7 +244,8 @@ void P_ArchiveWorld (void)
       }
   }
 
-  P_SAVE_X(musinfo.current_item);
+  CheckSaveGame(sizeof(int));
+  save_p += sizeof(int);
 }
 
 
@@ -347,7 +347,7 @@ void P_UnArchiveWorld (void)
       }
   }
 
-  P_LOAD_X(musinfo.current_item);
+  save_p += sizeof(int);
 }
 
 //

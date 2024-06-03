@@ -42,7 +42,6 @@
 #include "st_stuff.h"
 #include "hu_stuff.h"
 #include "s_sound.h"
-#include "s_advsound.h"
 #include "info.h"
 #include "g_game.h"
 #include "p_inter.h"
@@ -1263,7 +1262,6 @@ void P_MobjThinker (mobj_t* mobj)
 
   if (mobj->type == MT_MUSICSOURCE)
   {
-    MusInfoThinker(mobj);
     return;
   }
 
@@ -2500,18 +2498,6 @@ mobj_t* P_SpawnMapThing (const mapthing_t* mthing, int index)
   {
     iden_num = mthing->special_args[0]; // Ambient sound id
     thingtype = 14064; // ZMT_AMBIENTSOUND
-  }
-
-  if (!raven && thingtype >= 14100 && thingtype <= 14164)
-  {
-    iden_num = thingtype - 14100; // Mus change
-    thingtype = 14164;            // MT_MUSICSOURCE
-  }
-
-  if (!raven && thingtype == 14165 && map_format.hexen)
-  {
-    iden_num = BETWEEN(0, 64, mthing->special_args[0]); // Mus change
-    thingtype = 14164;            // MT_MUSICSOURCE
   }
 
   // find which type to spawn

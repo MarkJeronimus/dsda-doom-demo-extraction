@@ -90,48 +90,7 @@ unsigned char *I_GrabSound (int len);
 // NSM helper routine for some of the streaming audio
 void I_ResampleStream (void *dest, unsigned nsamp, void (*proc) (void *dest, unsigned nsamp), unsigned sratein, unsigned srateout);
 
-//
-//  MUSIC I/O
-//
-extern char music_player_order[][200];
-
-void I_InitMusic(void);
-void I_ShutdownMusic(void);
-
-// PAUSE game handling.
-void I_PauseSong(int handle);
-void I_ResumeSong(int handle);
-
-// Registers a song handle to song data.
-int I_RegisterSong(const void *data, size_t len);
-
-// Called by anything that wishes to start music.
-//  plays a song, and when the song is done,
-//  starts playing it again in an endless loop.
-// Horrible thing to do, considering.
-void I_PlaySong(int handle, int looping);
-
-// Stops a song over 3 seconds.
-void I_StopSong(int handle);
-
-// See above (register), then think backwards
-void I_UnRegisterSong(int handle);
-
 // CPhipps - put these in config file
 extern int snd_samplerate;
-
-// prefered MIDI player
-typedef enum
-{
-  midi_player_fluidsynth,
-  midi_player_opl,
-  midi_player_portmidi,
-
-  midi_player_last
-} midi_player_name_t;
-
-extern const char *midiplayers[];
-
-void M_ChangeMIDIPlayer(void);
 
 #endif

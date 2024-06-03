@@ -1988,7 +1988,7 @@ void WI_checkForAccelerate(void)
 // ====================================================================
 // WI_Ticker
 // Purpose: Do various updates every gametic, for stats, animation,
-//          checking that intermission music is running, etc.
+//          etc.
 // Args:    none
 // Returns: void
 //
@@ -1999,23 +1999,6 @@ void WI_Ticker(void)
 
   // counter for general background animation
   bcnt++;
-
-  if (bcnt == 1)
-  {
-    int mnum;
-    int muslump;
-
-    dsda_IntermissionMusic(&mnum, &muslump);
-
-    if (muslump >= 0)
-    {
-      S_ChangeMusInfoMusic(muslump, true);
-    }
-    else
-    {
-      S_ChangeMusic(mnum, true);
-    }
-  }
 
   WI_checkForAccelerate();
 

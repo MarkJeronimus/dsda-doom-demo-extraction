@@ -72,8 +72,6 @@
 
 #include "dsda/settings.h"
 
-static dboolean registered_non_rw = false;
-
 // The number of internal mixing channels,
 //  the samples calculated for each mixing step,
 //  the size of the 16bit, 2 hardware channel (stereo)
@@ -123,14 +121,10 @@ static int dumping_sound = 0;
 
 // lock for updating any params related to sfx
 SDL_mutex *sfxmutex;
-// lock for updating any params related to music
-SDL_mutex *musmutex;
 
 static int pitched_sounds;
 int snd_samplerate; // samples per second
 static int snd_samplecount;
-
-static const char *snd_midiplayer;
 
 void I_InitSoundParams(void)
 {
@@ -543,8 +537,6 @@ dboolean I_AnySoundStillPlaying(void)
 // This function currently supports only 16bit.
 //
 
-static void UpdateMusic (void *buff, unsigned nsamp);
-
 static void I_UpdateSound(void *unused, Uint8 *stream, int len)
 {
   // Mix current sound data.
@@ -563,21 +555,12 @@ static void I_UpdateSound(void *unused, Uint8 *stream, int len)
   // Mixing channel index.
   int       chan;
 
-  if (snd_midiplayer == NULL) // This is but a temporary fix. Please do remove after a more definitive one!
-    memset(stream, 0, len);
+  memset(stream, 0, len);
 
   // NSM: when dumping sound, ignore the callback calls and only
   // service dumping calls
   if (dumping_sound && unused != (void *) 0xdeadbeef)
     return;
-
-  // do music update
-  if (registered_non_rw)
-  {
-    SDL_LockMutex (musmutex);
-    UpdateMusic (stream, len / 4);
-    SDL_UnlockMutex (musmutex);
-  }
 
   SDL_LockMutex (sfxmutex);
   // Left and right channel
@@ -718,14 +701,13 @@ void I_InitSound(void)
   int audio_channels;
   int audio_buffers;
 
-  if (sound_was_initialized || (nomusicparm && nosfxparm))
+  if (sound_was_initialized || nosfxparm)
     return;
 
   if (SDL_InitSubSystem(SDL_INIT_AUDIO))
   {
     lprintf(LO_WARN, "Couldn't initialize SDL audio (%s))\n", SDL_GetError());
     nosfxparm = true;
-    nomusicparm = true;
     return;
   }
 
@@ -743,7 +725,6 @@ void I_InitSound(void)
   {
     lprintf(LO_DEBUG, "couldn't open audio with desired format (%s)\n", SDL_GetError());
     nosfxparm = true;
-    nomusicparm = true;
     return;
   }
 
@@ -759,9 +740,6 @@ void I_InitSound(void)
   I_AtExit(I_ShutdownSound, true, "I_ShutdownSound", exit_priority_normal);
 
   sfxmutex = SDL_CreateMutex ();
-
-  if (!nomusicparm)
-    I_InitMusic();
 
   lprintf(LO_DEBUG, "I_InitSound: sound module ready\n");
   SDL_PauseAudio(0);
@@ -844,517 +822,4 @@ void I_ResampleStream (void *dest, unsigned nsamp, void (*proc) (void *dest, uns
   }
   sin[0] = sin[nreq * 2];
   sin[1] = sin[nreq * 2 + 1];
-}
-
-//
-// MUSIC API.
-//
-
-static void UpdateMusic (void *buff, unsigned nsamp);
-static int RegisterSong (const void *data, size_t len);
-static int RegisterSongEx (const void *data, size_t len, int try_mus2mid);
-static void UnRegisterSong(int handle);
-static void StopSong(int handle);
-static void ResumeSong (int handle);
-static void PauseSong (int handle);
-static void PlaySong(int handle, int looping);
-
-#include "mus2mid.h"
-
-#include "MUSIC/musicplayer.h"
-#include "MUSIC/oplplayer.h"
-#include "MUSIC/madplayer.h"
-#include "MUSIC/dumbplayer.h"
-#include "MUSIC/flplayer.h"
-#include "MUSIC/vorbisplayer.h"
-#include "MUSIC/portmidiplayer.h"
-
-static Mix_Music *music[2] = { NULL, NULL };
-
-// Some tracks are directly streamed from the RWops;
-// we need to free them in the end
-static SDL_RWops *rwops_stream = NULL;
-
-// note that the "handle" passed around by s_sound is ignored
-// however, a handle is maintained for the individual music players
-
-static const music_player_t *music_players[] =
-{ // until some ui work is done, the order these appear is the autodetect order.
-  // of particular importance:  things that play mus have to be last, because
-  // mus2midi very often succeeds even on garbage input
-  &vorb_player, // vorbisplayer.h
-  &mp_player, // madplayer.h
-  &db_player, // dumbplayer.h
-  &fl_player, // flplayer.h
-  &opl_synth_player, // oplplayer.h
-  &pm_player, // portmidiplayer.h
-  NULL
-};
-#define NUM_MUS_PLAYERS ((int)(sizeof (music_players) / sizeof (music_player_t *) - 1))
-
-static int music_player_was_init[NUM_MUS_PLAYERS];
-
-#define PLAYER_VORBIS     "vorbis player"
-#define PLAYER_MAD        "mad mp3 player"
-#define PLAYER_DUMB       "dumb tracker player"
-#define PLAYER_FLUIDSYNTH "fluidsynth midi player"
-#define PLAYER_OPL        "opl synth player"
-#define PLAYER_PORTMIDI   "portmidi midi player"
-
-// order in which players are to be tried
-char music_player_order[NUM_MUS_PLAYERS][200] =
-{
-  PLAYER_VORBIS,
-  PLAYER_MAD,
-  PLAYER_DUMB,
-  PLAYER_FLUIDSYNTH,
-  PLAYER_OPL,
-  PLAYER_PORTMIDI,
-};
-
-const char *midiplayers[midi_player_last + 1] = {
-  "fluidsynth", "opl", "portmidi", NULL };
-
-static int current_player = -1;
-static const void *music_handle = NULL;
-
-static void *mus2mid_conversion_data = NULL;
-
-void I_ShutdownMusic(void)
-{
-  int i;
-  S_StopMusic ();
-
-  for (i = 0; music_players[i]; i++)
-  {
-    if (music_player_was_init[i])
-      music_players[i]->shutdown ();
-  }
-
-  if (musmutex)
-  {
-    SDL_DestroyMutex (musmutex);
-    musmutex = NULL;
-  }
-}
-
-void I_InitMusic(void)
-{
-  int i;
-  musmutex = SDL_CreateMutex ();
-
-  // todo not so greedy
-  for (i = 0; music_players[i]; i++)
-    music_player_was_init[i] = music_players[i]->init (snd_samplerate);
-
-  I_AtExit(I_ShutdownMusic, true, "I_ShutdownMusic", exit_priority_normal);
-}
-
-// Derived value (not saved, accounts for muted music)
-static int music_volume;
-
-void I_ResetMusicVolume(void)
-{
-  snd_MusicVolume = dsda_IntConfig(dsda_config_music_volume);
-
-  if (nomusicparm)
-    return;
-
-  if (dsda_MuteMusic())
-    music_volume = 0;
-  else
-    music_volume = snd_MusicVolume;
-
-  Mix_VolumeMusic(music_volume * 8);
-
-  if (music_handle)
-  {
-    SDL_LockMutex(musmutex);
-    music_players[current_player]->setvolume(music_volume);
-    SDL_UnlockMutex(musmutex);
-  }
-}
-
-void I_PlaySong(int handle, int looping)
-{
-  if (registered_non_rw)
-  {
-    PlaySong (handle, looping);
-    return;
-  }
-
-  if ( music[handle] ) {
-    //Mix_FadeInMusic(music[handle], looping ? -1 : 0, 500);
-    Mix_PlayMusic(music[handle], looping ? -1 : 0);
-
-    // haleyjd 10/28/05: make sure volume settings remain consistent
-    I_ResetMusicVolume();
-  }
-}
-
-void I_PauseSong (int handle)
-{
-  if (registered_non_rw)
-  {
-    PauseSong (handle);
-    return;
-  }
-
-  switch (dsda_IntConfig(dsda_config_mus_pause_opt))
-  {
-    case 0:
-        I_StopSong(handle);
-      break;
-    case 1:
-      switch (Mix_GetMusicType(NULL))
-      {
-        case MUS_NONE:
-          break;
-        default:
-          Mix_PauseMusic();
-          break;
-      }
-      break;
-  }
-  // Default - let music continue
-}
-
-void I_ResumeSong (int handle)
-{
-  if (registered_non_rw)
-  {
-    ResumeSong (handle);
-    return;
-  }
-
-  switch (dsda_IntConfig(dsda_config_mus_pause_opt)) {
-    case 0:
-        I_PlaySong(handle,1);
-      break;
-    case 1:
-      switch (Mix_GetMusicType(NULL))
-      {
-        case MUS_NONE:
-          break;
-        default:
-          Mix_ResumeMusic();
-          break;
-      }
-      break;
-  }
-  /* Otherwise, music wasn't stopped */
-}
-
-void I_StopSong(int handle)
-{
-  if (registered_non_rw)
-  {
-    StopSong (handle);
-    return;
-  }
-
-  // halt music playback
-  Mix_HaltMusic();
-}
-
-void I_UnRegisterSong(int handle)
-{
-  if (registered_non_rw)
-  {
-    UnRegisterSong (handle);
-    return;
-  }
-
-  if ( music[handle] ) {
-    Mix_FreeMusic(music[handle]);
-    music[handle] = NULL;
-
-    // Free RWops
-    if (rwops_stream != NULL)
-    {
-      //SDL_FreeRW(rwops_stream);
-      rwops_stream = NULL;
-    }
-  }
-}
-
-int I_RegisterSong(const void *data, size_t len)
-{
-  registered_non_rw = false;
-
-  if (RegisterSong(data, len))
-    return 0;
-
-  // e6y: new logic by me
-  // Now you can hear title music in deca.wad
-  // http://www.doomworld.com/idgames/index.php?id=8808
-  // Ability to use mp3 and ogg as inwad lump
-
-  music[0] = NULL;
-
-  rwops_stream = SDL_RWFromConstMem(data, len);
-  if (rwops_stream)
-  {
-    music[0] = Mix_LoadMUS_RW(rwops_stream, SDL_FALSE);
-  }
-
-  // Failed to load
-  if (!music[0])
-  {
-    // Conversion failed, free everything
-    if (rwops_stream != NULL)
-    {
-      //SDL_FreeRW(rwops_stream);
-      rwops_stream = NULL;
-    }
-
-    lprintf(LO_ERROR, "Error loading song: %s\n", Mix_GetError());
-  }
-
-  return (0);
-}
-
-static void PlaySong(int handle, int looping)
-{
-  if (music_handle)
-  {
-    SDL_LockMutex (musmutex);
-    music_players[current_player]->play (music_handle, looping);
-    music_players[current_player]->setvolume (music_volume);
-    SDL_UnlockMutex (musmutex);
-  }
-}
-
-static void PauseSong (int handle)
-{
-  if (!music_handle)
-    return;
-
-  SDL_LockMutex (musmutex);
-  switch (dsda_IntConfig(dsda_config_mus_pause_opt))
-  {
-    case 0:
-      music_players[current_player]->stop ();
-      break;
-    case 1:
-      music_players[current_player]->pause ();
-      break;
-    default: // Default - let music continue
-      break;
-  }
-  SDL_UnlockMutex (musmutex);
-}
-
-static void ResumeSong (int handle)
-{
-  if (!music_handle)
-    return;
-
-  SDL_LockMutex (musmutex);
-  switch (dsda_IntConfig(dsda_config_mus_pause_opt))
-  {
-    case 0: // i'm not sure why we can guarantee looping=true here,
-            // but that's what the old code did
-      music_players[current_player]->play (music_handle, 1);
-      break;
-    case 1:
-      music_players[current_player]->resume ();
-      break;
-    default: // Default - music was never stopped
-      break;
-  }
-  SDL_UnlockMutex (musmutex);
-}
-
-static void StopSong(int handle)
-{
-  if (music_handle)
-  {
-    SDL_LockMutex (musmutex);
-    music_players[current_player]->stop ();
-    SDL_UnlockMutex (musmutex);
-  }
-}
-
-static void UnRegisterSong(int handle)
-{
-  if (music_handle)
-  {
-    SDL_LockMutex (musmutex);
-    music_players[current_player]->unregistersong (music_handle);
-    music_handle = NULL;
-    if (mus2mid_conversion_data)
-    {
-      Z_Free (mus2mid_conversion_data);
-      mus2mid_conversion_data = NULL;
-    }
-    SDL_UnlockMutex (musmutex);
-  }
-}
-
-// returns 1 on success, 0 on failure
-static int RegisterSongEx (const void *data, size_t len, int try_mus2mid)
-{
-  int i, j;
-
-  MEMFILE *instream;
-  MEMFILE *outstream;
-  void *outbuf;
-  size_t outbuf_len;
-  int result;
-
-  if (music_handle)
-    UnRegisterSong (0);
-
-  // e6y: new logic by me
-  // Now you can hear title music in deca.wad
-  // http://www.doomworld.com/idgames/index.php?id=8808
-  // Ability to use mp3 and ogg as inwad lump
-
-  if (len > 4 && memcmp(data, "MUS", 3) != 0)
-  {
-    // The header has no MUS signature
-    // Let's try to load this song directly
-
-    // go through music players in order
-    int found = 0;
-
-    for (j = 0; j < NUM_MUS_PLAYERS; j++)
-    {
-      found = 0;
-      for (i = 0; music_players[i]; i++)
-      {
-        if (strcmp (music_players[i]->name (), music_player_order[j]) == 0)
-        {
-          found = 1;
-          if (music_player_was_init[i])
-          {
-            const void *temp_handle = music_players[i]->registersong (data, len);
-            if (temp_handle)
-            {
-              SDL_LockMutex (musmutex);
-              current_player = i;
-              music_handle = temp_handle;
-              SDL_UnlockMutex (musmutex);
-              lprintf(LO_DEBUG, "RegisterSongEx: Using player %s\n", music_players[i]->name ());
-              return 1;
-            }
-          }
-          else
-            lprintf(LO_DEBUG, "RegisterSongEx: Music player %s on preferred list but it failed to init\n", music_players[i]-> name ());
-        }
-      }
-      if (!found)
-        lprintf(LO_DEBUG, "RegisterSongEx: Couldn't find preferred music player %s in list\n  (typo or support not included at compile time)\n", music_player_order[j]);
-    }
-    // load failed
-  }
-
-  // load failed? try mus2mid
-  if (len > 4 && try_mus2mid)
-  {
-
-    instream = mem_fopen_read (data, len);
-    outstream = mem_fopen_write ();
-
-    // e6y: from chocolate-doom
-    // New mus -> mid conversion code thanks to Ben Ryves <benryves@benryves.com>
-    // This plays back a lot of music closer to Vanilla Doom - eg. tnt.wad map02
-    result = mus2mid(instream, outstream);
-    if (result != 0)
-    {
-      size_t muslen = len;
-      const unsigned char *musptr = (const unsigned char*)data;
-
-      // haleyjd 04/04/10: scan forward for a MUS header. Evidently DMX was
-      // capable of doing this, and would skip over any intervening data. That,
-      // or DMX doesn't use the MUS header at all somehow.
-      while (musptr < (const unsigned char*)data + len - sizeof(musheader))
-      {
-        // if we found a likely header start, reset the mus pointer to that location,
-        // otherwise just leave it alone and pray.
-        if (!strncmp ((const char*) musptr, "MUS\x1a", 4))
-        {
-          mem_fclose (instream);
-          instream = mem_fopen_read (musptr, muslen);
-          result = mus2mid (instream, outstream);
-          break;
-        }
-
-        musptr++;
-        muslen--;
-      }
-    }
-    if (result == 0)
-    {
-      mem_get_buf(outstream, &outbuf, &outbuf_len);
-
-      // recopy so we can free the MEMFILE
-      mus2mid_conversion_data = Z_Malloc (outbuf_len);
-      if (mus2mid_conversion_data)
-        memcpy (mus2mid_conversion_data, outbuf, outbuf_len);
-
-      mem_fclose(instream);
-      mem_fclose(outstream);
-
-      if (mus2mid_conversion_data)
-      {
-        return RegisterSongEx (mus2mid_conversion_data, outbuf_len, 0);
-      }
-    }
-  }
-
-  lprintf(LO_ERROR, "RegisterSongEx: Failed\n");
-  return 0;
-}
-
-
-static int RegisterSong (const void *data, size_t len)
-{
-  int result;
-
-  result = RegisterSongEx (data, len, 1);
-
-  if (result)
-    registered_non_rw = true;
-
-  return result;
-}
-
-static void UpdateMusic (void *buff, unsigned nsamp)
-{
-  if (!music_handle)
-  {
-    memset (buff, 0, nsamp * 4);
-    return;
-  }
-
-  music_players[current_player]->render (buff, nsamp);
-}
-
-void M_ChangeMIDIPlayer(void)
-{
-  snd_midiplayer = dsda_StringConfig(dsda_config_snd_midiplayer);
-
-  if (!strcasecmp(snd_midiplayer, midiplayers[midi_player_fluidsynth]))
-  {
-    strcpy(music_player_order[3], PLAYER_FLUIDSYNTH);
-    strcpy(music_player_order[4], PLAYER_OPL);
-    strcpy(music_player_order[5], PLAYER_PORTMIDI);
-  }
-  else if (!strcasecmp(snd_midiplayer, midiplayers[midi_player_opl]))
-  {
-    strcpy(music_player_order[3], PLAYER_OPL);
-    strcpy(music_player_order[4], PLAYER_FLUIDSYNTH);
-    strcpy(music_player_order[5], PLAYER_PORTMIDI);
-  }
-  else if (!strcasecmp(snd_midiplayer, midiplayers[midi_player_portmidi]))
-  {
-    strcpy(music_player_order[3], PLAYER_PORTMIDI);
-    strcpy(music_player_order[4], PLAYER_FLUIDSYNTH);
-    strcpy(music_player_order[5], PLAYER_OPL);
-  }
-
-  S_StopMusic();
-  S_RestartMusic();
 }

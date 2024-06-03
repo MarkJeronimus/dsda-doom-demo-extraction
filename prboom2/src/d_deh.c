@@ -58,7 +58,6 @@
 
 #include "dsda/args.h"
 #include "dsda/mobjinfo.h"
-#include "dsda/music.h"
 #include "dsda/sfx.h"
 #include "dsda/sprite.h"
 #include "dsda/state.h"
@@ -442,8 +441,6 @@ const char* s_AMSTR_OVERLAYOFF   = AMSTR_OVERLAYOFF;
 const char* s_AMSTR_TEXTUREDON   = AMSTR_TEXTUREDON;
 const char* s_AMSTR_TEXTUREDOFF  = AMSTR_TEXTUREDOFF;
 
-const char *s_STSTR_MUS          = STSTR_MUS;
-const char *s_STSTR_NOMUS        = STSTR_NOMUS;
 const char *s_STSTR_DQDON        = STSTR_DQDON;
 const char *s_STSTR_DQDOFF       = STSTR_DQDOFF;
 const char *s_STSTR_KFAADDED     = STSTR_KFAADDED;
@@ -761,8 +758,6 @@ static deh_strs deh_strlookup[] = {
   {&s_AMSTR_GRIDOFF,"AMSTR_GRIDOFF"},
   {&s_AMSTR_MARKEDSPOT,"AMSTR_MARKEDSPOT"},
   {&s_AMSTR_MARKSCLEARED,"AMSTR_MARKSCLEARED"},
-  {&s_STSTR_MUS,"STSTR_MUS"},
-  {&s_STSTR_NOMUS,"STSTR_NOMUS"},
   {&s_STSTR_DQDON,"STSTR_DQDON"},
   {&s_STSTR_DQDOFF,"STSTR_DQDOFF"},
   {&s_STSTR_KFAADDED,"STSTR_KFAADDED"},
@@ -1043,7 +1038,6 @@ static void deh_procBexCodePointers(DEHFILE *, char *);
 static void deh_procHelperThing(DEHFILE *, char *); // haleyjd 9/22/99
 // haleyjd: handlers to fully deprecate the DeHackEd text section
 static void deh_procBexSounds(DEHFILE *, char *);
-static void deh_procBexMusic(DEHFILE *, char *);
 static void deh_procBexSprites(DEHFILE *, char *);
 
 // Structure deh_block is used to hold the block names that can
@@ -1082,7 +1076,6 @@ static const deh_block deh_blocks[] = { // CPhipps - static const
   /* 13 */ {"[HELPER]", deh_procHelperThing}, // helper thing substitution haleyjd 9/22/99
   /* 14 */ {"[SPRITES]", deh_procBexSprites}, // bex style sprites
   /* 15 */ {"[SOUNDS]", deh_procBexSounds},   // bex style sounds
-  /* 16 */ {"[MUSIC]", deh_procBexMusic},     // bex style music
   /* 17 */ {"", deh_procError} // dummy to handle anything else
 };
 
@@ -2848,7 +2841,7 @@ static void deh_procText(DEHFILE *fpin, char *line)
     }
   }
 
-  if (!found && fromlen < 7 && tolen < 7)  // lengths of music and sfx are 6 or shorter
+  if (!found && fromlen < 7 && tolen < 7)  // lengths of sfx is 6 or shorter
   {
     usedlen = (fromlen < tolen) ? fromlen : tolen;
     if (fromlen != tolen)
@@ -2863,19 +2856,6 @@ static void deh_procText(DEHFILE *fpin, char *line)
       S_sfx[i].name = deh_sfx_name(&inbuffer[fromlen]);
 
       found = TRUE;
-    }
-    else
-    {
-      i = dsda_GetDehMusicIndex(inbuffer, (size_t) fromlen);
-      if (i >= 0)
-      {
-        deh_log("Changing name of music from %s to %*s\n",
-                S_music[i].name, usedlen, &inbuffer[fromlen]);
-
-        S_music[i].name = Z_Strdup(&inbuffer[fromlen]);
-
-        found = TRUE;
-      }
     }
   }
 
@@ -3174,54 +3154,6 @@ static void deh_procBexSounds(DEHFILE *fpin, char *line)
   }
 }
 
-// ditto for music names
-static void deh_procBexMusic(DEHFILE *fpin, char *line)
-{
-  char key[DEH_MAXKEYLEN];
-  char inbuffer[DEH_BUFFERMAX];
-  uint64_t value;    // All deh values are ints or longs
-  char *strval;  // holds the string value of the line
-  char candidate[7];
-  int  match;
-  size_t len;
-
-  deh_log("Processing music name substitution\n");
-
-  strncpy(inbuffer, line, DEH_BUFFERMAX - 1);
-
-  while (!dehfeof(fpin) && *inbuffer && (*inbuffer != ' '))
-  {
-    if (!dehfgets(inbuffer, sizeof(inbuffer), fpin))
-      break;
-    if (*inbuffer == '#')
-      continue;  // skip comment lines
-    lfstrip(inbuffer);
-    if (!*inbuffer)
-      break;  // killough 11/98
-    if (!deh_GetData(inbuffer, key, &value, &strval)) // returns TRUE if ok
-    {
-      deh_log("Bad data pair in '%s'\n", inbuffer);
-      continue;
-    }
-    // do it
-    memset(candidate, 0, 7);
-    strncpy(candidate, ptr_lstrip(strval), 6);
-    len = strlen(candidate);
-    if (len < 1 || len > 6)
-    {
-      deh_log("Bad length for music name '%s'\n", candidate);
-      continue;
-    }
-
-    match = dsda_GetOriginalMusicIndex(key);
-    if (match >= 0)
-    {
-      deh_log("Substituting '%s' for music '%s'\n", candidate, key);
-      S_music[match].name = Z_Strdup(candidate);
-    }
-  }
-}
-
 // ====================================================================
 // General utility function(s)
 // ====================================================================
@@ -3439,6 +3371,5 @@ void PostProcessDeh(void)
   dsda_FreeDehStates();
   dsda_FreeDehSprites();
   dsda_FreeDehSFX();
-  dsda_FreeDehMusic();
   dsda_FreeDehMobjInfo();
 }

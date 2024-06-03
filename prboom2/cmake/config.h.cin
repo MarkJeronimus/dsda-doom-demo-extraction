@@ -23,12 +23,6 @@
 #cmakedefine HAVE_LIBSDL2_IMAGE
 #cmakedefine HAVE_LIBSDL2_MIXER
 
-#cmakedefine HAVE_LIBMAD
-#cmakedefine HAVE_LIBFLUIDSYNTH
-#cmakedefine HAVE_LIBDUMB
-#cmakedefine HAVE_LIBVORBISFILE
-#cmakedefine HAVE_LIBPORTMIDI
-
 #cmakedefine SIMPLECHECKS
 
 #cmakedefine RANGECHECK

@@ -164,7 +164,6 @@ typedef enum {
   dsda_input_avj,
   dsda_input_exhud,
   dsda_input_mute_sfx,
-  dsda_input_mute_music,
   dsda_input_cheat_codes,
   dsda_input_notarget,
   dsda_input_freeze,

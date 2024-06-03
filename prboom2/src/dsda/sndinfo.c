@@ -27,22 +27,6 @@
 
 #include "sndinfo.h"
 
-static char song_lump[99][10];
-
-static void ReadMapSongLumpName(int map, char* lump_name) {
-  if (map < 1 || map > 98)
-    return;
-
-  M_StringCopy(song_lump[map], lump_name, sizeof(song_lump[map]));
-}
-
-const char* dsda_SndInfoMapSongLumpName(int map) {
-  if (map < 1 || map > 98)
-    return song_lump[0];
-
-  return song_lump[map];
-}
-
 void dsda_LoadSndInfo(void) {
   int i;
 
@@ -60,9 +44,6 @@ void dsda_LoadSndInfo(void) {
       else if (!strcasecmp(sc_String, "$MAP")) {
         SC_MustGetNumber();
         SC_MustGetString();
-
-        if (sc_Number)
-          ReadMapSongLumpName(sc_Number, sc_String);
       }
 
       continue;

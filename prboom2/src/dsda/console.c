@@ -2232,13 +2232,6 @@ static dboolean console_MobjInfoSetFlags(const char* command, const char* args) 
   return true;
 }
 
-static dboolean console_MusicRestart(const char* command, const char* args) {
-  S_StopMusic();
-  S_RestartMusic();
-
-  return true;
-}
-
 static dboolean console_AllGhosts(const char* command, const char* args) {
   if (bmapwidth)
     bmapwidth = 0;
@@ -2278,8 +2271,6 @@ static console_command_entry_t console_commands[] = {
   { "player.set_vx", console_PlayerSetVX, CF_NEVER },
   { "player.set_vy", console_PlayerSetVY, CF_NEVER },
   { "player.set_vz", console_PlayerSetVZ, CF_NEVER },
-
-  { "music.restart", console_MusicRestart, CF_ALWAYS },
 
   { "level.exit", console_LevelExit, CF_NEVER },
   { "level.secret_exit", console_LevelSecretExit, CF_NEVER },
@@ -2449,7 +2440,6 @@ static console_command_entry_t console_commands[] = {
   { "iddkt", console_BasicCheat, CF_DEMO },
   { "iddit", console_BasicCheat, CF_DEMO },
   { "idclev", console_BasicCheat, CF_DEMO },
-  { "idmus", console_BasicCheat, CF_DEMO },
   { "idbeholdv", console_BasicCheat, CF_DEMO },
   { "idbeholds", console_BasicCheat, CF_DEMO },
   { "idbeholdi", console_BasicCheat, CF_DEMO },

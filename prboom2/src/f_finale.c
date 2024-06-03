@@ -85,9 +85,6 @@ int midstage;                 // whether we're in "mid-stage"
 //
 void F_StartFinale (void)
 {
-  int mnum;
-  int muslump;
-
   if (heretic) return Heretic_F_StartFinale();
   if (hexen) return Hexen_F_StartFinale();
 
@@ -101,17 +98,6 @@ void F_StartFinale (void)
   finaletext = NULL;
   finaleflat = NULL;
   finalepatch = NULL;
-
-  dsda_InterMusic(&mnum, &muslump);
-
-  if (muslump >= 0)
-  {
-    S_ChangeMusInfoMusic(muslump, true);
-  }
-  else
-  {
-    S_ChangeMusic(mnum, true);
-  }
 
   // Okay - IWAD dependend stuff.
   // This has been changed severly, and
@@ -200,7 +186,7 @@ void F_StartFinale (void)
     // Indeterminate.
     default:  // Ty 03/30/98 - not externalized
          finaleflat = "F_SKY1"; // Not used anywhere else.
-         finaletext = s_C1TEXT;  // FIXME - other text, music?
+         finaletext = s_C1TEXT;  // FIXME - other text?
          break;
   }
 
@@ -328,7 +314,7 @@ void F_Ticker(void)
         if (gamemode != commercial)       // Doom 1 / Ultimate Doom episode end
           {                               // with enough time, it's automatic
             if (gameepisode == 3)
-              F_StartScroll(NULL, NULL, NULL, true);
+              F_StartScroll(NULL, NULL);
             else
               F_StartPostFinale();
           }
@@ -337,7 +323,7 @@ void F_Ticker(void)
             {
             next_level:
               if (F_ShowCast())
-                F_StartCast(NULL, NULL, true); // cast of Doom 2 characters
+                F_StartCast(NULL); // cast of Doom 2 characters
               else
                 gameaction = ga_worlddone;  // next level, e.g. MAP07
             }
@@ -469,25 +455,7 @@ static const char *castbackground;
 // F_StartCast
 //
 
-static void F_StartCastMusic(const char* music, dboolean loop_music)
-{
-  if (music)
-  {
-    if (!S_ChangeMusicByName(music, loop_music))
-      lprintf(LO_WARN, "Finale cast music not found: %s\n", music);
-  }
-  else if (gamemode == commercial)
-  {
-    S_ChangeMusic(mus_evil, loop_music);
-  }
-  else
-  {
-    lprintf(LO_WARN, "Finale cast music unspecified\n");
-    S_StopMusic();
-  }
-}
-
-void F_StartCast (const char* background, const char* music, dboolean loop_music)
+void F_StartCast (const char* background)
 {
   castorder = (gamemode == commercial ? castorder_d2 : castorder_d1);
   castbackground = (background ? background : bgcastcall);
@@ -501,8 +469,6 @@ void F_StartCast (const char* background, const char* music, dboolean loop_music
   castframes = 0;
   castonmelee = 0;
   castattacking = false;
-
-  F_StartCastMusic(music, loop_music);
 }
 
 //
@@ -726,23 +692,9 @@ static const char* pfub2 = "PFUB2";
 static const char* scrollpic1;
 static const char* scrollpic2;
 
-static void F_StartScrollMusic(const char* music, dboolean loop_music)
-{
-  if (music) {
-    if (!S_ChangeMusicByName(music, loop_music))
-      lprintf(LO_WARN, "Finale scroll music not found: %s\n", music);
-  }
-  else if (W_LumpNameExists("D_BUNNY"))
-    S_ChangeMusic(mus_bunny, loop_music);
-  else {
-    lprintf(LO_WARN, "Finale scroll music unspecified\n");
-    S_StopMusic();
-  }
-}
-
 static dboolean end_patches_exist;
 
-void F_StartScroll (const char* right, const char* left, const char* music, dboolean loop_music)
+void F_StartScroll (const char* right, const char* left)
 {
   wipegamestate = -1; // force a wipe
   scrollpic1 = right ? right : pfub1;
@@ -757,8 +709,6 @@ void F_StartScroll (const char* right, const char* left, const char* music, dboo
                       W_CheckNumForName("END4") != LUMP_NOT_FOUND &&
                       W_CheckNumForName("END5") != LUMP_NOT_FOUND &&
                       W_CheckNumForName("END6") != LUMP_NOT_FOUND;
-
-  F_StartScrollMusic(music, loop_music);
 }
 
 void F_BunnyScroll (void)

@@ -182,10 +182,8 @@ extern dboolean randomclass;
 // These are not used, but should be (menu).
 // From m_menu.c:
 //  Sound FX volume has default, 0 - 15
-//  Music volume has default, 0 - 15
 // These are multiplied by 8.
 extern int snd_SfxVolume;      // maximum volume for sound
-extern int snd_MusicVolume;    // maximum volume for music
 
 // CPhipps - screen parameters
 extern int desired_screenwidth, desired_screenheight;

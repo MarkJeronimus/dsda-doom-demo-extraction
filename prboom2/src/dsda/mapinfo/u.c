@@ -143,54 +143,6 @@ int dsda_UResolveINIT(int* init) {
   return false;
 }
 
-int dsda_UMusicIndexToLumpNum(int* lump, int music_index) {
-  return false;
-}
-
-int dsda_UMapMusic(int* music_index, int* music_lump) {
-  int lump;
-
-  if (!gamemapinfo)
-    return false;
-
-  if (!gamemapinfo->music[0])
-    return false;
-
-  lump = W_CheckNumForName(gamemapinfo->music);
-
-  if (lump == LUMP_NOT_FOUND)
-    return false;
-
-  *music_index = -1;
-  *music_lump = lump;
-
-  return true;
-}
-
-int dsda_UIntermissionMusic(int* music_index, int* music_lump) {
-  return false;
-}
-
-int dsda_UInterMusic(int* music_index, int* music_lump) {
-  int lump;
-
-  if (!gamemapinfo)
-    return false;
-
-  if (!gamemapinfo->intermusic[0])
-    return false;
-
-  lump = W_CheckNumForName(gamemapinfo->intermusic);
-
-  if (lump == LUMP_NOT_FOUND)
-    return false;
-
-  *music_index = -1;
-  *music_lump = lump;
-
-  return true;
-}
-
 extern int finalestage;
 extern int finalecount;
 extern const char* finaletext;
@@ -264,7 +216,7 @@ int dsda_UFTicker(void) {
   if (next_level) {
     if (gamemapinfo->endpic[0] && (strcmp(gamemapinfo->endpic, "-") != 0)) {
       if (!stricmp(gamemapinfo->endpic, "$CAST")) {
-        F_StartCast(NULL, NULL, true);
+        F_StartCast(NULL);
         return false; // let go of finale ownership
       }
       else {
@@ -272,7 +224,7 @@ int dsda_UFTicker(void) {
         finalestage = 1;
         wipegamestate = -1; // force a wipe
         if (!stricmp(gamemapinfo->endpic, "$BUNNY"))
-          F_StartScroll(NULL, NULL, NULL, true);
+          F_StartScroll(NULL, NULL);
         else if (!stricmp(gamemapinfo->endpic, "!"))
           return false; // let go of finale ownership
       }

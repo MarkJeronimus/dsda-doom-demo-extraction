@@ -34,8 +34,6 @@ typedef struct {
   char* map;
   char* end_pic;
   char* end_pic_b;
-  char* music;
-  dboolean loop_music;
   dmi_end_t end;
 } doom_mapinfo_map_next_t;
 
@@ -85,8 +83,6 @@ typedef struct {
   char* exit_pic;
   char* enter_pic;
   char* border_texture;
-  char* music;
-  char* inter_music;
   int par;
   char* gravity;
   char* air_control;
@@ -130,7 +126,6 @@ typedef struct {
   int id;
   char* enter_text;
   char* exit_text;
-  char* music;
   char* flat;
   char* pic;
 } doom_mapinfo_cluster_t;

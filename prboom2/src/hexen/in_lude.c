@@ -144,7 +144,6 @@ static void InitStats(void)
                 ClusterMessage[msgSize] = '\0';    // Append terminator
                 HubText = ClusterMessage;
                 HubCount = strlen(HubText) * TEXTSPEED + TEXTWAIT;
-                S_StartSongName("hub", true);
             }
         }
     }
@@ -185,7 +184,6 @@ static void InitStats(void)
         {                       // don't do the slaughter stuff if everyone is equal
             slaughterboy = 0;
         }
-        S_StartSongName("hub", true);
     }
 }
 

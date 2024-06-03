@@ -47,7 +47,6 @@ extern dboolean clfastparm; // checkparm of -fast
 //jff end of external declaration of command line playmode
 
 extern dboolean nosfxparm;
-extern dboolean nomusicparm;
 
 // Called by IO functions when input is detected.
 void D_PostEvent(event_t* ev);
@@ -77,6 +76,6 @@ typedef struct
   const char *name;
 } demostate_t;
 
-void D_SetPage(const char* name, int tics, int music);
+void D_SetPage(const char* name, int tics);
 
 #endif

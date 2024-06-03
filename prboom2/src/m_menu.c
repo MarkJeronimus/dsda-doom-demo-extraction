@@ -242,7 +242,6 @@ void M_QuitDOOM(int choice);
 
 void M_ChangeSensitivity(int choice);
 void M_SfxVol(int choice);
-void M_MusicVol(int choice);
 /* void M_ChangeDetail(int choice);  unused -- killough */
 void M_SizeDisplay(int choice);
 void M_StartGame(int choice);
@@ -1191,8 +1190,6 @@ enum
 {
   sfx_vol,
   sfx_empty1,
-  music_vol,
-  sfx_empty2,
   sound_end
 } sound_e;
 
@@ -1201,8 +1198,6 @@ enum
 menuitem_t SoundMenu[]=
 {
   {2,"M_SFXVOL",M_SfxVol,'s'},
-  {-1,"",0},
-  {2,"M_MUSVOL",M_MusicVol,'m'},
   {-1,"",0}
 };
 
@@ -1217,7 +1212,7 @@ menu_t SoundDef =
 };
 
 //
-// Change Sfx & Music volumes
+// Change Sfx volume
 //
 
 void M_DrawSound(void)
@@ -1228,8 +1223,6 @@ void M_DrawSound(void)
   V_DrawNamePatch(60, 38, 0, "M_SVOL", CR_DEFAULT, VPT_STRETCH);
 
   M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(sfx_vol+1),16,snd_SfxVolume);
-
-  M_DrawThermo(SoundDef.x,SoundDef.y+LINEHEIGHT*(music_vol+1),16,snd_MusicVolume);
 }
 
 void M_Sound(int choice)
@@ -1253,24 +1246,6 @@ void M_SfxVol(int choice)
   // Unmute the sfx if we are adjusting the volume
   if (dsda_MuteSfx())
     dsda_ToggleConfig(dsda_config_mute_sfx, true);
-}
-
-void M_MusicVol(int choice)
-{
-  switch(choice)
-  {
-    case 0:
-      if (dsda_IntConfig(dsda_config_music_volume) > 0)
-        dsda_DecrementIntConfig(dsda_config_music_volume, true);
-      break;
-    case 1:
-      dsda_IncrementIntConfig(dsda_config_music_volume, true);
-      break;
-  }
-
-  // Unmute the music if we are adjusting the volume
-  if (dsda_MuteMusic())
-    dsda_ToggleConfig(dsda_config_mute_music, true);
 }
 
 /////////////////////////////
@@ -2406,7 +2381,6 @@ setup_menu_t dsda_keys_settings[] = {
   { "Coordinate Display", S_INPUT, m_scrn, KB_X, 0, dsda_input_coordinate_display },
   { "Extended HUD", S_INPUT, m_scrn, KB_X, 0, dsda_input_exhud },
   { "SFX", S_INPUT, m_scrn, KB_X, 0, dsda_input_mute_sfx },
-  { "Music", S_INPUT, m_scrn, KB_X, 0, dsda_input_mute_music },
   { "Cheat Code Entry", S_INPUT, m_scrn, KB_X, 0, dsda_input_cheat_codes },
   { "Render Stats", S_INPUT, m_scrn, KB_X, 0, dsda_input_idrate },
   { "FPS", S_INPUT, m_scrn, KB_X, 0, dsda_input_fps },
@@ -2907,11 +2881,10 @@ setup_menu_t audiovideo_settings[] = {
   { "Fake Contrast", S_CHOICE, m_conf, G_X, dsda_config_fake_contrast_mode, 0, fake_contrast_list },
   { "GL Light Fade", S_CHOICE, m_conf, G_X, dsda_config_gl_fade_mode, 0, gl_fade_mode_list },
   EMPTY_LINE,
-  { "Sound & Music", S_SKIP | S_TITLE, m_null, G_X},
+  { "Sound", S_SKIP | S_TITLE, m_null, G_X},
   { "Number of Sound Channels", S_NUM, m_conf, G_X, dsda_config_snd_channels },
   { "Enable v1.1 Pitch Effects", S_YESNO, m_conf, G_X, dsda_config_pitched_sounds },
   { "Disable Sound Cutoffs", S_YESNO, m_conf, G_X, dsda_config_full_sounds },
-  { "Preferred MIDI player", S_CHOICE | S_STR, m_conf, G_X, dsda_config_snd_midiplayer, 0, midiplayers },
 
   NEXT_PAGE(mouse_settings),
   FINAL_ENTRY
@@ -4155,7 +4128,6 @@ static toggle_input_t toggle_inputs[] = {
   { dsda_input_fps, dsda_config_show_fps, true, true, "FPS" },
   { dsda_input_exhud, dsda_config_exhud, true, true, "Extended HUD" },
   { dsda_input_mute_sfx, dsda_config_mute_sfx, true, true, "SFX", true },
-  { dsda_input_mute_music, dsda_config_mute_music, true, true, "Music", true },
   { dsda_input_cheat_codes, dsda_config_cheat_codes, false, true, "Cheat Codes" },
   { -1 }
 };
@@ -5838,7 +5810,7 @@ void M_DrawThermo(int x,int y,int thermWidth,int thermDot )
    * larger ranges. (the thermWidth parameter can now have a value as
    * large as 200.      Modified 1-9-2000  Originally I used it to make
    * the sensitivity range for the mouse better. It could however also
-   * be used to improve the dynamic range of music and sound affect
+   * be used to improve the dynamic range of sound affect
    * volume controls for example.
    */
   thermWidth = (thermWidth > 200) ? 200 : thermWidth; //Clamp to 200 max
@@ -6079,8 +6051,6 @@ void M_Init(void)
   M_ChangeMapMultisamling();
 
   M_ChangeStretch();
-
-  M_ChangeMIDIPlayer();
 }
 
 //

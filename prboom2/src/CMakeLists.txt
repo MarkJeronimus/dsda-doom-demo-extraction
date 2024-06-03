@@ -177,8 +177,6 @@ set(COMMON_SRC
     dsda/mouse.h
     dsda/msecnode.c
     dsda/msecnode.h
-    dsda/music.c
-    dsda/music.h
     dsda/name.c
     dsda/name.h
     dsda/options.c
@@ -402,8 +400,6 @@ set(COMMON_SRC
     st_lib.h
     st_stuff.c
     st_stuff.h
-    s_advsound.c
-    s_advsound.h
     s_sound.c
     s_sound.h
     tables.c
@@ -434,43 +430,12 @@ else()
     set(WAD_SRC w_memcache.c)
 endif()
 
-set(MUS2MID_SRC
-    memio.c
-    memio.h
-    mus2mid.c
-    mus2mid.h
-)
-
 set(SDLDOOM_SOURCES
     SDL/i_main.c
     SDL/i_sound.c
     SDL/i_sshot.c
     SDL/i_system.c
     SDL/i_video.c
-)
-
-set(DOOMMUSIC_SOURCES
-    MUSIC/dumbplayer.c
-    MUSIC/dumbplayer.h
-    MUSIC/flplayer.c
-    MUSIC/flplayer.h
-    MUSIC/madplayer.c
-    MUSIC/madplayer.h
-    MUSIC/midifile.c
-    MUSIC/midifile.h
-    MUSIC/musicplayer.h
-    MUSIC/opl.c
-    MUSIC/opl.h
-    MUSIC/opl3.c
-    MUSIC/opl3.h
-    MUSIC/oplplayer.c
-    MUSIC/oplplayer.h
-    MUSIC/opl_queue.c
-    MUSIC/opl_queue.h
-    MUSIC/portmidiplayer.c
-    MUSIC/portmidiplayer.h
-    MUSIC/vorbisplayer.c
-    MUSIC/vorbisplayer.h
 )
 
 set(EXTRA_FILES
@@ -483,9 +448,7 @@ set(DSDA_SOURCES
     ${COMMON_SRC}
     ${NET_CLIENT_SRC}
     ${WAD_SRC}
-    ${MUS2MID_SRC}
     ${SDLDOOM_SOURCES}
-    ${DOOMMUSIC_SOURCES}
     ${EXTRA_FILES}
 )
 
@@ -566,26 +529,6 @@ function(AddGameExecutable TARGET SOURCES)
 
     if(HAVE_LIBSDL2_IMAGE)
         target_link_libraries(${TARGET} PRIVATE SDL2_image::SDL2_image)
-    endif()
-
-    if(HAVE_LIBMAD)
-        target_link_libraries(${TARGET} PRIVATE LibMad::libmad)
-    endif()
-
-    if(HAVE_LIBFLUIDSYNTH)
-        target_link_libraries(${TARGET} PRIVATE FluidSynth::libfluidsynth)
-    endif()
-
-    if(HAVE_LIBDUMB)
-        target_link_libraries(${TARGET} PRIVATE DUMB::DUMB)
-    endif()
-
-    if(HAVE_LIBVORBISFILE)
-        target_link_libraries(${TARGET} PRIVATE Vorbis::vorbisfile)
-    endif()
-
-    if(HAVE_LIBPORTMIDI)
-        target_link_libraries(${TARGET} PRIVATE PortMidi::portmidi)
     endif()
 
     add_dependencies(${TARGET} dsda-doom-wad)

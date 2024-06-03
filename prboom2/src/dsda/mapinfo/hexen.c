@@ -68,7 +68,6 @@ typedef struct mapInfo_s {
   dboolean doubleSky;
   dboolean lightning;
   int fadetable;
-  char songLump[10];
 } mapInfo_t;
 
 static int MapCount = 98;
@@ -236,54 +235,6 @@ int dsda_HexenResolveINIT(int* init) {
   *init = true;
 
   return true;
-}
-
-int dsda_HexenMusicIndexToLumpNum(int* lump, int music_index) {
-  const char* lump_name;
-
-  if (!hexen)
-    return false;
-
-  if (music_index >= hexen_mus_hub)
-    return false;
-
-  lump_name = dsda_SndInfoMapSongLumpName(music_index);
-  if (!*lump_name)
-    switch (music_index)
-    {
-    case hexen_mus_hexen:
-    case hexen_mus_hub:
-    case hexen_mus_hall:
-    case hexen_mus_orb:
-    case hexen_mus_chess:
-      lump_name = S_music[music_index].name;
-      break;
-    }
-
-  if (!*lump_name)
-    *lump = 0;
-  else
-    *lump = W_GetNumForName(lump_name);
-
-  return true;
-}
-
-int dsda_HexenMapMusic(int* music_index, int* music_lump) {
-  if (!hexen)
-    return false;
-
-  *music_lump = -1;
-  *music_index = gamemap;
-
-  return true;
-}
-
-int dsda_HexenIntermissionMusic(int* music_index, int* music_lump) {
-  return false; // TODO
-}
-
-int dsda_HexenInterMusic(int* music_index, int* music_lump) {
-  return false; // TODO
 }
 
 int dsda_HexenStartFinale(void) {

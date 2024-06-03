@@ -152,10 +152,6 @@ dboolean dsda_MuteSfx(void) {
   return dsda_IntConfig(dsda_config_mute_sfx);
 }
 
-dboolean dsda_MuteMusic(void) {
-  return dsda_IntConfig(dsda_config_mute_music);
-}
-
 dboolean dsda_ProcessCheatCodes(void) {
   return dsda_IntConfig(dsda_config_cheat_codes);
 }

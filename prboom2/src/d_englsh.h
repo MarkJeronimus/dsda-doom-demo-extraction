@@ -328,8 +328,6 @@
 
 /* st_stuff.c */
 
-#define STSTR_MUS       "Music Change"
-#define STSTR_NOMUS     "IMPOSSIBLE SELECTION"
 #define STSTR_DQDON     "Degreelessness Mode On"
 #define STSTR_DQDOFF    "Degreelessness Mode Off"
 

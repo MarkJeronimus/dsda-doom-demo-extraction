@@ -121,8 +121,6 @@ static void dsda_ResetMap(doom_mapinfo_map_t &map) {
   Z_Free(map.lump_name);
   Z_Free(map.nice_name);
   Z_Free(map.title_patch);
-  Z_Free(map.music);
-  Z_Free(map.inter_music);
   Z_Free(map.exit_pic);
   Z_Free(map.enter_pic);
   Z_Free(map.border_texture);
@@ -135,11 +133,9 @@ static void dsda_ResetMap(doom_mapinfo_map_t &map) {
   Z_Free(map.next.map);
   Z_Free(map.next.end_pic);
   Z_Free(map.next.end_pic_b);
-  Z_Free(map.next.music);
   Z_Free(map.secret_next.map);
   Z_Free(map.secret_next.end_pic);
   Z_Free(map.secret_next.end_pic_b);
-  Z_Free(map.secret_next.music);
 
   Z_Free(map.sky1.lump);
 
@@ -154,8 +150,6 @@ static void dsda_CopyMap(doom_mapinfo_map_t &dest, doom_mapinfo_map_t &source) {
   REPLACE_WITH_COPY(dest.lump_name);
   REPLACE_WITH_COPY(dest.nice_name);
   REPLACE_WITH_COPY(dest.title_patch);
-  REPLACE_WITH_COPY(dest.music);
-  REPLACE_WITH_COPY(dest.inter_music);
   REPLACE_WITH_COPY(dest.exit_pic);
   REPLACE_WITH_COPY(dest.enter_pic);
   REPLACE_WITH_COPY(dest.border_texture);
@@ -167,11 +161,9 @@ static void dsda_CopyMap(doom_mapinfo_map_t &dest, doom_mapinfo_map_t &source) {
   REPLACE_WITH_COPY(dest.next.map);
   REPLACE_WITH_COPY(dest.next.end_pic);
   REPLACE_WITH_COPY(dest.next.end_pic_b);
-  REPLACE_WITH_COPY(dest.next.music);
   REPLACE_WITH_COPY(dest.secret_next.map);
   REPLACE_WITH_COPY(dest.secret_next.end_pic);
   REPLACE_WITH_COPY(dest.secret_next.end_pic_b);
-  REPLACE_WITH_COPY(dest.secret_next.music);
 
   REPLACE_WITH_COPY(dest.sky1.lump);
 
@@ -185,8 +177,6 @@ static void dsda_ParseDoomMapInfoMapNext(Scanner &scanner, doom_mapinfo_map_next
   RESET_STR(next.map);
   RESET_STR(next.end_pic);
   RESET_STR(next.end_pic_b);
-  RESET_STR(next.music);
-  next.loop_music = true;
   next.end = dmi_end_null;
 
   scanner.MustGetString();
@@ -231,13 +221,6 @@ static void dsda_ParseDoomMapInfoMapNext(Scanner &scanner, doom_mapinfo_map_next
       else if (scanner.StringMatch("cast")) {
         next.end = dmi_end_game_cast;
       }
-      else if (scanner.StringMatch("music")) {
-        SCAN_STRING(next.music);
-        if (scanner.CheckToken(',')) {
-          scanner.MustGetInteger();
-          next.loop_music = !!scanner.number;
-        }
-      }
       else {
         dsda_SkipValue(scanner);
       }
@@ -265,21 +248,6 @@ static void dsda_ParseDoomMapInfoTitlePatch(Scanner &scanner, doom_mapinfo_map_t
     if (scanner.number)
       map.flags &= ~DMI_SHOW_AUTHOR;
   }
-}
-
-static void dsda_ParseDoomMapInfoMusic(Scanner &scanner, doom_mapinfo_map_t &map) {
-  scanner.MustGetToken('=');
-  scanner.MustGetString();
-
-  if (strchr(scanner.string, ':'))
-    return;
-
-  if (scanner.CheckToken(',')) {
-    scanner.MustGetInteger();
-    return;
-  }
-
-  STR_DUP(map.music);
 }
 
 static void dsda_ParseDoomMapInfoIntermissionPic(Scanner &scanner, char* &pic) {
@@ -367,17 +335,11 @@ static void dsda_ParseDoomMapInfoMapBlock(Scanner &scanner, doom_mapinfo_map_t &
     else if (scanner.StringMatch("Intermission")) {
       map.flags |= DMI_INTERMISSION;
     }
-    else if (scanner.StringMatch("Music")) {
-      dsda_ParseDoomMapInfoMusic(scanner, map);
-    }
     else if (scanner.StringMatch("ExitPic")) {
       dsda_ParseDoomMapInfoIntermissionPic(scanner, map.exit_pic);
     }
     else if (scanner.StringMatch("EnterPic")) {
       dsda_ParseDoomMapInfoIntermissionPic(scanner, map.enter_pic);
-    }
-    else if (scanner.StringMatch("InterMusic")) {
-      SCAN_STRING(map.inter_music);
     }
     else if (scanner.StringMatch("BorderTexture")) {
       SCAN_STRING(map.border_texture);
@@ -671,7 +633,6 @@ static void dsda_ParseDoomMapInfoSkill(Scanner &scanner) {
 static void dsda_FreeCluster(doom_mapinfo_cluster_t &cluster) {
   Z_Free(cluster.enter_text);
   Z_Free(cluster.exit_text);
-  Z_Free(cluster.music);
   Z_Free(cluster.flat);
   Z_Free(cluster.pic);
 }
@@ -691,9 +652,6 @@ static void dsda_ParseDoomMapInfoCluster(Scanner &scanner) {
     }
     else if (scanner.StringMatch("ExitText")) {
       dsda_ParseDoomMapInfoMultiString(scanner, cluster.exit_text);
-    }
-    else if (scanner.StringMatch("Music")) {
-      SCAN_STRING(cluster.music);
     }
     else if (scanner.StringMatch("Flat")) {
       SCAN_STRING(cluster.flat);

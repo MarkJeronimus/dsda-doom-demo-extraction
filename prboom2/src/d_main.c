@@ -136,9 +136,8 @@ dboolean randomclass;
 
 dboolean singletics = false; // debug flag to cancel adaptiveness
 
-//jff 1/22/98 parms for disabling music and sound
+//jff 1/22/98 parms for disabling sound
 dboolean nosfxparm;
-dboolean nomusicparm;
 
 //jff 4/18/98
 extern dboolean inhelpscreens;
@@ -670,11 +669,8 @@ static void D_SetPageName(const char *name)
     pagename = name;
 }
 
-void D_SetPage(const char* name, int tics, int music)
+void D_SetPage(const char* name, int tics)
 {
-  if (music)
-    S_StartMusic(music);
-
   if (tics)
     pagetic = tics;
 
@@ -683,12 +679,12 @@ void D_SetPage(const char* name, int tics, int music)
 
 static void D_DrawTitle1(const char *name)
 {
-  D_SetPage(name, TICRATE * 170 / 35, mus_intro);
+  D_SetPage(name, TICRATE * 170 / 35);
 }
 
 static void D_DrawTitle2(const char *name)
 {
-  D_SetPage(name, 0, mus_dm2ttl);
+  D_SetPage(name, 0);
 }
 
 /* killough 11/98: tabulate demo sequences
@@ -1696,13 +1692,12 @@ static void D_DoomMainSetup(void)
     lprintf(LO_INFO,"Levels will end after %d minute%s.\n", time, time>1 ? "s" : "");
   }
 
-  //jff 1/22/98 add command line parms to disable sound and music
+  //jff 1/22/98 add command line parms to disable sound
   {
     int nosound = dsda_Flag(dsda_arg_nosound);
-    nomusicparm = nosound || dsda_Flag(dsda_arg_nomusic);
     nosfxparm   = nosound || dsda_Flag(dsda_arg_nosfx);
   }
-  //jff end of sound/music command line parms
+  //jff end of sound command line parms
 
   // killough 3/2/98: allow -nodraw generally
   nodrawers = dsda_Flag(dsda_arg_nodraw);

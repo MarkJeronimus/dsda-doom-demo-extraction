@@ -48,7 +48,6 @@
 #include "p_tick.h"
 #include "p_enemy.h"
 #include "s_sound.h"
-#include "s_advsound.h"
 #include "lprintf.h" //jff 10/6/98 for debug outputs
 #include "v_video.h"
 #include "smooth.h"
@@ -3647,12 +3646,6 @@ void P_SetupLevel(int episode, int map, int playermask, int skill)
   // find map name
   snprintf(lumpname, sizeof(lumpname), "%s", dsda_MapLumpName(episode, map));
   lumpnum = W_GetNumForName(lumpname);
-
-  // Must process musinfo to get default track before calling S_Start
-  if (gamemode != shareware)
-  {
-    S_ParseMusInfo(lumpname);
-  }
 
   // Make sure all sounds are stopped before Z_FreeTag.
   S_Start();

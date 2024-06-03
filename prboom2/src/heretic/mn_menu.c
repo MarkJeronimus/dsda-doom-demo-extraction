@@ -28,7 +28,6 @@
 #define SELECTOR_XOFFSET (-28)
 #define SELECTOR_YOFFSET (-1)
 #define SFX_VOL_INDEX 1
-#define MUS_VOL_INDEX 3
 
 extern int g_menu_save_page_size;
 
@@ -113,7 +112,6 @@ void MN_Init(void)
   }
 
   SoundMenu[0].alttext = "SFX VOLUME";
-  SoundMenu[2].alttext = "MUSIC VOLUME";
 }
 
 void MN_UpdateClass(int choice)
@@ -342,8 +340,6 @@ void MN_DrawOptions(void)
 void MN_DrawSound(void)
 {
   MN_DrawSlider(SoundDef.x - 8, SoundDef.y + ITEM_HEIGHT * SFX_VOL_INDEX, 16, snd_SfxVolume);
-
-  MN_DrawSlider(SoundDef.x - 8, SoundDef.y + ITEM_HEIGHT * MUS_VOL_INDEX, 16, snd_MusicVolume);
 }
 
 extern char savegamestrings[10][SAVESTRINGSIZE];

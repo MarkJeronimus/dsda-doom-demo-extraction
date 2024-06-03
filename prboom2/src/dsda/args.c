@@ -463,11 +463,6 @@ static arg_config_t arg_config[dsda_arg_count] = {
     "turn off sound",
     arg_null,
   },
-  [dsda_arg_nomusic] = {
-    "-nomusic", NULL, NULL,
-    "turn off music",
-    arg_null,
-  },
   [dsda_arg_nosfx] = {
     "-nosfx", NULL, NULL,
     "turn off sfx",

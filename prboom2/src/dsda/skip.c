@@ -52,20 +52,18 @@ static void dsda_CacheSkipSetting(dboolean* old, dboolean* current) {
   *current = true;
 }
 
-static dboolean old_fastdemo, old_nodrawers, old_nosfxparm, old_nomusicparm;
+static dboolean old_fastdemo, old_nodrawers, old_nosfxparm;
 
 static void dsda_ApplySkipSettings(void) {
   dsda_CacheSkipSetting(&old_fastdemo, &fastdemo);
   dsda_CacheSkipSetting(&old_nodrawers, &nodrawers);
   dsda_CacheSkipSetting(&old_nosfxparm, &nosfxparm);
-  dsda_CacheSkipSetting(&old_nomusicparm, &nomusicparm);
 }
 
 static void dsda_ResetSkipSettings(void) {
   fastdemo = old_fastdemo;
   nodrawers = old_nodrawers;
   nosfxparm = old_nosfxparm;
-  nomusicparm = old_nomusicparm;
 }
 
 void dsda_EnterSkipMode(void) {
@@ -78,7 +76,6 @@ void dsda_EnterSkipMode(void) {
   M_ClearMenus();
   dsda_ApplySkipSettings();
   dsda_ResetPauseMode();
-  S_StopMusic();
   I_Init2();
 
   if (dsda_BuildMode())
@@ -101,7 +98,6 @@ void dsda_ExitSkipMode(void) {
   I_Init2();
   I_InitSound();
   S_Init();
-  S_RestartMusic();
 
   if (V_IsOpenGLMode())
     gld_PreprocessLevel();

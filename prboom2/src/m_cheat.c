@@ -74,7 +74,6 @@
 //
 //-----------------------------------------------------------------------------
 
-static void cheat_mus();
 static void cheat_choppers();
 static void cheat_god();
 static void cheat_fa();
@@ -145,7 +144,6 @@ static void cheat_script();
 //-----------------------------------------------------------------------------
 
 cheatseq_t cheat[] = {
-  CHEAT("idmus",      "Change music",     cht_always, cheat_mus, -2, false),
   CHEAT("idchoppers", "Chainsaw",         not_demo, cheat_choppers, 0, false),
   CHEAT("iddqd",      "God mode",         not_classic_demo,  cheat_god, 0, false),
   CHEAT("idkfa",      "Ammo & Keys",      not_demo, cheat_kfa, 0, false),
@@ -250,47 +248,6 @@ cheatseq_t cheat[] = {
 };
 
 //-----------------------------------------------------------------------------
-
-static void cheat_mus(buf)
-char buf[3];
-{
-  int musnum;
-
-  //jff 3/20/98 note: this cheat allowed in netgame/demorecord
-
-  //jff 3/17/98 avoid musnum being negative and crashing
-  if (!isdigit(buf[0]) || !isdigit(buf[1]))
-    return;
-
-  dsda_AddMessage(s_STSTR_MUS);
-
-  if (gamemode == commercial)
-    {
-      musnum = mus_runnin + (buf[0]-'0')*10 + buf[1]-'0' - 1;
-
-      //jff 4/11/98 prevent IDMUS00 in DOOMII and IDMUS36 or greater
-      if (musnum < mus_runnin ||  ((buf[0]-'0')*10 + buf[1]-'0') > 35)
-        dsda_AddMessage(s_STSTR_NOMUS);
-      else
-        {
-          S_ChangeMusic(musnum, 1);
-          idmusnum = musnum; //jff 3/17/98 remember idmus number for restore
-        }
-    }
-  else
-    {
-      musnum = mus_e1m1 + (buf[0]-'1')*9 + (buf[1]-'1');
-
-      //jff 4/11/98 prevent IDMUS0x IDMUSx0 in DOOMI and greater than introa
-      if (buf[0] < '1' || buf[1] < '1' || ((buf[0]-'1')*9 + buf[1]-'1') > 31)
-        dsda_AddMessage(s_STSTR_NOMUS);
-      else
-        {
-          S_ChangeMusic(musnum, 1);
-          idmusnum = musnum; //jff 3/17/98 remember idmus number for restore
-        }
-    }
-}
 
 // 'choppers' invulnerability & chainsaw
 static void cheat_choppers()

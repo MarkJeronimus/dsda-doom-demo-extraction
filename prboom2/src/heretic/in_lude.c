@@ -233,7 +233,6 @@ void IN_Start(wbstartstruct_t* wbstartstruct)
     intertime = 0;
     oldintertime = 0;
     AM_Stop(false);
-    S_ChangeMusic(heretic_mus_intr, true);
 }
 
 //========================================================================

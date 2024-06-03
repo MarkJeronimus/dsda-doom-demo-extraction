@@ -276,89 +276,12 @@ int dsda_LegacyResolveINIT(int* init) {
   return true;
 }
 
-int dsda_LegacyMusicIndexToLumpNum(int* lump, int music_index) {
-  char name[9];
-  const char* format;
-
-  format = raven ? "%s" : "d_%s";
-
-  sprintf(name, format, S_music[music_index].name);
-
-  *lump = W_GetNumForName(name);
-
-  return true;
-}
-
 static inline int WRAP(int i, int w)
 {
   while (i < 0)
     i += w;
 
   return i % w;
-}
-
-int dsda_LegacyMapMusic(int* music_index, int* music_lump) {
-  *music_lump = -1;
-
-  if (idmusnum != -1)
-    *music_index = idmusnum; //jff 3/17/98 reload IDMUS music if not -1
-  else {
-    if (gamemode == commercial)
-      *music_index = mus_runnin + WRAP(gamemap - 1, DOOM_MUSINFO - mus_runnin);
-    else {
-      static const int spmus[] = {
-        mus_e3m4,
-        mus_e3m2,
-        mus_e3m3,
-        mus_e1m5,
-        mus_e2m7,
-        mus_e2m4,
-        mus_e2m6,
-        mus_e2m5,
-        mus_e1m9
-      };
-
-      if (heretic)
-        *music_index = heretic_mus_e1m1 +
-                       WRAP((gameepisode - 1) * 9 + gamemap - 1,
-                            HERETIC_NUMMUSIC - heretic_mus_e1m1);
-      else if (gameepisode < 4)
-        *music_index = mus_e1m1 +
-                       WRAP((gameepisode - 1) * 9 + gamemap - 1, mus_runnin - mus_e1m1);
-      else
-        *music_index = spmus[WRAP(gamemap - 1, 9)];
-    }
-  }
-
-  return true;
-}
-
-int dsda_LegacyIntermissionMusic(int* music_index, int* music_lump) {
-  *music_lump = -1;
-
-  if (gamemode == commercial)
-    *music_index = mus_dm2int;
-  else
-    *music_index = mus_inter;
-
-  return true;
-}
-
-int dsda_LegacyInterMusic(int* music_index, int* music_lump) {
-  *music_lump = -1;
-
-  switch (gamemode) {
-    case shareware:
-    case registered:
-    case retail:
-      *music_index = mus_victor;
-      break;
-    default:
-      *music_index = mus_read_m;
-      break;
-  }
-
-  return true;
 }
 
 int dsda_LegacyStartFinale(void) {
