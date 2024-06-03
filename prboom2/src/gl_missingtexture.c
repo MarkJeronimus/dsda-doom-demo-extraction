@@ -157,12 +157,6 @@ static void gld_PrepareSectorSpecialEffects(void)
         gld_RegisterBleedthroughSector(back->sector, front->sector, BLEED_OCCLUDE);
       }
     }
-#ifdef PRBOOM_DEBUG
-    if (sectors[num].flags & NO_TOPTEXTURES)
-      lprintf(LO_INFO,"Sector %i has no toptextures\n",num);
-    if (sectors[num].flags & NO_BOTTOMTEXTURES)
-      lprintf(LO_INFO,"Sector %i has no bottomtextures\n",num);
-#endif
   }
 }
 

@@ -655,9 +655,6 @@ void I_PreInitGraphics(void)
   unsigned int flags = 0;
   if (!(dsda_Flag(dsda_arg_nodraw) && dsda_Flag(dsda_arg_nosound)))
     flags = SDL_INIT_VIDEO;
-#ifdef PRBOOM_DEBUG
-  flags |= SDL_INIT_NOPARACHUTE;
-#endif
 
   p = SDL_Init(flags);
   if (p < 0)

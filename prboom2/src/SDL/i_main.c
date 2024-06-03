@@ -313,7 +313,6 @@ int main(int argc, char **argv)
 
   I_AtExit(I_EssentialQuit, true, "I_EssentialQuit", exit_priority_first);
   I_AtExit(I_Quit, false, "I_Quit", exit_priority_last);
-#ifndef PRBOOM_DEBUG
   if (!dsda_Flag(dsda_arg_sigsegv))
   {
     signal(SIGSEGV, I_SignalHandler);
@@ -324,7 +323,6 @@ int main(int argc, char **argv)
 
   signal(SIGTERM, I_IntHandler);
   signal(SIGINT,  I_IntHandler);
-#endif
 
   // Priority class for the prboom-plus process
   I_SetProcessPriority();
