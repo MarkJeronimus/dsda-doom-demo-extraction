@@ -90,7 +90,6 @@ typedef enum {
   dsda_arg_hud,
   dsda_arg_shotdir,
   dsda_arg_movie,
-  dsda_arg_viddump,
   dsda_arg_dehout,
   dsda_arg_verbose,
   dsda_arg_quiet,

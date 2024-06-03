@@ -307,8 +307,6 @@ set(COMMON_SRC
     hu_stuff.h
     info.c
     info.h
-    i_capture.c
-    i_capture.h
     i_glob.c
     i_glob.h
     i_main.h

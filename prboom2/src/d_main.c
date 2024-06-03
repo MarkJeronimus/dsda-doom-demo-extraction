@@ -115,9 +115,6 @@
 
 #include "hexen/sn_sonix.h"
 
-// NSM
-#include "i_capture.h"
-
 #include "i_glob.h"
 
 static void D_PageDrawer(void);
@@ -281,11 +278,6 @@ static void D_Wipe(void)
 
     M_Drawer();                   // menu is drawn even on top of wipes
 
-    if (capturing_video && !dsda_SkipMode() && cap_wipescreen)
-    {
-      I_QueueFrameCapture();
-    }
-
     I_FinishUpdate();             // page flip or blit buffer
   }
   while (!done);
@@ -340,7 +332,7 @@ void D_MustFillBackScreen(void)
   must_fill_back_screen = true;
 }
 
-void D_Display (fixed_t frac)
+void D_Display ()
 {
   static dboolean isborderstate        = false;
   static dboolean borderwillneedredraw = false;
@@ -452,8 +444,7 @@ void D_Display (fixed_t frac)
     // Boom colormaps should be applied for everything in R_RenderPlayerView
     use_boom_cm=true;
 
-    if (frac < 0)
-      frac = I_GetTimeFrac();
+    fixed_t frac = I_GetTimeFrac();
 
     R_InterpolateView(&players[displayplayer], frac);
 
@@ -570,33 +561,7 @@ static void D_DoomLoop(void)
     // Update display, next frame, with current state.
     if (!movement_smooth || !WasRenderedInTryRunTics || gamestate != wipegamestate)
     {
-      // NSM
-      if (capturing_video && !dsda_SkipMode())
-      {
-        dboolean first = true;
-        int cap_step = TICRATE * FRACUNIT / cap_fps;
-        cap_frac += cap_step;
-        while(cap_frac <= FRACUNIT)
-        {
-          isExtraDDisplay = !first;
-          first = false;
-
-          if (gamestate == wipegamestate || cap_wipescreen)
-          {
-            I_QueueFrameCapture();
-          }
-
-          D_Display(cap_frac);
-
-          isExtraDDisplay = false;
-          cap_frac += cap_step;
-        }
-        cap_frac -= FRACUNIT + cap_step;
-      }
-      else
-      {
-        D_Display(-1);
-      }
+      D_Display();
     }
   }
 }
@@ -1949,13 +1914,6 @@ static void D_DoomMainSetup(void)
 
   if (!(dsda_Flag(dsda_arg_nodraw) && dsda_Flag(dsda_arg_nosound)))
     I_InitGraphics();
-
-  // NSM
-  arg = dsda_Arg(dsda_arg_viddump);
-  if (arg->found)
-  {
-    I_CapturePrep(arg->value.v_string);
-  }
 
   //jff 9/3/98 use logical output routine
   lprintf(LO_DEBUG, "ST_Init: Init status bar.\n");

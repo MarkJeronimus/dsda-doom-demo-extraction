@@ -62,7 +62,6 @@ void I_ShutdownGraphics(void);
 /* Takes full 8 bit values. */
 void I_SetPalette(int pal); /* CPhipps - pass down palette number */
 
-void I_QueueFrameCapture(void);
 void I_QueueScreenshot(void);
 void I_HandleCapture(void);
 

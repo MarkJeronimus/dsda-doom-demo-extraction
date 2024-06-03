@@ -60,7 +60,7 @@ void D_DoAdvanceDemo (void);
 // BASE LEVEL
 //
 
-void D_Display(fixed_t frac);
+void D_Display();
 void D_PageTicker(void);
 void D_StartTitle(void);
 void D_DoomMain(void);

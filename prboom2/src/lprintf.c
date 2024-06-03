@@ -52,7 +52,6 @@
 #include "i_main.h"
 #include "i_system.h"
 #include "e6y.h"//e6y
-#include "i_capture.h"
 
 #include "dsda/args.h"
 
@@ -128,7 +127,7 @@ void I_Error(const char *error, ...)
   va_end(argptr);
   lprintf(LO_ERROR, "%s\n", errmsg);
 #ifdef _WIN32
-  if (!disable_message_box && !dsda_Flag(dsda_arg_nodraw) && !capturing_video) {
+  if (!disable_message_box && !dsda_Flag(dsda_arg_nodraw)) {
     I_MessageBox(errmsg, PRB_MB_OK);
   }
 #endif
@@ -144,7 +143,7 @@ void I_Warn(const char *error, ...)
   va_end(argptr);
   lprintf(LO_WARN, "%s\n", errmsg);
 #ifdef _WIN32
-  if (!dsda_Flag(dsda_arg_nodraw) && !capturing_video) {
+  if (!dsda_Flag(dsda_arg_nodraw)) {
     I_MessageBox(errmsg, PRB_MB_OK);
   }
 #endif

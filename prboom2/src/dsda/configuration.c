@@ -684,38 +684,6 @@ dsda_config_t dsda_config[dsda_config_count] = {
     "snd_channels", dsda_config_snd_channels,
     dsda_config_int, 1, MAX_CHANNELS, { 32 }, NULL, NOT_STRICT, S_Init
   },
-  [dsda_config_cap_soundcommand] = {
-    "cap_soundcommand", dsda_config_cap_soundcommand,
-    CONF_STRING("ffmpeg -f s16le -ar %s -ac 2 -i - -c:a libopus -y temp_a.nut")
-  },
-  [dsda_config_cap_videocommand] = {
-    "cap_videocommand", dsda_config_cap_videocommand,
-    CONF_STRING("ffmpeg -f rawvideo -pix_fmt rgb24 -r %r -s %wx%h -i - -c:v libx264 -y temp_v.nut")
-  },
-  [dsda_config_cap_muxcommand] = {
-    "cap_muxcommand", dsda_config_cap_muxcommand,
-    CONF_STRING("ffmpeg -i temp_v.nut -i temp_a.nut -c copy -y %f")
-  },
-  [dsda_config_cap_tempfile1] = {
-    "cap_tempfile1", dsda_config_cap_tempfile1,
-    CONF_STRING("temp_a.nut")
-  },
-  [dsda_config_cap_tempfile2] = {
-    "cap_tempfile2", dsda_config_cap_tempfile2,
-    CONF_STRING("temp_v.nut")
-  },
-  [dsda_config_cap_remove_tempfiles] = {
-    "cap_remove_tempfiles", dsda_config_cap_remove_tempfiles,
-    CONF_BOOL(1)
-  },
-  [dsda_config_cap_wipescreen] = {
-    "cap_wipescreen", dsda_config_cap_wipescreen,
-    CONF_BOOL(0)
-  },
-  [dsda_config_cap_fps] = {
-    "cap_fps", dsda_config_cap_fps,
-    dsda_config_int, 16, 300, { 60 }
-  },
   [dsda_config_hudadd_crosshair_color] = {
     "hudadd_crosshair_color", dsda_config_hudadd_crosshair_color,
     CONF_CR(3)

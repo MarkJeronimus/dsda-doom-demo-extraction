@@ -68,7 +68,6 @@
 #include "d_event.h"
 #include "d_deh.h"
 #include "i_video.h"
-#include "i_capture.h"
 #include "z_zone.h"
 #include "s_sound.h"
 #include "sounds.h"
@@ -535,13 +534,7 @@ void I_ShutdownGraphics(void)
   DeactivateMouse();
 }
 
-static dboolean queue_frame_capture;
 static dboolean queue_screenshot;
-
-void I_QueueFrameCapture(void)
-{
-  queue_frame_capture = true;
-}
 
 void I_QueueScreenshot(void)
 {
@@ -550,12 +543,6 @@ void I_QueueScreenshot(void)
 
 void I_HandleCapture(void)
 {
-  if (queue_frame_capture)
-  {
-    I_CaptureFrame();
-    queue_frame_capture = false;
-  }
-
   if (queue_screenshot)
   {
     M_ScreenShot();
@@ -1225,9 +1212,6 @@ void I_UpdateVideoMode(void)
 
   if(sdl_window)
   {
-    // video capturing cannot be continued with new screen settings
-    I_CaptureFinish();
-
     if (V_IsOpenGLMode())
     {
       gld_CleanMemory();

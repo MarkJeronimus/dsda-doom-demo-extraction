@@ -40,7 +40,6 @@
 #include "smooth.h"
 #include "r_fps.h"
 #include "i_system.h"
-#include "i_capture.h"
 #include "e6y.h"
 
 #include "dsda/aim.h"
@@ -76,14 +75,11 @@ tic_vars_t tic_vars;
 
 static void R_DoAnInterpolation (int i, fixed_t smoothratio);
 
-void D_Display(fixed_t frac);
+void D_Display();
 
 void M_ChangeUncappedFrameRate(void)
 {
-  if (capturing_video)
-    movement_smooth = true;
-  else
-    movement_smooth = (singletics ? false : dsda_IntConfig(dsda_config_uncapped_framerate));
+  movement_smooth = (singletics ? false : dsda_IntConfig(dsda_config_uncapped_framerate));
 }
 
 typedef fixed_t fixed2_t[2];

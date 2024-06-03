@@ -55,9 +55,6 @@
 #include "dsda/game_controller.h"
 #include "dsda/settings.h"
 
-// NSM
-#include "i_capture.h"
-
 typedef struct
 {
   const char* name;
@@ -293,17 +290,6 @@ cfg_def_t cfg_defs[] =
   MIGRATED_SETTING(dsda_config_script_7),
   MIGRATED_SETTING(dsda_config_script_8),
   MIGRATED_SETTING(dsda_config_script_9),
-
-  // NSM
-  SETTING_HEADING("Video capture encoding settings"),
-  MIGRATED_SETTING(dsda_config_cap_soundcommand),
-  MIGRATED_SETTING(dsda_config_cap_videocommand),
-  MIGRATED_SETTING(dsda_config_cap_muxcommand),
-  MIGRATED_SETTING(dsda_config_cap_tempfile1),
-  MIGRATED_SETTING(dsda_config_cap_tempfile2),
-  MIGRATED_SETTING(dsda_config_cap_remove_tempfiles),
-  MIGRATED_SETTING(dsda_config_cap_wipescreen),
-  MIGRATED_SETTING(dsda_config_cap_fps),
 
   SETTING_HEADING("Overrun settings"),
   MIGRATED_SETTING(dsda_config_overrun_spechit_warn),

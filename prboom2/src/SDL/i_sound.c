@@ -115,10 +115,6 @@ int   steptable[256];
 // Volume lookups.
 //int   vol_lookup[128 * 256];
 
-// NSM
-static int dumping_sound = 0;
-
-
 // lock for updating any params related to sfx
 SDL_mutex *sfxmutex;
 
@@ -557,11 +553,6 @@ static void I_UpdateSound(void *unused, Uint8 *stream, int len)
 
   memset(stream, 0, len);
 
-  // NSM: when dumping sound, ignore the callback calls and only
-  // service dumping calls
-  if (dumping_sound && unused != (void *) 0xdeadbeef)
-    return;
-
   SDL_LockMutex (sfxmutex);
   // Left and right channel
   //  are in audio stream, alternating.
@@ -743,83 +734,4 @@ void I_InitSound(void)
 
   lprintf(LO_DEBUG, "I_InitSound: sound module ready\n");
   SDL_PauseAudio(0);
-}
-
-
-// NSM sound capture routines
-
-// silences sound output, and instead allows sound capture to work
-// call this before sound startup
-void I_SetSoundCap (void)
-{
-  dumping_sound = 1;
-}
-
-// grabs len samples of audio (16 bit interleaved)
-unsigned char *I_GrabSound (int len)
-{
-  static unsigned char *buffer = NULL;
-  static size_t buffer_size = 0;
-  size_t size;
-
-  if (!dumping_sound)
-    return NULL;
-
-  size = len * 4;
-  if (!buffer || size > buffer_size)
-  {
-    buffer_size = size * 4;
-    buffer = (unsigned char *)Z_Realloc (buffer, buffer_size);
-  }
-
-  if (buffer)
-  {
-    memset (buffer, 0, size);
-    I_UpdateSound ((void *) 0xdeadbeef, buffer, size);
-  }
-  return buffer;
-}
-
-
-
-
-// NSM helper routine for some of the streaming audio
-void I_ResampleStream (void *dest, unsigned nsamp, void (*proc) (void *dest, unsigned nsamp), unsigned sratein, unsigned srateout)
-{ // assumes 16 bit signed interleaved stereo
-
-  unsigned i;
-  int j = 0;
-
-  short *sout = (short*)dest;
-
-  static short *sin = NULL;
-  static unsigned sinsamp = 0;
-
-  static unsigned remainder = 0;
-  unsigned step = (sratein << 16) / (unsigned) srateout;
-
-  unsigned nreq = (step * nsamp + remainder) >> 16;
-
-  if (nreq > sinsamp)
-  {
-    sin = (short*)Z_Realloc (sin, (nreq + 1) * 4);
-    if (!sinsamp) // avoid pop when first starting stream
-      sin[0] = sin[1] = 0;
-    sinsamp = nreq;
-  }
-
-  proc (sin + 2, nreq);
-
-  for (i = 0; i < nsamp; i++)
-  {
-    *sout++ = ((unsigned) sin[j + 0] * (0x10000 - remainder) +
-               (unsigned) sin[j + 2] * remainder) >> 16;
-    *sout++ = ((unsigned) sin[j + 1] * (0x10000 - remainder) +
-               (unsigned) sin[j + 3] * remainder) >> 16;
-    remainder += step;
-    j += remainder >> 16 << 1;
-    remainder &= 0xffff;
-  }
-  sin[0] = sin[nreq * 2];
-  sin[1] = sin[nreq * 2 + 1];
 }
